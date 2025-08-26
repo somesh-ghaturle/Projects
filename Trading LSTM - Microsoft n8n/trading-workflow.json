@@ -1,0 +1,262 @@
+{
+  "name": "Algorithmic Trading Signal Generator (MSFT) - Python",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "517c6729-3833-4a7b-a197-a417387332c1",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "unit": "days"
+            }
+          ]
+        },
+        "timezone": "America/New_York"
+      },
+      "id": "01c9b6ac-1977-4d1a-9694-8774786358e7",
+      "name": "Schedule Trigger (Daily)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        300
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/{{$node[\"Set Ticker & Dates\"].json[\"ticker\"]}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "period1",
+              "value": "={{$node[\"Set Ticker & Dates\"].json[\"startDate\"]}}"
+            },
+            {
+              "name": "period2",
+              "value": "={{$node[\"Set Ticker & Dates\"].json[\"endDate\"]}}"
+            },
+            {
+              "name": "interval",
+              "value": "1d"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e6749911-574d-456d-8880-9289255a6435",
+      "name": "Fetch MSFT Historical Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "pythonCode": "import random\n\n# Get the input data from the previous node\nitems = get_input_data()\nitem = items[0]\n\n# --- IMPORTANT: THIS IS A SIMULATED MODEL API ---\n# In a real-world scenario, you would replace this node with an HTTP Request\n# node that calls your actual, deployed LSTM/GRU model's API.\n\n# Extract historical data\nchart_data = item['json']['chart']['result'][0]\nindicators = chart_data['indicators']['quote'][0]\nclose_prices = indicators['close']\n\n# Filter out None values from close prices\nclose_prices = [price for price in close_prices if price is not None]\n\n# Get the most recent closing price\nlast_close = close_prices[-1]\n\n# --- SIMULATED PREDICTION LOGIC ---\n# A real model would perform complex calculations. Here, we simulate a \n# prediction by applying a small, random fluctuation to the last close price.\nrandom_factor = (random.random() - 0.48) / 50  # a small +/- fluctuation\npredicted_price = last_close * (1 + random_factor)\n# --- END OF SIMULATION ---\n\n# Prepare the output in the format a real API would return\nresult = {\n    'lastActualClose': last_close,\n    'predictedPrice': predicted_price,\n    'ticker': chart_data['meta']['symbol']\n}\n\n# Return the result for the next node\nreturn [{'json': result}]"
+      },
+      "id": "9b1c7f5f-33e3-4b68-8095-2c81559132d7",
+      "name": "Simulated Model API (LSTM/GRU)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "pythonCode": "import datetime\n\n# Get data from the previous (model) node\nitems = get_input_data()\nmodel_output = items[0]['json']\n\nlast_close = model_output['lastActualClose']\npredicted_price = model_output['predictedPrice']\nticker = model_output['ticker']\n\n# --- TRADING LOGIC --- \n# Define the threshold for a buy/sell signal (e.g., 2% change)\nthreshold = 0.02\n\nsignal = 'HOLD'\nreason = f\"Predicted change is within the {threshold * 100}% threshold.\"\n\n# Calculate the percentage change\npercentage_change = ((predicted_price - last_close) / last_close) * 100\n\n# Check for BUY signal\nif predicted_price > last_close * (1 + threshold):\n    signal = 'BUY'\n    reason = f\"Model predicts price increase of {percentage_change:.2f}% (>{threshold * 100}% threshold).\"\n# Check for SELL signal\nelif predicted_price < last_close * (1 - threshold):\n    signal = 'SELL'\n    reason = f\"Model predicts price decrease of {percentage_change:.2f}% (<-{threshold * 100}% threshold).\"\nelse:\n    reason = f\"Predicted change of {percentage_change:.2f}% is within the ±{threshold * 100}% threshold.\"\n\n# Format the final output\nresult = {\n    'ticker': ticker,\n    'signal': signal,\n    'reason': reason,\n    'lastClose': round(last_close, 2),\n    'predictedPrice': round(predicted_price, 2),\n    'percentageChange': round(percentage_change, 2),\n    'timestamp': datetime.datetime.now().isoformat()\n}\n\nreturn [{'json': result}]"
+      },
+      "id": "e98e4d25-60b7-4c40-84a8-6b2b7371f435",
+      "name": "Generate Trading Signal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "webhookUrl": "={{ $credentials.DiscordWebhook.webhookUrl }}",
+        "content": "",
+        "embeds": {
+          "embed": [
+            {
+              "title": "={{ `📈 Algorithmic Trading Signal for ${$json.ticker}` }}",
+              "color": "={{ $json.signal === 'BUY' ? 3066993 : ($json.signal === 'SELL' ? 15158332 : 15844367) }}",
+              "fields": {
+                "field": [
+                  {
+                    "name": "Signal",
+                    "value": "={{ `**${$json.signal}**` }}"
+                  },
+                  {
+                    "name": "Reason",
+                    "value": "={{ $json.reason }}"
+                  },
+                  {
+                    "name": "Last Close Price",
+                    "value": "={{ `$${$json.lastClose}` }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Predicted Next Price",
+                    "value": "={{ `$${$json.predictedPrice}` }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Percentage Change",
+                    "value": "={{ `${$json.percentageChange > 0 ? '+' : ''}${$json.percentageChange}%` }}",
+                    "inline": true
+                  }
+                ]
+              },
+              "footer": {
+                "footer": {
+                  "text": "={{ `Signal generated at: ${new Date($json.timestamp).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'long' })}` }}"
+                }
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8b51d654-20a2-4a7b-a481-4b11e2f2e519",
+      "name": "Send Discord Notification",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 3,
+      "position": [
+        1780,
+        300
+      ],
+      "credentials": {
+        "discordWebhook": {
+          "id": "placeholder-id",
+          "name": "Discord webhook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "ticker",
+              "value": "MSFT"
+            },
+            {
+              "name": "startDate",
+              "value": "={{ Math.floor(DateTime.now().minus({ days: 100 }).toSeconds()).toString() }}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{ Math.floor(DateTime.now().toSeconds()).toString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "76420551-0a6e-4f1e-97f6-932d8819894e",
+      "name": "Set Ticker & Dates",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "notes": "## Algorithmic Trading Workflow (MSFT) - Fixed Version\n\nThis workflow demonstrates how to build a trading signal generator using n8n as an orchestrator.\n\n**Key Concepts:**\n1.  **Data Fetching**: It pulls historical stock data from Yahoo! Finance.\n2.  **Model Simulation**: A `Code` node **simulates** a call to a hosted LSTM/GRU deep learning model. In a real-world use case, you would replace this node with an `HTTP Request` node pointing to your actual model's API.\n3.  **Signal Generation**: It applies logic to the model's prediction to generate a BUY, SELL, or HOLD signal.\n4.  **Notification**: It sends a formatted alert to a Discord channel.\n\n**To Use This Workflow:**\n1.  Create a Discord Webhook and add it as a credential for the `Send Discord Notification` node.\n2.  (Advanced) Train and deploy your own LSTM/GRU model.\n3.  (Advanced) Replace the `Simulated Model API` node with an `HTTP Request` node to call your live model.\n\n**Fixes Applied:**\n- Fixed Unix timestamp formatting for Yahoo Finance API\n- Added null value filtering in the model simulation\n- Enhanced trading signal logic with percentage change calculation\n- Improved Discord notification formatting"
+      },
+      "id": "f516104f-7032-45a8-944f-1d89868749a0",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        80
+      ],
+      "color": "#FF9900"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger (Daily)": {
+      "main": [
+        [
+          {
+            "node": "Set Ticker & Dates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch MSFT Historical Data": {
+      "main": [
+        [
+          {
+            "node": "Simulated Model API (LSTM/GRU)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulated Model API (LSTM/GRU)": {
+      "main": [
+        [
+          {
+            "node": "Generate Trading Signal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Trading Signal": {
+      "main": [
+        [
+          {
+            "node": "Send Discord Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Ticker & Dates": {
+      "main": [
+        [
+          {
+            "node": "Fetch MSFT Historical Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b18e6e59-33d3-4a1d-847e-8555811c7d2e"
+}
