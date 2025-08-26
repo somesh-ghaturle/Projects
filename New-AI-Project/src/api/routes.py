@@ -8,8 +8,8 @@ from datetime import datetime
 import logging
 from pydantic import BaseModel
 
-from ..config.settings import settings
-from ..agents.researcher_agent import ResearcherAgent
+from config.settings import settings
+from agents.researcher_agent import ResearcherAgent
 
 logger = logging.getLogger(__name__)
 

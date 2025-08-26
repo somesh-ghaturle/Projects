@@ -181,25 +181,21 @@ async def interactive_research_mode():
                 if sources:
                     print(f"\n🔗 Sources Found:")
                     for i, source in enumerate(sources, 1):
-                        source_type = source.get('source_type', source.get('source', 'UNKNOWN'))
+                        source_type = source.get('source', 'unknown')
                         title = source.get('title', 'No title available')
                         url = source.get('url', 'No URL available')
-                        snippet = source.get('snippet', source.get('abstract', 'No description available'))
-                        relevance = source.get('relevance_score', 0.0)
                         
                         print(f"   {i}. [{source_type.upper()}] {title}")
                         if url != 'No URL available':
                             print(f"      🌐 {url}")
                         
-                        # Add snippet/description
-                        if snippet != 'No description available':
-                            display_snippet = snippet[:120] + "..." if len(snippet) > 120 else snippet
-                            print(f"      📄 {display_snippet}")
-                        
-                        # Add relevance score if available
-                        if relevance > 0:
-                            print(f"      ⭐ Relevance: {relevance:.2f}")
-                        
+                        # Add snippet if available
+                        if 'snippet' in source:
+                            snippet = source['snippet'][:100] + "..." if len(source['snippet']) > 100 else source['snippet']
+                            print(f"      📄 {snippet}")
+                        elif 'abstract' in source:
+                            abstract = source['abstract'][:100] + "..." if len(source['abstract']) > 100 else source['abstract']
+                            print(f"      📄 {abstract}")
                         print()  # Empty line for spacing
                 
                 print(f"📝 Summary:")
