@@ -9,7 +9,7 @@ This repository contains my personal learning projects developed during my Maste
 
 ## 📁 Project Structure
 
-```
+```text
 Projects/
 ├── Personal-Document-Assistant-MCP/    # MCP server with RAG capabilities
 ├── AI Data Analytics Agent/            # Streamlit + Ollama analytics tool
@@ -49,6 +49,7 @@ cd src && python demo.py   # Try the interactive demo
 ### 🎮 Interactive Demo
 
 Experience all features with the built-in demo:
+
 - Document processing with text chunking
 - Live AI responses from local Ollama
 - Storage system demonstration
@@ -137,6 +138,7 @@ This app is an AI-powered data analytics tool using local LLMs via Ollama and a 
 An automated trading workflow that combines LSTM neural networks with n8n automation for Microsoft stock predictions.
 
 **Features:**
+
 - Automated daily execution with customizable scheduling
 - Fetches MSFT historical prices from Yahoo Finance API
 - Simulates LSTM/GRU model predictions for price movement
