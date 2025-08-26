@@ -4,6 +4,24 @@ This project contains an n8n workflow for generating algorithmic trading signals
 
 ---
 
+## Workflow Architecture
+
+```mermaid
+flowchart TD
+    A[🕐 Schedule Trigger<br/>Daily] --> B[📊 Set Ticker & Dates<br/>MSFT, Last 100 days]
+    B --> C[📈 Fetch MSFT Historical Data<br/>Yahoo Finance API]
+    C --> D[🤖 Simulated Model API<br/>LSTM/GRU Prediction]
+    D --> E[⚡ Generate Trading Signal<br/>BUY/SELL/HOLD Logic]
+    E --> F[💬 Send Discord Notification<br/>Formatted Alert]
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#fce4ec
+    style F fill:#f1f8e9
+```
+
 ## Features
 - Automated daily execution (customizable schedule)
 - Fetches MSFT historical prices from Yahoo Finance
