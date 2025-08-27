@@ -1,12 +1,15 @@
 """
-Base application class and core functionality
+Base applicati        self.settings = settings
+        self.running = False
+        
+        logger.info(f"Initializing {settings.app_name}")lass and core functionality
 """
 
 import asyncio
 import logging
 from typing import Optional
 
-from config.settings import Settings
+from src.config.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +22,7 @@ class Application:
         self.settings = settings
         self.is_running = False
         
-        logger.info(f"Initializing {settings.APP_NAME}")
+        logger.info(f"Initializing {settings.app_name}")
         
     async def start(self):
         """Start the application"""

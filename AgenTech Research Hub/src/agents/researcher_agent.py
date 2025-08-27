@@ -6,6 +6,11 @@ import asyncio
 import logging
 from typing import Any, Dict, List, Optional
 from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
+import urllib.parse
+import time
+import json
 
 from agents.base_agent import BaseAgent
 
@@ -586,12 +591,197 @@ class ResearcherAgent(BaseAgent):
         return sources
 
     def _web_search(self, query: str) -> List[Dict[str, Any]]:
-        """Intelligent web search with dynamic topic detection"""
-        category = self._detect_topic_category(query)
-        sources = self._get_authoritative_sources(query, category)
+        """Real web search using multiple search engines and sources"""
+        logger.info(f"Performing real web search for: {query}")
         
-        logger.info(f"Detected topic category: {category} for query: {query}")
-        return sources
+        all_results = []
+        
+        try:
+            # DuckDuckGo search (doesn't require API key)
+            duckduckgo_results = self._search_duckduckgo(query)
+            all_results.extend(duckduckgo_results)
+            
+            # Wikipedia search
+            wikipedia_results = self._search_wikipedia(query)
+            all_results.extend(wikipedia_results)
+            
+            # Reddit search for discussions
+            reddit_results = self._search_reddit(query)
+            all_results.extend(reddit_results)
+            
+            # GitHub search (for technical topics)
+            if any(tech_term in query.lower() for tech_term in ['programming', 'code', 'software', 'api', 'framework', 'library']):
+                github_results = self._search_github(query)
+                all_results.extend(github_results)
+            
+            logger.info(f"Found {len(all_results)} real search results")
+            
+        except Exception as e:
+            logger.error(f"Error in web search: {e}")
+            # Fallback to simulated results if real search fails
+            return self._get_fallback_sources(query)
+        
+        return all_results[:10]  # Return top 10 results
+    
+    def _search_duckduckgo(self, query: str) -> List[Dict[str, Any]]:
+        """Search using DuckDuckGo instant answer API"""
+        results = []
+        try:
+            # DuckDuckGo instant answer API
+            encoded_query = urllib.parse.quote_plus(query)
+            url = f"https://api.duckduckgo.com/?q={encoded_query}&format=json&no_html=1&skip_disambig=1"
+            
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Abstract/answer
+                if data.get('Abstract'):
+                    results.append({
+                        "source_type": "SEARCH_ENGINE",
+                        "title": f"DuckDuckGo - {query}",
+                        "url": data.get('AbstractURL', f"https://duckduckgo.com/?q={encoded_query}"),
+                        "snippet": data['Abstract'][:200] + "..." if len(data['Abstract']) > 200 else data['Abstract'],
+                        "relevance_score": 0.9,
+                        "content": data['Abstract'],
+                        "last_updated": datetime.now().strftime("%Y-%m-%d")
+                    })
+                
+                # Related topics
+                for topic in data.get('RelatedTopics', [])[:3]:
+                    if isinstance(topic, dict) and topic.get('Text'):
+                        results.append({
+                            "source_type": "RELATED_INFO",
+                            "title": f"Related: {topic.get('Text', '')[:50]}...",
+                            "url": topic.get('FirstURL', ''),
+                            "snippet": topic.get('Text', '')[:150] + "...",
+                            "relevance_score": 0.7,
+                            "content": topic.get('Text', ''),
+                            "last_updated": datetime.now().strftime("%Y-%m-%d")
+                        })
+                        
+            time.sleep(0.5)  # Rate limiting
+            
+        except Exception as e:
+            logger.warning(f"DuckDuckGo search failed: {e}")
+            
+        return results
+    
+    def _search_wikipedia(self, query: str) -> List[Dict[str, Any]]:
+        """Search Wikipedia for relevant articles"""
+        results = []
+        try:
+            # Wikipedia API search
+            encoded_query = urllib.parse.quote_plus(query)
+            search_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{encoded_query}"
+            
+            headers = {
+                'User-Agent': 'AgenTech-Research-Hub/1.0 (educational-use)',
+                'Accept': 'application/json'
+            }
+            
+            response = requests.get(search_url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not data.get('type') == 'disambiguation':
+                    results.append({
+                        "source_type": "ENCYCLOPEDIA", 
+                        "title": data.get('title', query),
+                        "url": data.get('content_urls', {}).get('desktop', {}).get('page', ''),
+                        "snippet": data.get('extract', '')[:200] + "..." if data.get('extract') else '',
+                        "relevance_score": 0.85,
+                        "content": data.get('extract', ''),
+                        "last_updated": datetime.now().strftime("%Y-%m-%d")
+                    })
+                    
+            time.sleep(0.5)  # Rate limiting
+            
+        except Exception as e:
+            logger.warning(f"Wikipedia search failed: {e}")
+            
+        return results
+    
+    def _search_reddit(self, query: str) -> List[Dict[str, Any]]:
+        """Search Reddit for discussions"""
+        results = []
+        try:
+            # Reddit search API (limited but no auth required)
+            encoded_query = urllib.parse.quote_plus(query)
+            url = f"https://www.reddit.com/search.json?q={encoded_query}&sort=relevance&limit=3"
+            
+            headers = {
+                'User-Agent': 'AgenTech-Research-Hub/1.0 (educational-use)'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                
+                for post in data.get('data', {}).get('children', [])[:2]:
+                    post_data = post.get('data', {})
+                    if post_data.get('title'):
+                        results.append({
+                            "source_type": "DISCUSSION",
+                            "title": f"Reddit Discussion: {post_data['title'][:60]}...",
+                            "url": f"https://www.reddit.com{post_data.get('permalink', '')}",
+                            "snippet": (post_data.get('selftext', '') or 'Discussion thread')[:150] + "...",
+                            "relevance_score": min(0.7, post_data.get('score', 0) / 100),
+                            "content": post_data.get('selftext', 'Reddit discussion'),
+                            "last_updated": datetime.now().strftime("%Y-%m-%d")
+                        })
+                        
+            time.sleep(0.5)  # Rate limiting
+            
+        except Exception as e:
+            logger.warning(f"Reddit search failed: {e}")
+            
+        return results
+    
+    def _search_github(self, query: str) -> List[Dict[str, Any]]:
+        """Search GitHub for relevant repositories"""
+        results = []
+        try:
+            # GitHub search API (limited rate without auth)
+            encoded_query = urllib.parse.quote_plus(query)
+            url = f"https://api.github.com/search/repositories?q={encoded_query}&sort=stars&order=desc"
+            
+            headers = {
+                'User-Agent': 'AgenTech-Research-Hub/1.0',
+                'Accept': 'application/vnd.github.v3+json'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                
+                for repo in data.get('items', [])[:2]:
+                    results.append({
+                        "source_type": "CODE_REPOSITORY",
+                        "title": f"GitHub: {repo.get('full_name', '')}",
+                        "url": repo.get('html_url', ''),
+                        "snippet": (repo.get('description', '') or 'Code repository')[:150] + "...",
+                        "relevance_score": min(0.8, repo.get('stargazers_count', 0) / 1000),
+                        "content": repo.get('description', ''),
+                        "last_updated": repo.get('updated_at', '')[:10] if repo.get('updated_at') else datetime.now().strftime("%Y-%m-%d")
+                    })
+                    
+            time.sleep(1)  # Rate limiting for GitHub
+            
+        except Exception as e:
+            logger.warning(f"GitHub search failed: {e}")
+            
+        return results
+    
+    def _get_fallback_sources(self, query: str) -> List[Dict[str, Any]]:
+        """Fallback to simulated sources if real search fails"""
+        logger.warning("Using fallback simulated sources")
+        category = self._detect_topic_category(query)
+        return self._get_authoritative_sources(query, category)
     
     async def _academic_search(self, search_terms: List[str]) -> List[Dict[str, Any]]:
         """Simulate academic paper search"""

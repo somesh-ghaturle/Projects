@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .testing { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <h1>🔧 AgenTech API Connection Test</h1>
+    <div id="status" class="status testing">🔍 Testing API connection...</div>
+    <div id="details"></div>
+    
+    <script>
+        async function testAPI() {
+            const statusDiv = document.getElementById('status');
+            const detailsDiv = document.getElementById('details');
+            
+            try {
+                statusDiv.innerHTML = '🔍 Testing API connection...';
+                statusDiv.className = 'status testing';
+                
+                // Test health endpoint
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    statusDiv.innerHTML = '✅ API Connection Successful!';
+                    statusDiv.className = 'status success';
+                    detailsDiv.innerHTML = `
+                        <h3>Connection Details:</h3>
+                        <ul>
+                            <li><strong>Status:</strong> ${data.status}</li>
+                            <li><strong>Service:</strong> ${data.service}</li>
+                            <li><strong>API URL:</strong> http://localhost:8000</li>
+                            <li><strong>CORS:</strong> Working ✅</li>
+                        </ul>
+                        <p><strong>✅ Your web interface should now show "System Online"</strong></p>
+                    `;
+                } else {
+                    throw new Error('API returned unhealthy status');
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = '❌ API Connection Failed';
+                statusDiv.className = 'status error';
+                detailsDiv.innerHTML = `
+                    <h3>Error Details:</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <h3>Troubleshooting:</h3>
+                    <ul>
+                        <li>Ensure API server is running: <code>curl http://localhost:8000/health</code></li>
+                        <li>Check server logs: <code>tail -f server.log</code></li>
+                        <li>Restart API server: <code>./start_server.sh</code></li>
+                    </ul>
+                `;
+            }
+        }
+        
+        // Test immediately
+        testAPI();
+        
+        // Test every 5 seconds
+        setInterval(testAPI, 5000);
+    </script>
+</body>
+</html>

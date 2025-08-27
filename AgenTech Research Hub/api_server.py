@@ -8,6 +8,7 @@ import os
 sys.path.append('src')
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, Any
 import asyncio
@@ -15,6 +16,15 @@ import asyncio
 from agents.researcher_agent import ResearcherAgent
 
 app = FastAPI(title="AgenTech Research Hub API", version="1.0.0")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with specific origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ResearchRequest(BaseModel):
     query: str

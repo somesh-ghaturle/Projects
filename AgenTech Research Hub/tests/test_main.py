@@ -50,10 +50,9 @@ class TestApplication:
         """Test settings loading"""
         settings = Settings()
         
-        assert settings.APP_NAME is not None
-        assert settings.APP_VERSION is not None
-        assert isinstance(settings.DEBUG, bool)
-        assert isinstance(settings.API_PORT, int)
+        assert settings.app_name is not None
+        assert settings.app_version is not None
+        assert settings.log_level is not None
 
 
 class TestSettings:
@@ -63,27 +62,25 @@ class TestSettings:
         """Test default configuration values"""
         settings = Settings()
         
-        assert settings.APP_NAME == "New AI Project"
-        assert settings.APP_VERSION == "1.0.0"
-        assert settings.API_HOST == "0.0.0.0"
-        assert settings.API_PORT == 8000
-        assert settings.OLLAMA_BASE_URL == "http://localhost:11434"
-        assert settings.OLLAMA_MODEL == "llama3"
+        assert settings.app_name == "Multi-Agent AI Research Assistant"
+        assert settings.app_version == "1.0.0"
+        assert settings.ollama_base_url == "http://localhost:11434"
+        assert settings.ollama_model == "llama3"
     
     def test_environment_override(self):
         """Test environment variable override"""
         import os
         
         # Set environment variable
-        os.environ["APP_NAME"] = "Test App"
+        os.environ["app_name"] = "Test App"
         
         # Create new settings instance
         settings = Settings()
         
-        assert settings.APP_NAME == "Test App"
+        assert settings.app_name == "Test App"
         
         # Clean up
-        del os.environ["APP_NAME"]
+        del os.environ["app_name"]
 
 
 if __name__ == "__main__":

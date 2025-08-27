@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgenTech Research Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #1e1b4b 100%);
+        }
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .loading {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result-item {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .professional-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .professional-button:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+        .status-online { color: #10b981; }
+        .status-warning { color: #f59e0b; }
+        .status-offline { color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-robot text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">AgenTech Research Hub</h1>
+                        <p class="text-sm opacity-90">AI-Powered Multi-Agent Research Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="status-indicator" class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-sm">System Online</span>
+                    </div>
+                    <button onclick="window.open('http://localhost:8000/docs', '_blank')" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition border border-white border-opacity-20">
+                        <i class="fas fa-book mr-2"></i>API Docs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Search Section -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Start Your Research</h2>
+                    <p class="text-gray-600">Enter your research question and let our AI agents find comprehensive insights</p>
+                </div>
+                
+                <form id="research-form" class="space-y-4">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input 
+                            type="text" 
+                            id="research-query" 
+                            placeholder="What would you like to research? (e.g., Latest AI developments, Climate change solutions...)"
+                            class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg transition-all duration-200"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <div class="flex items-center space-x-2">
+                            <label for="max-sources" class="text-sm font-medium text-gray-700">Sources:</label>
+                            <select id="max-sources" class="border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="5">5 sources</option>
+                                <option value="10" selected>10 sources</option>
+                                <option value="15">15 sources</option>
+                                <option value="20">20 sources</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <label for="research-type" class="text-sm font-medium text-gray-700">Type:</label>
+                            <select id="research-type" class="border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="comprehensive">Comprehensive</option>
+                                <option value="quick">Quick</option>
+                                <option value="academic">Academic</option>
+                                <option value="news">News</option>
+                            </select>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            id="search-btn"
+                            class="flex-1 professional-button text-white px-8 py-3 rounded-lg font-semibold min-w-40 shadow-lg"
+                        >
+                            <i class="fas fa-rocket mr-2"></i>
+                            Start Research
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loading-section" class="hidden max-w-4xl mx-auto mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                <div class="loading text-4xl text-blue-600 mb-4">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">AI Agents Working...</h3>
+                <p class="text-gray-600" id="loading-text">Initializing research workflow</p>
+                <div class="mt-4 bg-gray-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-700 h-2 rounded-full transition-all duration-500" id="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden max-w-6xl mx-auto">
+            <!-- Research Summary -->
+            <div id="research-summary" class="bg-white rounded-xl shadow-lg p-8 mb-8 result-item">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                    Research Summary
+                </h3>
+                <div id="summary-content" class="prose max-w-none">
+                    <!-- Summary will be populated here -->
+                </div>
+                <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
+                    <span id="sources-count">Sources analyzed: 0</span>
+                    <span id="quality-score">Quality score: 0%</span>
+                </div>
+            </div>
+
+            <!-- Sources Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sources-grid">
+                <!-- Sources will be populated here -->
+            </div>
+        </div>
+
+        <!-- Quick Start Examples -->
+        <div class="max-w-4xl mx-auto mt-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                Quick Start Examples
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="setQuery('Latest breakthroughs in quantum computing')" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-left card-hover">
+                    <i class="fas fa-atom text-2xl text-blue-500 mb-2"></i>
+                    <h4 class="font-semibold text-gray-800">Quantum Computing</h4>
+                    <p class="text-sm text-gray-600">Latest breakthroughs in quantum computing</p>
+                </button>
+                
+                <button onclick="setQuery('Impact of AI on software development')" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-left card-hover">
+                    <i class="fas fa-code text-2xl text-green-500 mb-2"></i>
+                    <h4 class="font-semibold text-gray-800">AI & Development</h4>
+                    <p class="text-sm text-gray-600">Impact of AI on software development</p>
+                </button>
+                
+                <button onclick="setQuery('Sustainable energy trends 2025')" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-left card-hover">
+                    <i class="fas fa-leaf text-2xl text-green-600 mb-2"></i>
+                    <h4 class="font-semibold text-gray-800">Green Energy</h4>
+                    <p class="text-sm text-gray-600">Sustainable energy trends 2025</p>
+                </button>
+                
+                <button onclick="setQuery('Cybersecurity threats in cloud computing')" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-left card-hover">
+                    <i class="fas fa-shield-alt text-2xl text-red-500 mb-2"></i>
+                    <h4 class="font-semibold text-gray-800">Cybersecurity</h4>
+                    <p class="text-sm text-gray-600">Cybersecurity threats in cloud computing</p>
+                </button>
+                
+                <button onclick="setQuery('Future of autonomous vehicles')" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-left card-hover">
+                    <i class="fas fa-car text-2xl text-purple-500 mb-2"></i>
+                    <h4 class="font-semibold text-gray-800">Autonomous Vehicles</h4>
+                    <p class="text-sm text-gray-600">Future of autonomous vehicles</p>
+                </button>
+                
+                <button onclick="setQuery('Machine learning in healthcare')" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-left card-hover">
+                    <i class="fas fa-heartbeat text-2xl text-pink-500 mb-2"></i>
+                    <h4 class="font-semibold text-gray-800">ML Healthcare</h4>
+                    <p class="text-sm text-gray-600">Machine learning in healthcare</p>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <i class="fas fa-robot text-2xl"></i>
+                <span class="text-lg font-semibold">AgenTech Research Hub</span>
+            </div>
+            <p class="text-gray-400 mb-4">Powered by AI Multi-Agent Technology</p>
+            <div class="flex items-center justify-center space-x-6 text-sm">
+                <a href="/docs" target="_blank" class="hover:text-purple-400 transition">
+                    <i class="fas fa-book mr-1"></i>API Documentation
+                </a>
+                <a href="/health" target="_blank" class="hover:text-purple-400 transition">
+                    <i class="fas fa-heartbeat mr-1"></i>System Health
+                </a>
+                <span class="text-gray-500">v1.0.0</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
