@@ -95,4 +95,23 @@ async def get_status():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import logging
+    
+    # Set up logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    print("🚀 Starting AgenTech Research Hub API Server...")
+    print("📍 Server will be available at: http://0.0.0.0:8000")
+    print("📖 API Documentation: http://0.0.0.0:8000/docs")
+    print("❤️ Health Check: http://0.0.0.0:8000/health")
+    
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=8000, 
+        log_level="info",
+        access_log=True
+    )

@@ -1,9 +1,28 @@
 // AgenTech Research Hub - Web UI JavaScript
 class AgenTechUI {
     constructor() {
-        // Try different API base URLs
-        this.apiBase = 'http://localhost:8000';
+        // Auto-detect API base URL based on environment
+        this.apiBase = this.detectApiBase();
         this.init();
+    }
+    
+    detectApiBase() {
+        // Check if we're running in Docker or locally
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            if (port === '3000') {
+                // Running in Docker - use nginx proxy (same origin)
+                return '';  // Use relative URLs - nginx will proxy to backend
+            } else {
+                // Running locally - direct API connection
+                return 'http://localhost:8000';
+            }
+        } else {
+            // Running on a different host - use same host different port
+            return `http://${hostname}:8000`;
+        }
     }
 
     async init() {
@@ -13,53 +32,44 @@ class AgenTechUI {
     }
 
     async checkSystemHealth() {
-        try {
-            // Try multiple endpoints to ensure connection
-            const response = await fetch(`${this.apiBase}/health`, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Accept': 'application/json',
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.status === 'healthy') {
-                    this.updateStatusIndicator('online', 'System Online');
-                    return;
-                }
-            }
-            
-            // If first attempt fails, try without CORS
-            const fallbackResponse = await fetch(`${this.apiBase}/health`);
-            if (fallbackResponse.ok) {
-                const data = await fallbackResponse.json();
-                if (data.status === 'healthy') {
-                    this.updateStatusIndicator('online', 'System Online');
-                    return;
-                }
-            }
-            
-            this.updateStatusIndicator('warning', 'System Issues');
-        } catch (error) {
-            console.warn('Primary API check failed, trying fallback...', error);
-            
-            // Try direct localhost connection
+        const possibleUrls = [
+            this.apiBase,  // Primary URL
+            'http://localhost:8000',  // Local development
+            'http://127.0.0.1:8000',  // Local development fallback
+            ''  // Relative URL for Docker nginx proxy
+        ];
+        
+        for (const baseUrl of possibleUrls) {
             try {
-                const directResponse = await fetch('http://127.0.0.1:8000/health');
-                if (directResponse.ok) {
-                    const data = await directResponse.json();
-                    this.apiBase = 'http://127.0.0.1:8000';
-                    this.updateStatusIndicator('online', 'System Online');
-                    return;
+                const url = baseUrl ? `${baseUrl}/health` : '/health';
+                console.log(`Trying API at: ${url}`);
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'healthy') {
+                        this.apiBase = baseUrl;  // Update to working URL
+                        this.updateStatusIndicator('online', 'System Online');
+                        console.log(`Successfully connected to API at: ${url}`);
+                        return;
+                    }
                 }
-            } catch (fallbackError) {
-                console.error('All health checks failed:', fallbackError);
+            } catch (error) {
+                console.log(`Failed to connect to ${baseUrl || 'relative URL'}: ${error.message}`);
+                continue;
             }
-            
-            this.updateStatusIndicator('offline', 'API Server Offline');
         }
+        
+        // If all attempts failed
+        this.updateStatusIndicator('offline', 'System Offline - API Connection Failed');
+        console.error('All API connection attempts failed');
     }
 
     updateStatusIndicator(status, text) {
