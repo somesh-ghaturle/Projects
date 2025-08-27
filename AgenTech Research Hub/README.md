@@ -478,6 +478,26 @@ python -m memory_profiler api_server.py
 - **API Documentation**: <http://localhost:8000/docs>
 - **Health Monitor**: <http://localhost:3000/health>
 
+## 🚀 Deployment Suggestions
+
+### Option 1: Cloud Deployment
+- **Heroku**: Deploy the Docker container using Heroku Container Registry
+- **AWS ECS**: Use Amazon Elastic Container Service for scalable deployment
+- **Google Cloud Run**: Serverless container deployment with auto-scaling
+- **DigitalOcean Apps**: Simple container deployment with managed infrastructure
+
+### Option 2: Streamlit Cloud (for Web Interface)
+- Fork this repository to your GitHub account
+- Sign up for free at [Streamlit Cloud](https://streamlit.io/cloud)
+- Connect your GitHub repository
+- Deploy the Streamlit version of the web interface
+- **Note**: Requires creating a Streamlit app version of the web interface
+
+### Option 3: Vercel/Netlify (Static Frontend)
+- Deploy the `web-ui/` folder as a static site
+- Configure environment variables for API endpoints
+- Suitable for frontend-only deployments
+
 ---
 
 ## 👨‍💻 Author & License

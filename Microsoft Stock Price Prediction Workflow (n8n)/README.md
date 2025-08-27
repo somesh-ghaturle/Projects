@@ -5,16 +5,29 @@
 [![n8n](https://img.shields.io/badge/n8n-Workflow-EA4B71)](https://n8n.io/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Yahoo Finance](https://img.shields.io/badge/Yahoo%20Finance-API-purple)](https://finance.yahoo.com/)
-[![Discord## 👨‍💻 Author & License
+[![Discord## 👨‍- **Prediction Accuracy**: Consider implementing real ML models for production use
 
-All code and content in this repository is for educational and personal use.
+## 🚀 Deployment Suggestions
 
-**Somesh Ramesh Ghaturle**  
-MS in Data Science, Pace University
+### Option 1: n8n Cloud
+- Deploy your workflow on [n8n Cloud](https://n8n.io/cloud/) for managed hosting
+- Import the `trading-workflow.json` file directly
+- Set up scheduled triggers for automated trading signals
 
-📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
-🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
-💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)s://img.shields.io/badge/Discord-Webhook-5865F2)](https://discord.com/)
+### Option 2: Self-Hosted n8n
+- Deploy n8n on your own server using Docker
+- Perfect for custom configurations and data privacy
+- Can integrate with local databases and custom APIs
+
+### Option 3: Streamlit Dashboard
+- Create a Streamlit interface to display trading signals
+- Deploy on [Streamlit Cloud](https://streamlit.io/cloud)
+- **Note**: Would require adapting n8n workflow to work with Streamlit
+
+### Option 4: Cloud Functions
+- Convert workflow logic to **AWS Lambda** or **Google Cloud Functions**
+- Trigger via CloudWatch Events or Cloud Scheduler
+- Send notifications via SNS or Cloud Pub/Sub
 
 ## Overview
 
@@ -469,12 +482,16 @@ for (const ticker of tickers) {
 - **n8n Execution Failures**: Review workflow logs and node configurations
 - **Prediction Accuracy**: Consider implementing real ML models for production use
 
-## �‍💻 Author & License
+## 👨‍💻 Author & License
 
 All code and content in this repository is for educational and personal use.
 
 **Somesh Ramesh Ghaturle**  
 MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
 
 ---
 

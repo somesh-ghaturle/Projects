@@ -10,7 +10,35 @@
 
 ## Overview
 
-A powerful Model Context Protocol (MCP) server that provides intelligent document management and RAG (Retrieval-Augmented Generation)## 👨‍💻 Author & License
+A powerful Model Context Protocol (MCP) server that provides intelligent document management and RAG (Retrieval-Augmented Generation)##The server uses:
+- **MCP Protocol** for VS Code integration
+- **ChromaDB** for vector storage
+- **SQLite** for metadata
+- **Ollama** for local LLM
+- **Python 3.13+** runtime
+
+## � Deployment Suggestions
+
+### Option 1: Local Development Server
+- Keep running locally as an MCP server for VS Code
+- Best for personal document management and development
+
+### Option 2: Network Deployment
+- Deploy on a local server accessible across your network
+- Great for team document management within an organization
+
+### Option 3: Cloud Adaptation
+- Adapt for cloud deployment with managed vector databases
+- **Pinecone** or **Weaviate** instead of local ChromaDB
+- **OpenAI API** instead of local Ollama
+- Deploy on **AWS**, **Google Cloud**, or **Azure**
+
+### Option 4: Streamlit Interface
+- Create a Streamlit web interface for document management
+- Deploy on [Streamlit Cloud](https://streamlit.io/cloud)
+- **Note**: Would require creating a web-based version of the MCP tools
+
+## �👨‍💻 Author & Licenseuthor & License
 
 All code and content in this repository is for educational and personal use.
 

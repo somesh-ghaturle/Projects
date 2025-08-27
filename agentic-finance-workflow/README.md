@@ -389,7 +389,26 @@ This project is licensed under the MIT License. See LICENSE file for details.
 
 For support, please open an issue on GitHub or contact the development team.
 
-## 👨‍💻 Author & License
+## � Deployment Suggestions
+
+### Option 1: Streamlit Cloud (Recommended)
+- Fork this repository to your GitHub account
+- Sign up for free at [Streamlit Cloud](https://streamlit.io/cloud)
+- Deploy the Streamlit version directly from GitHub
+- Perfect for showcasing financial analysis capabilities
+
+### Option 2: FastAPI Cloud Deployment
+- **Heroku**: Deploy the FastAPI backend with web interface
+- **Railway**: Modern platform for full-stack deployment
+- **Render**: Free tier available for FastAPI applications
+- **Vercel**: Deploy the web interface as a static frontend
+
+### Option 3: Docker Cloud Hosting
+- **AWS ECS**: Enterprise-grade container deployment
+- **Google Cloud Run**: Serverless scaling with pay-per-use
+- **DigitalOcean Apps**: Simple container deployment platform
+
+## �👨‍💻 Author & License
 
 All code and content in this repository is for educational and personal use.
 

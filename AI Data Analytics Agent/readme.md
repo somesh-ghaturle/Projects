@@ -3,7 +3,30 @@
 > Intelligent data analytics platform powered by local LLMs and Streamlit for comprehensive data analysis workflows
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=f## 👨‍💻 Author & License
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=f## - **Ollama connection error:** Make sure `ollama serve` is running and the model is pulled
+- **Memory issues:** Try using a smaller LLM model or reduce dataset size
+- **Import errors:** Verify all dependencies are installed with `pip install -r requirements.txt`
+- **Port conflicts:** Check if port 8501 is available or specify a different port
+
+## 🚀 Deployment Suggestions
+
+### Option 1: Streamlit Cloud (Recommended)
+- Fork this repository to your GitHub account
+- Sign up for free at [Streamlit Cloud](https://streamlit.io/cloud)
+- Connect your GitHub repository and deploy
+- **Note**: You'll need to modify the app to use cloud-based LLM APIs instead of local Ollama
+
+### Option 2: Local Network Deployment
+- Deploy on your local network using `streamlit run --server.address 0.0.0.0`
+- Access from other devices on your network
+- Keep Ollama running locally for AI processing
+
+### Option 3: Cloud Hosting
+- **Heroku**: Deploy with Streamlit and cloud LLM integration
+- **AWS EC2**: Full control over environment with Ollama installation
+- **Google Cloud**: Use Streamlit with Vertex AI integration
+
+## �👨‍💻 Author & Licenseuthor & License
 
 All code and content in this repository is for educational and personal use.
 
