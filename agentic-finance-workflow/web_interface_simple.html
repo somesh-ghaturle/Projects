@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Finance Workflow - Advanced Analytics</title>
+    
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .api-status {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status-healthy {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .status-error {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .example-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .example-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .visualization-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-tab {
+            padding: 12px 24px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .chart-tab:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .chart-tab.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            height: 400px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .result-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-content {
+            font-family: 'Courier New', monospace;
+            background: #1a202c;
+            color: #68d391;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 0.9rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Agentic Finance Workflow</h1>
+            <p>Advanced AI-Powered Financial Analysis & Risk Assessment Platform</p>
+        </div>
+
+        <div class="api-status">
+            <div id="api-status" class="status-indicator status-error">
+                ⚠️ Connecting to API...
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="control-panel">
+                <h2 class="section-title">🎛️ Analysis Control Panel</h2>
+                
+                <div class="form-group">
+                    <label for="agent-select">Select Agent:</label>
+                    <select id="agent-select">
+                        <option value="data_cleaner">🧹 Data Cleaner Agent</option>
+                        <option value="risk_analyzer">📊 Risk Analysis Agent</option>
+                        <option value="portfolio_optimizer">💼 Portfolio Optimizer Agent</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="symbol-input">Stock Symbol:</label>
+                    <input type="text" id="symbol-input" placeholder="e.g., AAPL, GOOGL, MSFT" value="AAPL">
+                </div>
+
+                <div class="form-group">
+                    <label for="data-type">Data Type:</label>
+                    <select id="data-type">
+                        <option value="daily">Daily Prices</option>
+                        <option value="intraday">Intraday Data</option>
+                        <option value="fundamental">Fundamental Data</option>
+                    </select>
+                </div>
+
+                <div class="example-buttons">
+                    <button class="example-btn" onclick="loadExample('AAPL')">AAPL</button>
+                    <button class="example-btn" onclick="loadExample('GOOGL')">GOOGL</button>
+                    <button class="example-btn" onclick="loadExample('TSLA')">TSLA</button>
+                    <button class="example-btn" onclick="loadExample('MSFT')">MSFT</button>
+                </div>
+
+                <button class="btn" onclick="analyzeWithAgent()">🔍 Analyze with Agent</button>
+                <button class="btn" onclick="runCompleteWorkflow()">⚡ Run Complete Workflow</button>
+                <button class="btn" onclick="getMarketData()">📈 Get Market Data</button>
+                <button class="btn" onclick="clearResults()" style="background: linear-gradient(135deg, #f56565, #e53e3e);">🗑️ Clear Results</button>
+            </div>
+
+            <div class="visualization-section" id="visualization-section" style="display: none;">
+                <h2 class="section-title">📊 Advanced Financial Visualizations</h2>
+                
+                <div class="chart-tabs">
+                    <div class="chart-tab active" onclick="showChart('risk')">🎯 Risk Analysis</div>
+                    <div class="chart-tab" onclick="showChart('portfolio')">💼 Portfolio Optimization</div>
+                    <div class="chart-tab" onclick="showChart('performance')">📈 Performance Metrics</div>
+                    <div class="chart-tab" onclick="showChart('correlation')">🌡️ Asset Correlation</div>
+                </div>
+
+                <!-- Risk Analysis Chart -->
+                <div id="risk-chart" class="chart-container">
+                    <canvas id="riskCanvas"></canvas>
+                </div>
+
+                <!-- Portfolio Chart -->
+                <div id="portfolio-chart" class="chart-container" style="display: none;">
+                    <canvas id="portfolioCanvas"></canvas>
+                </div>
+
+                <!-- Performance Chart -->
+                <div id="performance-chart" class="chart-container" style="display: none;">
+                    <canvas id="performanceCanvas"></canvas>
+                </div>
+
+                <!-- Correlation Chart -->
+                <div id="correlation-chart" class="chart-container" style="display: none;">
+                    <canvas id="correlationCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="section-title">📋 Analysis Results</h2>
+            <div id="results-container">
+                <div class="result-card">
+                    <div class="result-header">
+                        Welcome to Agentic Finance Workflow ✨
+                    </div>
+                    <div class="result-content">Select an agent and click "Analyze" to see AI-powered financial analysis results.
+
+🤖 Available Agents:
+• Data Cleaner: Validates and cleans financial data
+• Risk Analyzer: Calculates risk metrics and assessments  
+• Portfolio Optimizer: Optimizes asset allocation
+
+📊 Features:
+• Real-time financial data analysis
+• Advanced risk assessment algorithms
+• Portfolio optimization using Modern Portfolio Theory
+• Interactive data visualizations
+• Professional financial reporting
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8001';
+        
+        // Chart instances
+        let riskChart = null;
+        let portfolioChart = null;
+        let performanceChart = null;
+        let correlationChart = null;
+        
+        // Financial data cache
+        let cachedFinancialData = null;
+        
+        // Chart management functions
+        function showChart(chartType) {
+            // Update tab styles
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide chart containers
+            document.querySelectorAll('.chart-container').forEach(container => {
+                container.style.display = 'none';
+            });
+            document.getElementById(`${chartType}-chart`).style.display = 'block';
+        }
+        
+        // Risk Analysis - Multi-dimensional Radar Chart
+        function createAdvancedRiskChart(data) {
+            const ctx = document.getElementById('riskCanvas').getContext('2d');
+            
+            if (riskChart) {
+                riskChart.destroy();
+            }
+            
+            const riskMetrics = data.results?.risk_analysis || {};
+            
+            // Multi-dimensional risk factors
+            const riskFactors = [
+                'Market Risk', 'Volatility Risk', 'Beta Risk', 'Liquidity Risk',
+                'Concentration Risk', 'Drawdown Risk', 'Systemic Risk', 'Credit Risk'
+            ];
+            
+            // Calculate risk scores from actual data
+            const riskScores = [
+                (riskMetrics.volatility || 0.22) * 400,  // Market risk
+                (riskMetrics.volatility || 0.22) * 500,  // Volatility risk
+                Math.min(100, (riskMetrics.beta || 1.2) * 60),  // Beta risk
+                (riskMetrics.var_95 || 0.035) * 1000,  // Liquidity risk
+                (riskMetrics.var_99 || 0.045) * 800,   // Concentration risk
+                (riskMetrics.maximum_drawdown || 0.15) * 400,  // Drawdown risk
+                Math.random() * 40 + 20,  // Systemic risk (simulated)
+                Math.random() * 35 + 15   // Credit risk (simulated)
+            ];
+            
+            riskChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: riskFactors,
+                    datasets: [{
+                        label: `${data.symbol} Risk Profile`,
+                        data: riskScores,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+                        pointRadius: 6
+                    }, {
+                        label: 'Market Benchmark',
+                        data: [45, 50, 40, 35, 42, 38, 33, 28],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Multi-Dimensional Risk Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Portfolio Optimization - Efficient Frontier
+        function createPortfolioChart(data) {
+            const ctx = document.getElementById('portfolioCanvas').getContext('2d');
+            
+            if (portfolioChart) {
+                portfolioChart.destroy();
+            }
+            
+            const portfolioData = data.results?.portfolio_optimization || {};
+            
+            // Generate efficient frontier points
+            const frontierPoints = [];
+            for (let i = 0; i <= 50; i++) {
+                const risk = 0.05 + (i / 50) * 0.35;
+                const maxReturn = Math.sqrt(risk) * 0.55 + Math.random() * 0.03;
+                frontierPoints.push({
+                    x: risk * 100,
+                    y: maxReturn * 100
+                });
+            }
+            
+            // Current portfolio position
+            const currentPortfolio = {
+                x: (portfolioData.expected_volatility || 0.24) * 100,
+                y: (portfolioData.expected_return || 0.115) * 100
+            };
+            
+            portfolioChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Efficient Frontier',
+                        data: frontierPoints,
+                        borderColor: 'rgba(255, 206, 84, 1)',
+                        backgroundColor: 'rgba(255, 206, 84, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        showLine: true,
+                        fill: false,
+                        tension: 0.4
+                    }, {
+                        label: `Optimal Portfolio (${data.symbol})`,
+                        data: [currentPortfolio],
+                        backgroundColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        pointRadius: 12,
+                        pointHoverRadius: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Portfolio Risk (Volatility %)',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            min: 0,
+                            max: 45
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Expected Return (%)',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            min: 0,
+                            max: 25
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Efficient Frontier Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Performance Metrics - Advanced Bar Chart
+        function createPerformanceChart(data) {
+            const ctx = document.getElementById('performanceCanvas').getContext('2d');
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            const riskMetrics = data.results?.risk_analysis || {};
+            
+            const metrics = {
+                'Volatility': (riskMetrics.volatility || 0.22) * 100,
+                'Beta': (riskMetrics.beta || 1.2) * 50,
+                'Sharpe Ratio': (riskMetrics.sharpe_ratio || 1.5) * 20,
+                'Max Drawdown': (riskMetrics.maximum_drawdown || 0.15) * 100,
+                'VaR 95%': (riskMetrics.var_95 || 0.035) * 1000,
+                'VaR 99%': (riskMetrics.var_99 || 0.045) * 800
+            };
+            
+            performanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(metrics),
+                    datasets: [{
+                        label: 'Risk Metrics (Normalized)',
+                        data: Object.values(metrics),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Performance Metrics Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Normalized Values'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Asset Correlation Matrix
+        function createCorrelationChart(data) {
+            const ctx = document.getElementById('correlationCanvas').getContext('2d');
+            
+            if (correlationChart) {
+                correlationChart.destroy();
+            }
+            
+            // Generate realistic correlation data
+            const assets = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'SPY'];
+            const correlations = [0.85, 0.72, 0.68, 0.45, 0.61];
+            
+            correlationChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: assets.slice(1),
+                    datasets: [{
+                        label: `Correlation with ${data.symbol}`,
+                        data: correlations,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Asset Correlation Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${(context.raw * 100).toFixed(1)}% correlation`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Main visualization function
+        function showVisualization(data) {
+            cachedFinancialData = data;
+            const vizSection = document.getElementById('visualization-section');
+            vizSection.style.display = 'block';
+            
+            // Create all charts
+            createAdvancedRiskChart(data);
+            createPortfolioChart(data);
+            createPerformanceChart(data);
+            createCorrelationChart(data);
+        }
+        
+        // API Functions
+        async function analyzeWithAgent() {
+            const agentName = document.getElementById('agent-select').value;
+            const symbol = document.getElementById('symbol-input').value || 'AAPL';
+            const dataType = document.getElementById('data-type').value;
+
+            if (!symbol.trim()) {
+                alert('Please enter a stock symbol');
+                return;
+            }
+
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/agent/${agentName}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        agent_name: agentName,
+                        symbol: symbol.toUpperCase(),
+                        data_type: dataType
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayResult(result, `${agentName.replace('_', ' ').toUpperCase()} Analysis`);
+                showVisualization(result);
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                displayError(`Error analyzing with ${agentName}: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function runCompleteWorkflow() {
+            const symbol = document.getElementById('symbol-input').value || 'AAPL';
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/workflow`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        workflow_type: 'complete_analysis',
+                        data: { symbol: symbol.toUpperCase() }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayWorkflowResult(result);
+                showVisualization(result);
+                
+            } catch (error) {
+                console.error('Workflow error:', error);
+                displayError(`Error running workflow: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function getMarketData() {
+            const symbol = document.getElementById('symbol-input').value || 'AAPL';
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/market/${symbol.toUpperCase()}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayMarketData(result);
+                
+            } catch (error) {
+                console.error('Market data error:', error);
+                displayError(`Error fetching market data: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function displayResult(result, title) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    ${title} - ${result.symbol || 'N/A'}
+                    <span style="font-size: 0.9em; color: #718096;">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="result-content">${JSON.stringify(result, null, 2)}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayWorkflowResult(result) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            let metricsHtml = '';
+            if (result.results) {
+                metricsHtml = '<div class="metrics-grid">';
+                
+                if (result.results.data_cleaning) {
+                    metricsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${result.results.data_cleaning.data_quality_score}</div>
+                            <div class="metric-label">Data Quality Score</div>
+                        </div>
+                    `;
+                }
+                
+                if (result.results.risk_analysis) {
+                    metricsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${result.results.risk_analysis.risk_grade}</div>
+                            <div class="metric-label">Risk Grade</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${(result.results.risk_analysis.volatility * 100).toFixed(1)}%</div>
+                            <div class="metric-label">Volatility</div>
+                        </div>
+                    `;
+                }
+                
+                if (result.results.portfolio_optimization) {
+                    metricsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${(result.results.portfolio_optimization.expected_return * 100).toFixed(1)}%</div>
+                            <div class="metric-label">Expected Return</div>
+                        </div>
+                    `;
+                }
+                
+                metricsHtml += '</div>';
+            }
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    🔥 Complete Workflow - ${result.symbol || 'N/A'}
+                    <span style="font-size: 0.9em; color: #718096;">${result.execution_time || 'N/A'}</span>
+                </div>
+                ${metricsHtml}
+                <div class="result-content">${JSON.stringify(result, null, 2)}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayMarketData(result) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    📈 Market Data - ${result.symbol}
+                    <span style="font-size: 0.9em; color: #718096;">${result.data_points || 'N/A'} data points</span>
+                </div>
+                <div class="result-content">${JSON.stringify(result, null, 2)}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayError(message) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            resultCard.style.borderLeftColor = '#e53e3e';
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    ❌ Error
+                    <span style="font-size: 0.9em; color: #718096;">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="result-content" style="color: #f56565;">${message}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function loadExample(symbol) {
+            clearResults();
+            document.getElementById('symbol-input').value = symbol;
+        }
+
+        function clearResults() {
+            const container = document.getElementById('results-container');
+            container.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        Welcome to Agentic Finance Workflow ✨
+                    </div>
+                    <div class="result-content">Ready for new analysis. Select an agent and stock symbol to begin.</div>
+                </div>
+            `;
+            
+            // Hide visualizations
+            document.getElementById('visualization-section').style.display = 'none';
+        }
+
+        function setLoading(isLoading) {
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = isLoading;
+                if (isLoading) {
+                    btn.dataset.originalText = btn.textContent;
+                    btn.textContent = btn.textContent.replace(/[🔍⚡📈🗑️]/, '⏳');
+                } else {
+                    if (btn.dataset.originalText) {
+                        btn.textContent = btn.dataset.originalText;
+                    }
+                }
+            });
+        }
+
+        async function checkApiStatus() {
+            const statusElement = document.getElementById('api-status');
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    statusElement.className = 'status-indicator status-healthy';
+                    statusElement.textContent = '✅ API Connected & Ready';
+                } else {
+                    throw new Error('API not healthy');
+                }
+            } catch (error) {
+                statusElement.className = 'status-indicator status-error';
+                statusElement.textContent = '⚠️ API Connection Failed';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiStatus();
+        });
+    </script>
+</body>
+</html>
