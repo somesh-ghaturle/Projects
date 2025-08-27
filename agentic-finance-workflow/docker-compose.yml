@@ -1,115 +1,23 @@
-# Docker Compose configuration for development environment
 version: '3.8'
 
 services:
-  # PostgreSQL database
-  postgres:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: agentic_finance_dev
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Redis cache
-  redis:
-    image: redis:6-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # GraphQL API server
-  graphql-api:
+  finance-api:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: agentic-finance-api
+    ports:
+      - "8001:8001"
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/agentic_finance_dev
-      - REDIS_URL=redis://redis:6379
-      - ENVIRONMENT=development
-    ports:
-      - "4000:4000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    volumes:
-      - ./data:/app/data
-      - ./workflows:/app/workflows
-      - ./configs:/app/configs
-    command: ["python", "-m", "graphql.server"]
-
-  # Web dashboard
-  dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "8050:8050"
-    depends_on:
-      - graphql-api
-    environment:
-      - GRAPHQL_ENDPOINT=http://graphql-api:4000/graphql
-
-  # Prometheus monitoring
-  prometheus:
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-
-  # Grafana dashboards
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
-    depends_on:
-      - prometheus
-
-  # Jaeger tracing
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - "16686:16686"
-      - "14268:14268"
-    environment:
-      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
-
-volumes:
-  postgres_data:
-  redis_data:
-  prometheus_data:
-  grafana_data:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   default:
-    name: agentic-finance-network
+    name: finance-network

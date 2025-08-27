@@ -1,3 +1,15 @@
+# Core Framework Dependencies for Docker Deployment
 fastapi==0.116.1
 uvicorn[standard]==0.35.0
 pydantic==2.11.7
+python-dotenv==1.1.1
+
+# HTTP Client for health checks
+httpx==0.28.1
+
+# Testing
+pytest==8.4.1
+pytest-asyncio==1.1.0
+
+# Security
+python-multipart==0.0.9

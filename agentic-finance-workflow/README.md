@@ -1,713 +1,394 @@
-# Agentic Finance Workflow
+# 🏦 Agentic Finance Workflow
 
-> Enterprise-grade multi-agent financial data processing and analysis platform
+> **Enterprise-grade multi-agent financial analysis platform with professional web interface**
 
-[![Build Status](https://github.com/your-org/agentic-finance-workflow/workflows/CI/badge.svg)](https://github.com/your-org/agentic-finance-workflow/actions)
-[![Coverage](https://codecov.io/gh/your-org/agentic-finance-workflow/branch/main/graph/badge.svg)](https://codecov.io/gh/your-org/agentic-finance-workflow)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Overview
+## 🎯 Overview
 
-Agentic Finance Workflow is a sophisticated multi-agent system designed for enterprise-grade financial data processing, analysis, and visualization. Built for institutions like quantitative hedge funds and investment banks, it provides a comprehensive platform for automated financial workflows with real-time processing capabilities.
+**Agentic Finance Workflow** is a production-ready multi-agent system designed for comprehensive financial data analysis. The platform features three specialized AI agents working in harmony to provide data cleaning, risk analysis, and portfolio optimization capabilities through an intuitive web interface.
 
-## 📚 Table of Contents
+### ✨ Key Features
 
-- [🏗️ Architecture Overview](#️-architecture-overview)
-- [📊 System Architecture Flowchart](#-system-architecture-flowchart)
-- [🔄 Workflow Process Flow](#-workflow-process-flow)
-- [🏢 Agent Interaction Diagram](#-agent-interaction-diagram)
-- [🐳 Docker Architecture](#-docker-architecture)
-- [📊 Data Flow Architecture](#-data-flow-architecture)
-- [📁 Detailed Project Structure](#-detailed-project-structure)
-- [🔄 Agent Workflow Execution Flow](#-agent-workflow-execution-flow)
-- [📋 Visual Architecture Summary](#-visual-architecture-summary)
-- [🤖 Agent Architecture](#-agent-architecture)
-- [🎯 Usage Examples](#-usage-examples)
-- [📈 Performance & Monitoring](#-performance--monitoring)
-- [🚀 Deployment](#-deployment)
+- **🤖 Multi-Agent Architecture**: Four specialized financial AI agents
+- **🌐 Professional Web Interface**: Responsive UI with real-time analysis  
+- **🐳 Docker Containerized**: Easy deployment with Docker support
+- **⚡ FastAPI Backend**: High-performance REST API with automatic documentation
+- **📊 Real Financial Calculations**: Professional-grade mathematical models
+- **📈 Advanced Visualizations**: Interactive charts with Chart.js
+- **🔮 Price Prediction Engine**: Multi-model ensemble forecasting with confidence intervals
+- **💰 Comprehensive Stock Database**: 30+ stocks across multiple sectors
 
-## 🏗️ Architecture Overview
+## 🏗️ Agent Architecture
 
-This project implements a **modular, scalable, and production-ready** agentic workflow specifically designed for financial data processing. The system is built with enterprise standards suitable for top-tier financial firms like Jane Street, BlackRock, and Goldman Sachs.
+### 🧹 Data Cleaner Agent
 
-### Key Design Principles
+- **Purpose**: Data quality assurance and preprocessing
+- **Capabilities**:
+  - Data validation and cleaning
+  - Missing value handling
+  - Outlier detection and treatment
+  - Quality score generation
 
-- **Modularity**: Independent agents with single responsibilities
-- **Scalability**: GraphQL-based unified data layer
-- **Reliability**: Comprehensive testing and error handling
-- **Maintainability**: Clear documentation and standardized interfaces
-- **Security**: Enterprise-grade data protection and access controls
+### 📊 Risk Analysis Agent
 
-## 📊 System Architecture Flowchart
+- **Purpose**: Comprehensive risk assessment
+- **Capabilities**:
+  - Value at Risk (VaR) calculation
+  - Volatility analysis using mathematical models
+  - Beta calculation against market
+  - Maximum drawdown analysis
+  - Risk grade assignment
 
-```mermaid
-graph TB
-    subgraph "Data Sources"
-        A[Market Data APIs]
-        B[Financial Databases]
-        C[CSV/JSON Files]
-        D[Real-time Feeds]
-    end
-    
-    subgraph "Data Ingestion Layer"
-        E[Data Collector Agent]
-        F[Data Validator Agent]
-    end
-    
-    subgraph "Processing Layer"
-        G[Data Cleaner Agent]
-        H[Analyzer Agent]
-        I[Risk Assessment Agent]
-        J[Portfolio Manager Agent]
-    end
-    
-    subgraph "Orchestration Layer"
-        K[Orchestrator Agent]
-        L[Workflow Engine]
-    end
-    
-    subgraph "API Layer"
-        M[FastAPI Server]
-        N[GraphQL Endpoint]
-        O[REST Endpoints]
-    end
-    
-    subgraph "Storage Layer"
-        P[(PostgreSQL)]
-        Q[(Redis Cache)]
-        R[File Storage]
-    end
-    
-    subgraph "Output Layer"
-        S[Reports Generator]
-        T[Visualization Dashboard]
-        U[Alert System]
-        V[Recommendation Engine]
-    end
-    
-    A --> E
-    B --> E
-    C --> E
-    D --> E
-    
-    E --> F
-    F --> G
-    G --> H
-    G --> I
-    G --> J
-    
-    H --> K
-    I --> K
-    J --> K
-    
-    K --> L
-    L --> M
-    M --> N
-    M --> O
-    
-    G --> P
-    G --> Q
-    H --> P
-    I --> P
-    J --> P
-    
-    K --> S
-    K --> T
-    K --> U
-    K --> V
-    
-    style K fill:#ff9999
-    style L fill:#ff9999
-    style M fill:#99ccff
-    style P fill:#99ff99
-    style Q fill:#99ff99
-```
+### 💼 Portfolio Optimizer Agent
 
-## 🔄 Workflow Process Flow
+- **Purpose**: Optimal asset allocation
+- **Capabilities**:
+  - Modern Portfolio Theory implementation
+  - Efficient frontier generation
+  - Weight optimization
+  - Return/risk optimization
 
-```mermaid
-flowchart TD
-    START([Start Workflow]) --> INPUT{Data Input Type}
-    
-    INPUT -->|File Upload| UPLOAD[File Processing]
-    INPUT -->|API Data| API[API Data Fetch]
-    INPUT -->|Real-time Stream| STREAM[Stream Processing]
-    
-    UPLOAD --> VALIDATE[Data Validation]
-    API --> VALIDATE
-    STREAM --> VALIDATE
-    
-    VALIDATE --> VALID{Valid Data?}
-    VALID -->|No| ERROR[Error Handling]
-    VALID -->|Yes| CLEAN[Data Cleaning]
-    
-    ERROR --> RETRY{Retry?}
-    RETRY -->|Yes| VALIDATE
-    RETRY -->|No| FAIL[Workflow Failed]
-    
-    CLEAN --> ANALYZE[Data Analysis]
-    ANALYZE --> RISK[Risk Assessment]
-    RISK --> PORTFOLIO[Portfolio Management]
-    
-    PORTFOLIO --> RESULTS[Generate Results]
-    RESULTS --> REPORT[Create Reports]
-    REPORT --> ALERTS[Send Alerts]
-    ALERTS --> STORE[(Store Results)]
-    
-    STORE --> END([Workflow Complete])
-    
-    style START fill:#90EE90
-    style END fill:#90EE90
-    style FAIL fill:#FFB6C1
-    style ERROR fill:#FFB6C1
-    style VALIDATE fill:#87CEEB
-    style CLEAN fill:#87CEEB
-    style ANALYZE fill:#DDA0DD
-    style RISK fill:#DDA0DD
-    style PORTFOLIO fill:#DDA0DD
-```
+### 🔮 Price Prediction Agent
 
-## 🏢 Agent Interaction Diagram
-
-```mermaid
-graph LR
-    subgraph "Input Agents"
-        DC[Data Collector]
-        DV[Data Validator]
-    end
-    
-    subgraph "Processing Agents"
-        CL[Cleaner Agent]
-        AN[Analyzer Agent]
-        RA[Risk Agent]
-        PM[Portfolio Agent]
-    end
-    
-    subgraph "Output Agents"
-        VIS[Visualizer Agent]
-        REC[Recommender Agent]
-        REP[Reporter Agent]
-    end
-    
-    subgraph "Control Agents"
-        ORC[Orchestrator]
-        MON[Monitor Agent]
-    end
-    
-    DC --> DV
-    DV --> CL
-    CL --> AN
-    CL --> RA
-    CL --> PM
-    
-    AN --> VIS
-    AN --> REC
-    RA --> REP
-    PM --> REP
-    
-    VIS --> REC
-    
-    ORC -.-> DC
-    ORC -.-> DV
-    ORC -.-> CL
-    ORC -.-> AN
-    ORC -.-> RA
-    ORC -.-> PM
-    ORC -.-> VIS
-    ORC -.-> REC
-    ORC -.-> REP
-    
-    MON -.-> ORC
-    
-    style ORC fill:#ff9999
-    style MON fill:#ffcc99
-    style DC fill:#99ccff
-    style DV fill:#99ccff
-    style CL fill:#99ff99
-    style AN fill:#99ff99
-    style RA fill:#99ff99
-    style PM fill:#99ff99
-    style VIS fill:#ffff99
-    style REC fill:#ffff99
-    style REP fill:#ffff99
-```
-
-## 🐳 Docker Architecture
-
-```mermaid
-graph TB
-    subgraph "Docker Compose Environment"
-        subgraph "Application Layer"
-            API[FastAPI Container<br/>Port: 8000]
-            GRAPHQL[GraphQL Server<br/>Port: 4000]
-            DASH[Dashboard<br/>Port: 8050]
-        end
-        
-        subgraph "Data Layer"
-            PG[(PostgreSQL<br/>Port: 5432)]
-            REDIS[(Redis Cache<br/>Port: 6379)]
-        end
-        
-        subgraph "Monitoring Layer"
-            PROM[Prometheus<br/>Port: 9090]
-            GRAF[Grafana<br/>Port: 3000]
-            JAEGER[Jaeger<br/>Port: 16686]
-        end
-        
-        subgraph "Load Balancer"
-            NGINX[Nginx<br/>Port: 80/443]
-        end
-    end
-    
-    subgraph "External"
-        CLIENT[Client Applications]
-        APIS[External APIs]
-    end
-    
-    CLIENT --> NGINX
-    NGINX --> API
-    NGINX --> GRAPHQL
-    NGINX --> DASH
-    
-    API --> PG
-    API --> REDIS
-    GRAPHQL --> PG
-    GRAPHQL --> REDIS
-    
-    API --> PROM
-    GRAPHQL --> PROM
-    PROM --> GRAF
-    
-    API --> JAEGER
-    GRAPHQL --> JAEGER
-    
-    APIS --> API
-    
-    style API fill:#99ccff
-    style GRAPHQL fill:#99ccff
-    style DASH fill:#99ccff
-    style PG fill:#99ff99
-    style REDIS fill:#99ff99
-    style PROM fill:#ffcc99
-    style GRAF fill:#ffcc99
-    style JAEGER fill:#ffcc99
-    style NGINX fill:#ff9999
-```
-
-## � Data Flow Architecture
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API as FastAPI Server
-    participant Orchestrator
-    participant Cleaner as Data Cleaner
-    participant Analyzer
-    participant DB as PostgreSQL
-    participant Cache as Redis
-    participant Monitor
-    
-    Client->>API: Submit Data Request
-    API->>Orchestrator: Initialize Workflow
-    
-    Note over Orchestrator: Workflow Planning
-    Orchestrator->>Cleaner: Clean Data Task
-    Cleaner->>DB: Store Clean Data
-    Cleaner->>Cache: Cache Results
-    Cleaner-->>Orchestrator: Cleaning Complete
-    
-    Orchestrator->>Analyzer: Analysis Task
-    Analyzer->>DB: Query Clean Data
-    Analyzer->>Cache: Cache Analysis
-    Analyzer-->>Orchestrator: Analysis Complete
-    
-    Orchestrator->>Monitor: Log Workflow Status
-    Orchestrator-->>API: Results Ready
-    API-->>Client: Return Results
-    
-    Note over Monitor: Health Monitoring
-    Monitor->>DB: Store Metrics
-    Monitor->>Cache: Update Status
-```
-
-## �📁 Detailed Project Structure
-
-```bash
-agentic-finance-workflow/
-│
-├── 📋 Configuration & Environment
-│   ├── .env.example                 # Environment variables template
-│   ├── .gitignore                   # Git ignore patterns
-│   ├── requirements.txt             # Python dependencies
-│   ├── docker-compose.yml          # Multi-service Docker setup
-│   ├── Dockerfile                   # Container build instructions
-│   └── configs/                     # Configuration files
-│       ├── agents.yaml              # Agent configurations
-│       ├── database.yaml            # Database settings
-│       └── logging.yaml             # Logging configuration
-│
-├── 🤖 Core Application
-│   ├── main.py                      # Application entry point
-│   ├── api_server.py               # FastAPI server implementation
-│   └── agents/                      # Agent implementations
-│       ├── __init__.py              # Agent package initialization
-│       ├── base_agent.py            # Base agent class
-│       ├── cleaner/                 # Data cleaning agents
-│       │   ├── __init__.py
-│       │   ├── cleaner_agent.py     # Main cleaning logic
-│       │   └── rules.py             # Cleaning rules engine
-│       ├── analyzer/                # Data analysis agents
-│       │   ├── __init__.py
-│       │   ├── statistical.py      # Statistical analysis
-│       │   └── ml_models.py         # Machine learning models
-│       ├── orchestrator/            # Workflow coordination
-│       │   ├── __init__.py
-│       │   ├── orchestrator.py      # Main orchestrator
-│       │   └── workflow_engine.py   # Workflow execution engine
-│       └── monitor/                 # System monitoring
-│           ├── __init__.py
-│           └── health_monitor.py    # Health check agent
-│
-├── 🌐 API & GraphQL Layer
-│   └── graphql/                     # GraphQL implementation
-│       ├── schema.graphql           # GraphQL schema definitions
-│       ├── resolvers/               # Query resolvers
-│       │   ├── data_resolver.py     # Data query resolvers
-│       │   └── agent_resolver.py    # Agent status resolvers
-│       └── server.py                # GraphQL server
-│
-├── 🔄 Workflows & Processing
-│   └── workflows/                   # Workflow definitions
-│       ├── data_processing.yaml     # Data processing workflows
-│       ├── risk_analysis.yaml       # Risk assessment workflows
-│       └── portfolio_mgmt.yaml      # Portfolio management workflows
-│
-├── 💾 Data Management
-│   └── data/                        # Data storage
-│       ├── raw/                     # Raw input data
-│       │   ├── market_data/         # Market data files
-│       │   └── financial_reports/   # Financial reports
-│       ├── processed/               # Cleaned datasets
-│       │   ├── cleaned_prices.parquet
-│       │   └── validated_trades.parquet
-│       └── cache/                   # Temporary cached data
-│           ├── analysis_cache/      # Analysis results cache
-│           └── model_cache/         # ML model cache
-│
-├── 📚 Documentation
-│   ├── README.md                    # This file
-│   ├── CONTRIBUTING.md              # Contribution guidelines
-│   ├── DEPLOYMENT_GUIDE.md          # Deployment instructions
-│   └── docs/                        # Additional documentation
-│       ├── architecture.md          # Architecture documentation
-│       ├── api_reference.md         # API reference
-│       └── user_guide.md           # User guide
-│
-└── 🛠️ Development & Deployment
-    ├── scripts/                     # Utility scripts (if needed)
-    └── k8s/                        # Kubernetes manifests (if used)
-        ├── deployment.yaml
-        ├── service.yaml
-        └── configmap.yaml
-```
-
-## 🔄 Agent Workflow Execution Flow
-
-```mermaid
-stateDiagram-v2
-    [*] --> Initialized
-    
-    Initialized --> DataIngestion: Start Workflow
-    DataIngestion --> DataValidation: Data Received
-    DataValidation --> DataCleaning: Validation Passed
-    DataValidation --> ErrorHandling: Validation Failed
-    
-    DataCleaning --> Analysis: Cleaning Complete
-    Analysis --> RiskAssessment: Analysis Complete
-    RiskAssessment --> PortfolioManagement: Risk Calculated
-    
-    PortfolioManagement --> ReportGeneration: Portfolio Updated
-    ReportGeneration --> AlertGeneration: Reports Ready
-    AlertGeneration --> Complete: Alerts Sent
-    
-    ErrorHandling --> Retry: Retryable Error
-    ErrorHandling --> Failed: Fatal Error
-    Retry --> DataValidation: Retry Attempt
-    
-    Complete --> [*]
-    Failed --> [*]
-    
-    note right of DataValidation
-        Validates data format,
-        completeness, and quality
-    end note
-    
-    note right of Analysis
-        Statistical analysis,
-        ML predictions,
-        trend identification
-    end note
-    
-    note right of RiskAssessment
-        VaR calculation,
-        stress testing,
-        risk metrics
-    end note
-```
-
-## 📋 Visual Architecture Summary
-
-The above diagrams provide a comprehensive view of the agentic finance workflow system:
-
-### 🎯 **Key Visual Components:**
-
-1. **System Architecture Flowchart**: Shows the complete data flow from sources to outputs
-2. **Workflow Process Flow**: Illustrates the step-by-step execution process
-3. **Agent Interaction Diagram**: Maps relationships between different agents
-4. **Docker Architecture**: Displays containerized deployment structure
-5. **Data Flow Sequence**: Shows timing and interaction sequences
-6. **Project Structure**: Detailed file organization and component layout
-7. **State Machine**: Workflow execution states and transitions
-
-### 🔄 **Workflow Execution Path:**
-```
-Data Input → Validation → Cleaning → Analysis → Risk Assessment → Portfolio Management → Reports → Alerts
-```
-
-### 🏗️ **Architecture Layers:**
-- **Presentation Layer**: FastAPI, GraphQL, Dashboard
-- **Business Logic Layer**: Agents (Cleaner, Analyzer, Risk, Portfolio)
-- **Orchestration Layer**: Workflow Engine, Orchestrator
-- **Data Layer**: PostgreSQL, Redis, File Storage
-- **Infrastructure Layer**: Docker, Monitoring, Load Balancing
-
-## 🤖 Agent Architecture
-
-### Core Agents
-
-1. **Data Cleaner Agent**
-   - Handles missing values, outliers, and data type conversions
-   - Implements financial data-specific cleaning rules
-   - Maintains data lineage and audit trails
-
-2. **Data Validator Agent**
-   - Performs data quality checks and anomaly detection
-   - Validates business rules and regulatory compliance
-   - Implements real-time monitoring and alerting
-
-3. **Financial Analyzer Agent**
-   - Conducts statistical analysis and ML modeling
-   - Performs risk assessment and portfolio optimization
-   - Implements quantitative finance algorithms
-
-4. **Visualization Agent**
-   - Generates interactive dashboards and reports
-   - Creates publication-ready charts and graphs
-   - Supports real-time data streaming
-
-5. **Recommendation Agent**
-   - Provides actionable trading and investment insights
-   - Implements ML-based recommendation systems
-   - Supports A/B testing for strategy optimization
-
-6. **Orchestrator Agent**
-   - Coordinates workflow execution and agent communication
-   - Handles error recovery and human-in-the-loop escalation
-   - Manages resource allocation and scheduling
+- **Purpose**: Advanced stock price forecasting
+- **Capabilities**:
+  - Multi-model ensemble predictions
+  - Geometric Brownian Motion modeling
+  - Mean reversion analysis
+  - Momentum-based forecasting
+  - Technical analysis integration
+  - Trading signal generation
+  - Confidence interval calculations
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Python 3.9+
-- Node.js 16+ (for frontend)
-- PostgreSQL 13+ (or compatible database)
-- Redis (for caching)
+- Docker & Docker Compose
+- Git
 
-### Installation
+### 1. Clone Repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/agentic-finance-workflow.git
+git clone <repository-url>
 cd agentic-finance-workflow
+```
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+### 2. Start the Application
 
+**Option 1: One-Command Start (Recommended)**
+
+```bash
+# Start everything with one script
+./start.sh
+```
+
+**Option 2: Manual Start**
+
+```bash
+# Start API server with Docker
+docker-compose up -d
+
+# Start web interface (in a new terminal)
+python3 start_ui_server.py
+```
+
+**Option 3: Local Development**
+
+```bash
 # Install dependencies
 pip install -r requirements.txt
 
-# Setup environment variables
-cp .env.example .env
-# Edit .env with your configuration
+# Run API server
+python app.py
 
-# Initialize database
-python scripts/init_db.py
-
-# Start the GraphQL server
-python -m graphql.server
-
-# Start the frontend (in another terminal)
-cd frontend
-npm install
-npm start
+# Run web interface (separate terminal)
+python start_ui_server.py
 ```
 
-### Running a Sample Workflow
+### 3. Access the Application
+
+- **🌐 Web Interface**: <http://localhost:3001/web_interface.html>
+- **📚 API Documentation**: <http://localhost:8001/docs>
+- **💚 Health Check**: <http://localhost:8001/health>
+
+## 💻 Web Interface Features
+
+### 🎛️ Professional Dashboard
+
+- **📊 Stock Selection**: Dropdown with 30+ stocks across sectors (Tech, Healthcare, Finance, Energy)
+- **🤖 Agent Controls**: Individual agent analysis or complete workflow
+- **📈 Real-time Data**: Live market data fetching and analysis
+- **🎨 Advanced Visualizations**: 4 interactive chart types powered by Chart.js
+
+### 📋 Analysis Options
+
+1. **🔍 Individual Agent Analysis**: Run specific agents (Data Cleaner, Risk Analyzer, Portfolio Optimizer, Price Predictor)
+2. **⚡ Complete Workflow**: Execute all agents in sequence  
+3. **📊 Get Market Data**: Fetch 30 days of OHLCV data for selected stock
+4. **� Predict Price**: Generate 30-day price forecasts with confidence intervals
+5. **�🗑️ Clear Results**: Reset interface for new analysis
+
+### 📊 Visualization Types
+
+1. **📈 Risk Analysis Charts**: VaR, volatility, and risk metrics
+2. **💼 Portfolio Optimization**: Efficient frontier and allocation charts
+3. **📊 Performance Metrics**: Returns, Sharpe ratio, and drawdown analysis
+4. **🔗 Correlation Analysis**: Market correlation and beta visualization
+5. **🔮 Price Predictions**: Future price forecasts with confidence bands
+4. **🔗 Correlation Analysis**: Market correlation and beta visualization
+
+## 🔧 API Endpoints
+
+### Core Endpoints
 
 ```bash
-# Execute a predefined workflow
-python -m agents.orchestrator --workflow workflows/stock_analysis.yaml
-
-# Or run individual agents
-python -m agents.cleaner --input data/raw/stock_prices.csv
-python -m agents.analyzer --input data/processed/cleaned_stock_prices.csv
-```
-
-## 📊 Sample Workflows
-
-### 1. Stock Price Analysis Pipeline
-```yaml
-# workflows/stock_analysis.yaml
-name: "Stock Price Analysis"
-agents:
-  - cleaner: {input: "raw/stock_prices.csv", output: "processed/clean_prices.csv"}
-  - validator: {input: "processed/clean_prices.csv", rules: "stock_validation.json"}
-  - analyzer: {input: "processed/clean_prices.csv", models: ["volatility", "momentum"]}
-  - visualizer: {input: "processed/analysis_results.json", charts: ["candlestick", "volume"]}
-  - recommender: {input: "processed/analysis_results.json", strategy: "momentum_trading"}
-```
-
-### 2. Portfolio Risk Assessment
-```yaml
-# workflows/risk_assessment.yaml
-name: "Portfolio Risk Assessment"
-agents:
-  - cleaner: {input: "raw/portfolio_holdings.csv"}
-  - validator: {rules: "portfolio_validation.json"}
-  - analyzer: {models: ["var", "cvar", "sharpe_ratio"]}
-  - visualizer: {charts: ["risk_heatmap", "correlation_matrix"]}
-  - recommender: {strategy: "risk_optimization"}
-```
-
-## 🔧 GraphQL API
-
-The system provides a unified GraphQL API for all data operations:
-
-### Key Endpoints
-
-- **Query**: `http://localhost:4000/graphql`
-- **Subscriptions**: `ws://localhost:4000/graphql`
-- **Playground**: `http://localhost:4000/playground`
-
-### Sample Queries
-
-```graphql
-# Get stock prices with technical indicators
-query GetStockAnalysis($symbol: String!, $timeframe: TimeFrame!) {
-  stockPrices(symbol: $symbol, timeframe: $timeframe) {
-    timestamp
-    open
-    high
-    low
-    close
-    volume
-    technicalIndicators {
-      sma20
-      ema50
-      rsi
-      macd
-    }
-  }
+# Individual agent analysis
+POST /agent/{agent_name}
+{
+  "agent_name": "data_cleaner|risk_analyzer|portfolio_optimizer|price_predictor",
+  "symbol": "AAPL",
+  "data_type": "daily"
 }
 
-# Subscribe to real-time recommendations
-subscription RecommendationUpdates($portfolio: String!) {
-  recommendations(portfolio: $portfolio) {
-    timestamp
-    action
-    symbol
-    confidence
-    reasoning
+# Complete workflow
+POST /workflow
+{
+  "workflow_type": "complete_analysis", 
+  "data": {"symbol": "AAPL"}
+}
+
+# Price prediction (30-day forecast)
+POST /predict/{symbol}
+
+# Market data (30 days OHLCV)
+GET /market-data/{symbol}
+
+# Market data with predictions
+GET /market-data/{symbol}?include_predictions=true
+
+# Available agents
+GET /agents
+
+# Health check
+GET /health
+```
+
+### 📊 Example Responses
+
+**Portfolio Analysis:**
+```json
+{
+  "portfolio_metrics": {
+    "total_value": 145000,
+    "sharpe_ratio": 1.2,
+    "volatility": 0.16,
+    "max_drawdown": -0.12
+  },
+  "asset_allocation": {
+    "AAPL": 0.25,
+    "GOOGL": 0.20,
+    "MSFT": 0.15,
+    "TSLA": 0.10
   }
 }
 ```
 
-## 📈 Performance & Monitoring
-
-- **Metrics**: Prometheus + Grafana dashboards
-- **Logging**: Structured logging with ELK stack integration
-- **Tracing**: Distributed tracing with Jaeger
-- **Health Checks**: Built-in health monitoring and alerting
-
-## 🔐 Security Features
-
-- **Authentication**: JWT-based authentication
-- **Authorization**: Role-based access control (RBAC)
-- **Data Protection**: Encryption at rest and in transit
-- **Audit Logging**: Comprehensive audit trails
-- **Compliance**: SOC2, PCI DSS ready
-
-## 🚀 Deployment
-
-### Docker Deployment
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-
-# Scale agents horizontally
-docker-compose up --scale analyzer=3 --scale cleaner=2
+**Price Prediction:**
+```json
+{
+  "symbol": "AAPL",
+  "current_price": 185.20,
+  "predicted_price_30d": 192.45,
+  "price_change_percentage": 3.91,
+  "prediction_confidence": 84.5,
+  "trading_signal": "BUY",
+  "models_used": [
+    "geometric_brownian_motion",
+    "mean_reversion", 
+    "momentum_analysis",
+    "technical_analysis"
+  ],
+  "forecast_horizon": "30 days"
+}
 ```
 
-### Kubernetes Deployment
-```bash
-# Deploy to Kubernetes
-kubectl apply -f k8s/
+## 📁 Project Structure
 
-# Monitor deployment
-kubectl get pods -l app=agentic-finance
+```
+agentic-finance-workflow/
+├── app.py                      # Main FastAPI application with financial calculations
+├── web_interface.html          # Professional web interface
+├── start_ui_server.py          # Web server with CORS support
+├── start.sh                    # One-command startup script
+├── docker-compose.yml          # Docker configuration
+├── Dockerfile                  # Docker image definition
+├── requirements.txt            # Python dependencies
+└── README.md                   # This documentation
 ```
 
-## 📚 Documentation
+## 🔄 Usage Examples
 
-- [Architecture Guide](docs/architecture.md)
-- [Agent Development](docs/agent_development.md)
-- [GraphQL Schema](docs/graphql_schema.md)
-- [Deployment Guide](docs/deployment.md)
-- [API Reference](docs/api_reference.md)
+### Example 1: Complete Analysis
+
+1. Open <http://localhost:3001/web_interface.html>
+2. Select "TSLA" from the stock dropdown
+3. Click "⚡ Run Complete Workflow"
+4. View comprehensive analysis with:
+   - Data quality scores
+   - Risk metrics (VaR, volatility, beta)
+   - Portfolio optimization results
+   - Interactive visualizations
+
+### Example 2: Risk Analysis Only
+
+1. Select "AAPL" from dropdown
+2. Click "🔍 Analyze with Agent"
+3. View risk assessment including:
+   - Value at Risk calculation
+   - Volatility analysis
+   - Maximum drawdown
+   - Risk grade assignment
+
+### Example 3: Market Data Exploration
+
+1. Select any stock (e.g., "GOOGL")
+2. Click "📊 Get Market Data"
+3. Explore 30 days of:
+   - OHLC price data
+   - Volume information
+   - Realistic price movements generated by Geometric Brownian Motion
+
+## 🎯 Financial Calculations
+
+### Real Mathematical Models
+
+- **Geometric Brownian Motion**: For realistic price generation
+- **Modern Portfolio Theory**: For portfolio optimization
+- **Value at Risk (VaR)**: Using historical simulation method
+- **Volatility Calculation**: Annualized standard deviation
+- **Beta Calculation**: Against market benchmark
+- **Sharpe Ratio**: Risk-adjusted returns
+- **Maximum Drawdown**: Peak-to-trough loss analysis
+
+### Stock Database
+
+**Technology**: AAPL, GOOGL, MSFT, TSLA, NVDA, META, AMZN
+
+**Healthcare**: JNJ, PFE, UNH, ABBV, MRK
+
+**Finance**: JPM, BAC, WFC, GS, MS
+
+**Energy**: XOM, CVX, COP, EOG
+
+**And 10+ more across various sectors**
+
+## 📈 Interactive Visualizations
+
+The platform features Chart.js-powered interactive visualizations that automatically appear with every analysis:
+
+### 🎯 Risk Analysis Charts
+
+- **Doughnut Chart**: Risk distribution (Low/Medium/High Risk)
+- **Interactive Legend**: Click to toggle risk categories
+- **Real-time Updates**: Automatically updates with new analysis
+
+### 💼 Portfolio Allocation Charts  
+
+- **Pie Chart**: Optimal asset allocation weights
+- **Dynamic Colors**: Each asset gets a unique color scheme
+- **Hover Details**: See exact percentages and values
+
+### 📊 Performance Metrics Charts
+
+- **Bar Chart**: Volatility, Beta, Sharpe Ratio, Max Drawdown
+- **Color-coded**: Red for risk, green for returns
+- **Interactive Tooltips**: Detailed metric explanations
+
+### 🔗 Correlation Matrix
+
+- **Heat Map**: Stock correlation visualization
+- **Market Beta**: Individual stock market correlation
+- **Portfolio Diversification**: Visual assessment of portfolio balance
+
+## 🛠️ Technical Details
+
+### Backend Architecture
+
+- **FastAPI**: Modern Python web framework with automatic OpenAPI documentation
+- **Pydantic**: Data validation and serialization
+- **Docker**: Containerized deployment for consistency
+- **Mathematical Libraries**: NumPy, SciPy for financial calculations
+
+### Frontend Technology
+
+- **Vanilla JavaScript**: No heavy frameworks, fast loading
+- **Chart.js**: Professional interactive charts
+- **Responsive Design**: Works on desktop and mobile
+- **Real-time Updates**: Live data fetching and display
+
+### Financial Models
+
+- **Geometric Brownian Motion**: `dS = μS dt + σS dW`
+- **Portfolio Optimization**: Modern Portfolio Theory implementation
+- **VaR Calculation**: Historical simulation with confidence intervals
+- **Risk Metrics**: Professional-grade financial risk assessment
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**Port Conflicts**
+```bash
+# Kill processes on specific ports
+lsof -ti:8001 | xargs kill -9  # API port
+lsof -ti:3001 | xargs kill -9  # UI port
+```
+
+**Docker Issues**
+```bash
+# Rebuild containers
+docker-compose down
+docker-compose up --build -d
+```
+
+**Dependencies**
+```bash
+# Reinstall requirements
+pip install -r requirements.txt --force-reinstall
+```
+
+### Health Checks
+
+```bash
+# Check API health
+curl http://localhost:8001/health
+
+# Check web interface
+curl http://localhost:3001/web_interface.html
+```
+
+## 📝 License
+
+This project is licensed under the MIT License. See LICENSE file for details.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## 📞 Support
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🏆 Why This Architecture Wins
-
-### For Top Financial Firms
-
-- **Enterprise-Ready**: Production-grade architecture with comprehensive monitoring
-- **Scalable**: Microservices architecture with GraphQL unified interface
-- **Compliant**: Built with financial industry standards and regulations in mind
-- **Innovative**: Cutting-edge AI agent orchestration for competitive advantage
-
-### Technical Excellence
-
-- **Modern Stack**: Python, GraphQL, React, TypeScript, Docker, Kubernetes
-- **Best Practices**: TDD, CI/CD, Infrastructure as Code, Observability
-- **Maintainable**: Clear separation of concerns, comprehensive documentation
-- **Testable**: Unit, integration, and end-to-end testing strategies
+For support, please open an issue on GitHub or contact the development team.
 
 ---
 
-**Built for the future of financial technology** 🚀
-
-*Ready for deployment at Jane Street, BlackRock, Goldman Sachs, and other top-tier financial institutions.*
+**Built with ❤️ for professional financial analysis**

@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 pandas
 numpy
+scipy
 scikit-learn
 redis
 psycopg2-binary

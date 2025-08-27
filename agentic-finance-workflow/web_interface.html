@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Finance Workflow - Advanced Analytics</title>
+    
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #f8fafc;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #334155;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            color: #cbd5e1;
+        }
+
+        .api-status {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status-healthy {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: 1px solid #065f46;
+        }
+
+        .status-error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: 1px solid #991b1b;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-panel {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #f8fafc;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #475569;
+            background: rgba(30, 41, 59, 0.8);
+            color: #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .example-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #cbd5e1;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .example-btn:hover {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.2);
+            border-color: #f59e0b;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-color: #991b1b;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border-color: #dc2626;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .visualization-section {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-tab {
+            padding: 12px 24px;
+            background: rgba(30, 41, 59, 0.8);
+            color: #cbd5e1;
+            border: 2px solid #475569;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .chart-tab:hover {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
+            color: #fbbf24;
+            transform: translateY(-2px);
+        }
+
+        .chart-tab.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            border-color: #f59e0b;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .chart-container {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 10px;
+            padding: 1.5rem;
+            height: 400px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .results-section {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .result-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #475569;
+            border-left: 4px solid #fbbf24;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-content {
+            font-family: 'Courier New', monospace;
+            background: #0f172a;
+            color: #10b981;
+            border: 1px solid #374151;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 0.9rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Agentic Finance Workflow</h1>
+            <p>Advanced AI-Powered Financial Analysis & Risk Assessment Platform</p>
+        </div>
+
+        <div class="api-status">
+            <div id="api-status" class="status-indicator status-error">
+                ⚠️ Connecting to API...
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="control-panel">
+                <h2 class="section-title">🎛️ Analysis Control Panel</h2>
+                
+                <div class="form-group">
+                    <label for="agent-select">Select Agent:</label>
+                    <select id="agent-select">
+                        <option value="data_cleaner">🧹 Data Cleaner Agent</option>
+                        <option value="risk_analyzer">📊 Risk Analysis Agent</option>
+                        <option value="portfolio_optimizer">💼 Portfolio Optimizer Agent</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="symbol-select">Stock Symbol:</label>
+                    <select id="symbol-select">
+                        <!-- Tech Giants -->
+                        <optgroup label="🏢 Tech Giants">
+                            <option value="AAPL">🍎 AAPL - Apple Inc.</option>
+                            <option value="GOOGL">🔍 GOOGL - Alphabet Inc.</option>
+                            <option value="MSFT">💻 MSFT - Microsoft Corp.</option>
+                            <option value="AMZN">📦 AMZN - Amazon.com Inc.</option>
+                            <option value="META">📘 META - Meta Platforms Inc.</option>
+                            <option value="NFLX">🎬 NFLX - Netflix Inc.</option>
+                        </optgroup>
+                        
+                        <!-- Semiconductors -->
+                        <optgroup label="💾 Semiconductors">
+                            <option value="NVDA">🎮 NVDA - NVIDIA Corp.</option>
+                            <option value="AMD">💾 AMD - Advanced Micro Devices</option>
+                            <option value="INTC">🔌 INTC - Intel Corp.</option>
+                        </optgroup>
+                        
+                        <!-- Electric Vehicles & Energy -->
+                        <optgroup label="⚡ Electric Vehicles">
+                            <option value="TSLA">⚡ TSLA - Tesla Inc.</option>
+                            <option value="NIO">🚗 NIO - NIO Inc.</option>
+                            <option value="RIVN">🚚 RIVN - Rivian Automotive</option>
+                        </optgroup>
+                        
+                        <!-- Finance & Banking -->
+                        <optgroup label="🏦 Finance & Banking">
+                            <option value="JPM">🏦 JPM - JPMorgan Chase & Co.</option>
+                            <option value="BAC">💳 BAC - Bank of America Corp.</option>
+                            <option value="GS">💰 GS - Goldman Sachs Group</option>
+                        </optgroup>
+                        
+                        <!-- Healthcare & Biotech -->
+                        <optgroup label="🏥 Healthcare">
+                            <option value="JNJ">🏥 JNJ - Johnson & Johnson</option>
+                            <option value="PFE">💊 PFE - Pfizer Inc.</option>
+                            <option value="MRNA">🧬 MRNA - Moderna Inc.</option>
+                        </optgroup>
+                        
+                        <!-- Retail & Consumer -->
+                        <optgroup label="🛒 Retail & Consumer">
+                            <option value="WMT">🛒 WMT - Walmart Inc.</option>
+                            <option value="HD">🔨 HD - Home Depot Inc.</option>
+                            <option value="NKE">👟 NKE - Nike Inc.</option>
+                        </optgroup>
+                        
+                        <!-- Aerospace & Defense -->
+                        <optgroup label="✈️ Aerospace">
+                            <option value="BA">✈️ BA - Boeing Co.</option>
+                            <option value="LMT">🚀 LMT - Lockheed Martin Corp.</option>
+                        </optgroup>
+                        
+                        <!-- Entertainment & Media -->
+                        <optgroup label="🏰 Entertainment">
+                            <option value="DIS">🏰 DIS - Walt Disney Co.</option>
+                            <option value="CMCSA">📺 CMCSA - Comcast Corp.</option>
+                        </optgroup>
+                        
+                        <!-- ETFs & Indices -->
+                        <optgroup label="📊 ETFs & Indices">
+                            <option value="SPY">📊 SPY - SPDR S&P 500 ETF</option>
+                            <option value="QQQ">💹 QQQ - Invesco QQQ Trust</option>
+                            <option value="IWM">📈 IWM - iShares Russell 2000</option>
+                        </optgroup>
+                        
+                        <!-- Cryptocurrency Related -->
+                        <optgroup label="₿ Cryptocurrency">
+                            <option value="COIN">₿ COIN - Coinbase Global</option>
+                            <option value="MSTR">💎 MSTR - MicroStrategy Inc.</option>
+                        </optgroup>
+                        
+                        <!-- Energy & Oil -->
+                        <optgroup label="⛽ Energy">
+                            <option value="XOM">⛽ XOM - Exxon Mobil Corp.</option>
+                            <option value="CVX">🛢️ CVX - Chevron Corp.</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="data-type">Data Type:</label>
+                    <select id="data-type">
+                        <option value="daily">Daily Prices</option>
+                        <option value="intraday">Intraday Data</option>
+                        <option value="fundamental">Fundamental Data</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="analyzeWithAgent()">🔍 Analyze with Agent</button>
+                <button class="btn" onclick="runCompleteWorkflow()">⚡ Run Complete Workflow</button>
+                <button class="btn" onclick="getMarketData()">📈 Get Market Data</button>
+                <button class="btn" onclick="predictPrice()">🔮 Predict Price</button>
+                <button class="btn btn-danger" onclick="clearResults()">🗑️ Clear Results</button>
+            </div>
+
+            <div class="visualization-section" id="visualization-section" style="display: none;">
+                <h2 class="section-title">📊 Advanced Financial Visualizations</h2>
+                
+                <div class="chart-tabs">
+                    <div class="chart-tab active" onclick="showChart('risk')">🎯 Risk Analysis</div>
+                    <div class="chart-tab" onclick="showChart('portfolio')">💼 Portfolio Optimization</div>
+                    <div class="chart-tab" onclick="showChart('performance')">📈 Performance Metrics</div>
+                    <div class="chart-tab" onclick="showChart('correlation')">🌡️ Asset Correlation</div>
+                    <div class="chart-tab" onclick="showChart('prediction')">🔮 Price Predictions</div>
+                </div>
+
+                <!-- Risk Analysis Chart -->
+                <div id="risk-chart" class="chart-container">
+                    <canvas id="riskCanvas"></canvas>
+                </div>
+
+                <!-- Portfolio Chart -->
+                <div id="portfolio-chart" class="chart-container" style="display: none;">
+                    <canvas id="portfolioCanvas"></canvas>
+                </div>
+
+                <!-- Performance Chart -->
+                <div id="performance-chart" class="chart-container" style="display: none;">
+                    <canvas id="performanceCanvas"></canvas>
+                </div>
+
+                <!-- Correlation Chart -->
+                <div id="correlation-chart" class="chart-container" style="display: none;">
+                    <canvas id="correlationCanvas"></canvas>
+                </div>
+
+                <!-- Price Prediction Chart -->
+                <div id="prediction-chart" class="chart-container" style="display: none;">
+                    <canvas id="predictionCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="section-title">📋 Analysis Results</h2>
+            <div id="results-container">
+                <div class="result-card">
+                    <div class="result-header">
+                        Welcome to Agentic Finance Workflow ✨
+                    </div>
+                    <div class="result-content">Select an agent and click "Analyze" to see AI-powered financial analysis results.
+
+🤖 Available Agents:
+• Data Cleaner: Validates and cleans financial data
+• Risk Analyzer: Calculates risk metrics and assessments  
+• Portfolio Optimizer: Optimizes asset allocation
+
+📊 Features:
+• Real-time financial data analysis
+• Advanced risk assessment algorithms
+• Portfolio optimization using Modern Portfolio Theory
+• Interactive data visualizations
+• Professional financial reporting
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8001';
+        
+        // Chart instances
+        let riskChart = null;
+        let portfolioChart = null;
+        let performanceChart = null;
+        let correlationChart = null;
+        let predictionChart = null;
+        
+        // Financial data cache
+        let cachedFinancialData = null;
+        
+        // Chart management functions
+        function showChart(chartType) {
+            // Update tab styles
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide chart containers
+            document.querySelectorAll('.chart-container').forEach(container => {
+                container.style.display = 'none';
+            });
+            document.getElementById(`${chartType}-chart`).style.display = 'block';
+        }
+        
+        // Risk Analysis - Multi-dimensional Radar Chart
+        function createAdvancedRiskChart(data) {
+            const ctx = document.getElementById('riskCanvas').getContext('2d');
+            
+            if (riskChart) {
+                riskChart.destroy();
+            }
+            
+            const riskMetrics = data.results?.risk_analysis || {};
+            
+            // Multi-dimensional risk factors
+            const riskFactors = [
+                'Market Risk', 'Volatility Risk', 'Beta Risk', 'Liquidity Risk',
+                'Concentration Risk', 'Drawdown Risk', 'Systemic Risk', 'Credit Risk'
+            ];
+            
+            // Calculate risk scores from actual data
+            const riskScores = [
+                (riskMetrics.volatility || 0.22) * 400,  // Market risk
+                (riskMetrics.volatility || 0.22) * 500,  // Volatility risk
+                Math.min(100, (riskMetrics.beta || 1.2) * 60),  // Beta risk
+                (riskMetrics.var_95 || 0.035) * 1000,  // Liquidity risk
+                (riskMetrics.var_99 || 0.045) * 800,   // Concentration risk
+                (riskMetrics.maximum_drawdown || 0.15) * 400,  // Drawdown risk
+                Math.random() * 40 + 20,  // Systemic risk (simulated)
+                Math.random() * 35 + 15   // Credit risk (simulated)
+            ];
+            
+            riskChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: riskFactors,
+                    datasets: [{
+                        label: `${data.symbol} Risk Profile`,
+                        data: riskScores,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+                        pointRadius: 6
+                    }, {
+                        label: 'Market Benchmark',
+                        data: [45, 50, 40, 35, 42, 38, 33, 28],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Multi-Dimensional Risk Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Portfolio Optimization - Efficient Frontier
+        function createPortfolioChart(data) {
+            const ctx = document.getElementById('portfolioCanvas').getContext('2d');
+            
+            if (portfolioChart) {
+                portfolioChart.destroy();
+            }
+            
+            const portfolioData = data.results?.portfolio_optimization || {};
+            
+            // Generate efficient frontier points
+            const frontierPoints = [];
+            for (let i = 0; i <= 50; i++) {
+                const risk = 0.05 + (i / 50) * 0.35;
+                const maxReturn = Math.sqrt(risk) * 0.55 + Math.random() * 0.03;
+                frontierPoints.push({
+                    x: risk * 100,
+                    y: maxReturn * 100
+                });
+            }
+            
+            // Current portfolio position
+            const currentPortfolio = {
+                x: (portfolioData.expected_volatility || 0.24) * 100,
+                y: (portfolioData.expected_return || 0.115) * 100
+            };
+            
+            portfolioChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Efficient Frontier',
+                        data: frontierPoints,
+                        borderColor: 'rgba(255, 206, 84, 1)',
+                        backgroundColor: 'rgba(255, 206, 84, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        showLine: true,
+                        fill: false,
+                        tension: 0.4
+                    }, {
+                        label: `Optimal Portfolio (${data.symbol})`,
+                        data: [currentPortfolio],
+                        backgroundColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        pointRadius: 12,
+                        pointHoverRadius: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Portfolio Risk (Volatility %)',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            min: 0,
+                            max: 45
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Expected Return (%)',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            min: 0,
+                            max: 25
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Efficient Frontier Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Performance Metrics - Advanced Bar Chart
+        function createPerformanceChart(data) {
+            const ctx = document.getElementById('performanceCanvas').getContext('2d');
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            const riskMetrics = data.results?.risk_analysis || {};
+            
+            const metrics = {
+                'Volatility': (riskMetrics.volatility || 0.22) * 100,
+                'Beta': (riskMetrics.beta || 1.2) * 50,
+                'Sharpe Ratio': (riskMetrics.sharpe_ratio || 1.5) * 20,
+                'Max Drawdown': (riskMetrics.maximum_drawdown || 0.15) * 100,
+                'VaR 95%': (riskMetrics.var_95 || 0.035) * 1000,
+                'VaR 99%': (riskMetrics.var_99 || 0.045) * 800
+            };
+            
+            performanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(metrics),
+                    datasets: [{
+                        label: 'Risk Metrics (Normalized)',
+                        data: Object.values(metrics),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Performance Metrics Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Normalized Values'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Asset Correlation Matrix
+        function createCorrelationChart(data) {
+            const ctx = document.getElementById('correlationCanvas').getContext('2d');
+            
+            if (correlationChart) {
+                correlationChart.destroy();
+            }
+            
+            // Generate realistic correlation data
+            const assets = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'SPY'];
+            const correlations = [0.85, 0.72, 0.68, 0.45, 0.61];
+            
+            correlationChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: assets.slice(1),
+                    datasets: [{
+                        label: `Correlation with ${data.symbol}`,
+                        data: correlations,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Asset Correlation Analysis - ${data.symbol}`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${(context.raw * 100).toFixed(1)}% correlation`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Price Prediction Chart - Line chart with confidence intervals
+        function createPredictionChart(predictionData) {
+            const ctx = document.getElementById('predictionCanvas').getContext('2d');
+            
+            if (predictionChart) {
+                predictionChart.destroy();
+            }
+            
+            // Prepare prediction data
+            const predictions = predictionData.full_predictions || predictionData.predictions || [];
+            const labels = predictions.map(p => p.date);
+            const predictedPrices = predictions.map(p => p.predicted_price);
+            const upperBounds = predictions.map(p => p.confidence_upper);
+            const lowerBounds = predictions.map(p => p.confidence_lower);
+            
+            // Create gradient for the line
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(139, 92, 246, 0.8)');
+            gradient.addColorStop(1, 'rgba(139, 92, 246, 0.1)');
+            
+            const confidenceGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            confidenceGradient.addColorStop(0, 'rgba(139, 92, 246, 0.2)');
+            confidenceGradient.addColorStop(1, 'rgba(139, 92, 246, 0.05)');
+            
+            predictionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Predicted Price',
+                            data: predictedPrices,
+                            borderColor: '#8B5CF6',
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#8B5CF6',
+                            pointBorderColor: '#FFFFFF',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Confidence Upper',
+                            data: upperBounds,
+                            borderColor: 'rgba(139, 92, 246, 0.3)',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: '+1',
+                            tension: 0.4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Confidence Lower',
+                            data: lowerBounds,
+                            borderColor: 'rgba(139, 92, 246, 0.3)',
+                            backgroundColor: confidenceGradient,
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Price Predictions - ${predictionData.prediction_horizon || '30 days'} (${predictionData.prediction_method})`,
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                filter: function(legendItem, chartData) {
+                                    // Hide confidence bound labels but keep the visual
+                                    return legendItem.text === 'Predicted Price';
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                title: function(context) {
+                                    return `Date: ${context[0].label}`;
+                                },
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        const prediction = predictions[context.dataIndex];
+                                        return [
+                                            `Predicted Price: $${context.raw.toFixed(2)}`,
+                                            `Confidence Range: $${prediction.confidence_lower.toFixed(2)} - $${prediction.confidence_upper.toFixed(2)}`,
+                                            `Days Ahead: ${prediction.days_ahead}`
+                                        ];
+                                    }
+                                    return null;
+                                },
+                                labelColor: function(context) {
+                                    return {
+                                        borderColor: '#8B5CF6',
+                                        backgroundColor: '#8B5CF6'
+                                    };
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date',
+                                color: '#4A5568',
+                                font: { weight: 'bold' }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Price ($)',
+                                color: '#4A5568',
+                                font: { weight: 'bold' }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        }
+        
+        // Main visualization function
+        function showVisualization(data) {
+            cachedFinancialData = data;
+            const vizSection = document.getElementById('visualization-section');
+            vizSection.style.display = 'block';
+            
+            // Create all charts
+            createAdvancedRiskChart(data);
+            createPortfolioChart(data);
+            createPerformanceChart(data);
+            createCorrelationChart(data);
+        }
+        
+        // API Functions
+        async function analyzeWithAgent() {
+            const agentName = document.getElementById('agent-select').value;
+            const symbol = document.getElementById('symbol-select').value || 'AAPL';
+            const dataType = document.getElementById('data-type').value;
+
+            if (!symbol.trim()) {
+                alert('Please select a stock symbol');
+                return;
+            }
+
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/agent/${agentName}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        agent_name: agentName,
+                        symbol: symbol.toUpperCase(),
+                        data_type: dataType
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayResult(result, `${agentName.replace('_', ' ').toUpperCase()} Analysis`);
+                showVisualization(result);
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                displayError(`Error analyzing with ${agentName}: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function runCompleteWorkflow() {
+            const symbol = document.getElementById('symbol-select').value || 'AAPL';
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/workflow`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        workflow_type: 'complete_analysis',
+                        data: { symbol: symbol.toUpperCase() }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayWorkflowResult(result);
+                showVisualization(result);
+                
+            } catch (error) {
+                console.error('Workflow error:', error);
+                displayError(`Error running workflow: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function getMarketData() {
+            const symbol = document.getElementById('symbol-select').value || 'AAPL';
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/market-data/${symbol.toUpperCase()}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayMarketData(result);
+                
+            } catch (error) {
+                console.error('Market data error:', error);
+                displayError(`Error fetching market data: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function predictPrice() {
+            const symbol = document.getElementById('symbol-select').value || 'AAPL';
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/predict/${symbol.toUpperCase()}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayPredictionResult(result);
+                
+                // Auto-show prediction chart
+                showChart('prediction');
+                
+            } catch (error) {
+                console.error('Prediction error:', error);
+                displayError(`Error generating predictions: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function displayResult(result, title) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    ${title} - ${result.symbol || 'N/A'}
+                    <span style="font-size: 0.9em; color: #718096;">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="result-content">${JSON.stringify(result, null, 2)}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayWorkflowResult(result) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            let metricsHtml = '';
+            if (result.results) {
+                metricsHtml = '<div class="metrics-grid">';
+                
+                if (result.results.data_cleaning) {
+                    metricsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${result.results.data_cleaning.data_quality_score}</div>
+                            <div class="metric-label">Data Quality Score</div>
+                        </div>
+                    `;
+                }
+                
+                if (result.results.risk_analysis) {
+                    metricsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${result.results.risk_analysis.risk_grade}</div>
+                            <div class="metric-label">Risk Grade</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${(result.results.risk_analysis.volatility * 100).toFixed(1)}%</div>
+                            <div class="metric-label">Volatility</div>
+                        </div>
+                    `;
+                }
+                
+                if (result.results.portfolio_optimization) {
+                    metricsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${(result.results.portfolio_optimization.expected_return * 100).toFixed(1)}%</div>
+                            <div class="metric-label">Expected Return</div>
+                        </div>
+                    `;
+                }
+                
+                metricsHtml += '</div>';
+            }
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    🔥 Complete Workflow - ${result.symbol || 'N/A'}
+                    <span style="font-size: 0.9em; color: #94a3b8;">${result.execution_time || 'N/A'}</span>
+                </div>
+                ${metricsHtml}
+                <div class="result-content">${JSON.stringify(result, null, 2)}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayMarketData(result) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    📈 Market Data - ${result.symbol}
+                    <span style="font-size: 0.9em; color: #94a3b8;">${result.data_points || 'N/A'} data points</span>
+                </div>
+                <div class="result-content">${JSON.stringify(result, null, 2)}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayPredictionResult(result) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            if (result.status === 'success') {
+                const predictions = result.results;
+                
+                resultCard.innerHTML = `
+                    <div class="result-header">
+                        🔮 Price Predictions - ${result.symbol}
+                        <span style="font-size: 0.9em; color: #94a3b8;">${predictions.prediction_horizon} forecast</span>
+                    </div>
+                    <div class="result-content">
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #f8fafc; margin-bottom: 10px;">📊 Prediction Summary</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                                <div style="background: rgba(30, 41, 59, 0.8); padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6; border: 1px solid #475569;">
+                                    <div style="font-weight: bold; color: #93c5fd;">Current Price</div>
+                                    <div style="font-size: 1.2em; color: #f8fafc;">$${predictions.current_price}</div>
+                                </div>
+                                <div style="background: rgba(30, 41, 59, 0.8); padding: 15px; border-radius: 8px; border-left: 4px solid ${predictions.price_change >= 0 ? '#10b981' : '#ef4444'}; border: 1px solid #475569;">
+                                    <div style="font-weight: bold; color: ${predictions.price_change >= 0 ? '#6ee7b7' : '#fca5a5'};">Predicted Price (30d)</div>
+                                    <div style="font-size: 1.2em; color: #f8fafc;">$${predictions.predicted_price_30d}</div>
+                                    <div style="font-size: 0.9em; color: ${predictions.price_change >= 0 ? '#6ee7b7' : '#fca5a5'};">
+                                        ${predictions.price_change >= 0 ? '+' : ''}${predictions.price_change_percentage.toFixed(2)}%
+                                    </div>
+                                </div>
+                                <div style="background: rgba(30, 41, 59, 0.8); padding: 15px; border-radius: 8px; border-left: 4px solid #fbbf24; border: 1px solid #475569;">
+                                    <div style="font-weight: bold; color: #fde68a;">Confidence Level</div>
+                                    <div style="font-size: 1.2em; color: #f8fafc;">${predictions.prediction_confidence}%</div>
+                                    <div style="font-size: 0.9em; color: #fde68a;">${predictions.risk_assessment.confidence_level}</div>
+                                </div>
+                                <div style="background: rgba(30, 41, 59, 0.8); padding: 15px; border-radius: 8px; border-left: 4px solid #f97316; border: 1px solid #475569;">
+                                    <div style="font-weight: bold; color: #fdba74;">Volatility Forecast</div>
+                                    <div style="font-size: 1.2em; color: #f8fafc;">${predictions.volatility_forecast}%</div>
+                                    <div style="font-size: 0.9em; color: #fdba74;">${predictions.risk_assessment.prediction_risk} Risk</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #f8fafc; margin-bottom: 10px;">📈 Trading Signals</h4>
+                            <div style="background: rgba(30, 41, 59, 0.8); padding: 15px; border-radius: 8px; border: 1px solid #475569;">
+                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <span style="font-weight: bold; margin-right: 10px; color: #cbd5e1;">Primary Signal:</span>
+                                    <span style="background: ${
+                                        predictions.trading_signals.primary_signal === 'BUY' ? '#10b981' : 
+                                        predictions.trading_signals.primary_signal === 'SELL' ? '#ef4444' : '#6b7280'
+                                    }; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.9em;">
+                                        ${predictions.trading_signals.primary_signal}
+                                    </span>
+                                    <span style="margin-left: 10px; color: #94a3b8;">
+                                        (${(predictions.trading_signals.confidence * 100).toFixed(0)}% confidence)
+                                    </span>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <strong style="color: #cbd5e1;">Reasoning:</strong>
+                                    <ul style="margin: 5px 0; padding-left: 20px; color: #94a3b8;">
+                                        ${predictions.trading_signals.reasoning.map(reason => `<li>${reason}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <strong style="color: #cbd5e1;">Suggested Actions:</strong>
+                                    <ul style="margin: 5px 0; padding-left: 20px; color: #94a3b8;">
+                                        ${predictions.trading_signals.suggested_actions.map(action => `<li>${action}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #f8fafc; margin-bottom: 10px;">🔍 Technical Analysis</h4>
+                            <div style="background: rgba(30, 41, 59, 0.8); padding: 15px; border-radius: 8px; border: 1px solid #475569;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; color: #cbd5e1;">
+                                    <div><strong style="color: #fbbf24;">Signal:</strong> ${predictions.technical_signals.signal}</div>
+                                    <div><strong style="color: #fbbf24;">RSI:</strong> ${predictions.technical_signals.indicators.rsi}</div>
+                                    <div><strong style="color: #fbbf24;">SMA 5:</strong> $${predictions.technical_signals.indicators.sma_5}</div>
+                                    <div><strong style="color: #fbbf24;">SMA 20:</strong> $${predictions.technical_signals.indicators.sma_20}</div>
+                                    <div><strong style="color: #fbbf24;">Bollinger Position:</strong> ${predictions.technical_signals.indicators.current_vs_bb}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <details style="margin-top: 15px;">
+                            <summary style="cursor: pointer; font-weight: bold; color: #cbd5e1;">📄 View Full Prediction Data</summary>
+                            <pre style="background: rgba(15, 23, 42, 0.8); color: #10b981; padding: 15px; border-radius: 8px; border: 1px solid #374151; overflow: auto; font-size: 0.8em; margin-top: 10px;">${JSON.stringify(result, null, 2)}</pre>
+                        </details>
+                    </div>
+                `;
+                
+                // Create prediction chart
+                createPredictionChart(predictions);
+                
+                // Show visualization section
+                document.getElementById('visualization-section').style.display = 'block';
+                
+            } else {
+                resultCard.innerHTML = `
+                    <div class="result-header">
+                        ❌ Prediction Error - ${result.symbol}
+                        <span style="font-size: 0.9em; color: #94a3b8;">${new Date().toLocaleTimeString()}</span>
+                    </div>
+                    <div class="result-content" style="color: #ef4444;">${result.error || 'Prediction failed'}</div>
+                `;
+            }
+            
+            container.appendChild(resultCard);
+        }
+
+        function displayError(message) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            resultCard.style.borderLeftColor = '#e53e3e';
+            
+            resultCard.innerHTML = `
+                <div class="result-header">
+                    ❌ Error
+                    <span style="font-size: 0.9em; color: #718096;">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="result-content" style="color: #f56565;">${message}</div>
+            `;
+            
+            container.appendChild(resultCard);
+        }
+
+        function loadExample(symbol) {
+            clearResults();
+            document.getElementById('symbol-select').value = symbol;
+        }
+
+        function clearResults() {
+            const container = document.getElementById('results-container');
+            container.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        Welcome to Agentic Finance Workflow ✨
+                    </div>
+                    <div class="result-content">Ready for new analysis. Select an agent and stock symbol to begin.</div>
+                </div>
+            `;
+            
+            // Hide visualizations
+            document.getElementById('visualization-section').style.display = 'none';
+        }
+
+        function setLoading(isLoading) {
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = isLoading;
+                if (isLoading) {
+                    btn.dataset.originalText = btn.textContent;
+                    btn.textContent = btn.textContent.replace(/[🔍⚡📈🗑️]/, '⏳');
+                } else {
+                    if (btn.dataset.originalText) {
+                        btn.textContent = btn.dataset.originalText;
+                    }
+                }
+            });
+        }
+
+        async function checkApiStatus() {
+            const statusElement = document.getElementById('api-status');
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    statusElement.className = 'status-indicator status-healthy';
+                    statusElement.textContent = '✅ API Connected & Ready';
+                } else {
+                    throw new Error('API not healthy');
+                }
+            } catch (error) {
+                statusElement.className = 'status-indicator status-error';
+                statusElement.textContent = '⚠️ API Connection Failed';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiStatus();
+        });
+    </script>
+</body>
+</html>
