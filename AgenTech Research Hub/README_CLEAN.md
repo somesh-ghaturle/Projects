@@ -478,26 +478,6 @@ python -m memory_profiler api_server.py
 - **API Documentation**: <http://localhost:8000/docs>
 - **Health Monitor**: <http://localhost:3000/health>
 
-## 🚀 Deployment Suggestions
-
-### Option 1: Cloud Deployment
-- **Heroku**: Deploy the Docker container using Heroku Container Registry
-- **AWS ECS**: Use Amazon Elastic Container Service for scalable deployment
-- **Google Cloud Run**: Serverless container deployment with auto-scaling
-- **DigitalOcean Apps**: Simple container deployment with managed infrastructure
-
-### Option 2: Streamlit Cloud (for Web Interface)
-- Fork this repository to your GitHub account
-- Sign up for free at [Streamlit Cloud](https://streamlit.io/cloud)
-- Connect your GitHub repository
-- Deploy the Streamlit version of the web interface
-- **Note**: Requires creating a Streamlit app version of the web interface
-
-### Option 3: Vercel/Netlify (Static Frontend)
-- Deploy the `web-ui/` folder as a static site
-- Configure environment variables for API endpoints
-- Suitable for frontend-only deployments
-
 ---
 
 ## 👨‍💻 Author & License
@@ -510,32 +490,6 @@ MS in Data Science, Pace University
 📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
 🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
 💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
-
-### 📄 MIT License
-
-```
-MIT License
-
-Copyright (c) 2025 Somesh Ramesh Ghaturle
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
 
 ---
 
