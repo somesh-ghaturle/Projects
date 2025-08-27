@@ -3,7 +3,16 @@
 > Intelligent data analytics platform powered by local LLMs and Streamlit for comprehensive data analysis workflows
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)](https://streamlit.io/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=f## 👨‍💻 Author & License
+
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)go=Streamlit&logoColor=white)](https://streamlit.io/)
 [![Ollama](https://img.shields.io/badge/Ollama-000000?style=flat&logo=llama&logoColor=white)](https://ollama.ai/)
 
 ## Overview
@@ -333,10 +342,13 @@ mindmap
 - **Import errors:** Verify all dependencies are installed with `pip install -r requirements.txt`
 - **Port conflicts:** Check if port 8501 is available or specify a different port
 
-## 📄 License
+## �‍💻 Author & License
 
-MIT License - Open source project for educational and research purposes.
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
 
 ---
 
-*Built with ❤️ using Streamlit, Ollama, and Python*
+### Built with ❤️ using Streamlit, Ollama, and Python

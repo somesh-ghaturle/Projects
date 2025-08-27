@@ -5,7 +5,16 @@
 [![n8n](https://img.shields.io/badge/n8n-Workflow-EA4B71)](https://n8n.io/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Yahoo Finance](https://img.shields.io/badge/Yahoo%20Finance-API-purple)](https://finance.yahoo.com/)
-[![Discord](https://img.shields.io/badge/Discord-Webhook-5865F2)](https://discord.com/)
+[![Discord## 👨‍💻 Author & License
+
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)s://img.shields.io/badge/Discord-Webhook-5865F2)](https://discord.com/)
 
 ## Overview
 
@@ -460,12 +469,13 @@ for (const ticker of tickers) {
 - **n8n Execution Failures**: Review workflow logs and node configurations
 - **Prediction Accuracy**: Consider implementing real ML models for production use
 
-## 📄 License
+## �‍💻 Author & License
 
-Educational and personal use only. Not for commercial trading advice.
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
 
 ---
 
-**Somesh Ramesh Ghaturle** | *MS in Data Science, Pace University*
-
-Built with 📊 using n8n, Python, Yahoo Finance API, and Discord
+### Built with 📊 using n8n, Python, Yahoo Finance API, and Discord

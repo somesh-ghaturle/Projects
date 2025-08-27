@@ -10,7 +10,16 @@
 
 ## Overview
 
-A powerful Model Context Protocol (MCP) server that provides intelligent document management and RAG (Retrieval-Augmented Generation) capabilities for VS Code. This system enables seamless integration of document processing, semantic search, and AI-powered question answering directly within your development environment.
+A powerful Model Context Protocol (MCP) server that provides intelligent document management and RAG (Retrieval-Augmented Generation)## 👨‍💻 Author & License
+
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)ilities for VS Code. This system enables seamless integration of document processing, semantic search, and AI-powered question answering directly within your development environment.
 
 ## 📚 Table of Contents
 
@@ -781,6 +790,9 @@ The server uses:
 - **Ollama** for local LLM
 - **Python 3.13+** runtime
 
-## 📄 License
+## �‍💻 Author & License
 
-MIT License - feel free to modify and distribute.
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University

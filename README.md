@@ -218,11 +218,13 @@ An automated trading workflow that combines LSTM neural networks with n8n automa
 - **Protocols**: Model Context Protocol (MCP)
 - **Tools**: VS Code, Git, Docker
 
-## License
+## 👨‍💻 Author & License
 
 All code and content in this repository is for educational and personal use.
 
----
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
 
-*Somesh Ramesh Ghaturle*  
-*MS in Data Science, Pace University*
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)

@@ -389,6 +389,17 @@ This project is licensed under the MIT License. See LICENSE file for details.
 
 For support, please open an issue on GitHub or contact the development team.
 
+## 👨‍💻 Author & License
+
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
+
 ---
 
-**Built with ❤️ for professional financial analysis**
+### Built with ❤️ for professional financial analysis

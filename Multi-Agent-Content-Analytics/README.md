@@ -8,7 +8,16 @@
 [![GraphQL](https://img.shields.io/badge/GraphQL-API-pink)](https://graphql.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Server-teal)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-green)](https://github.com/somesh-ghaturle/Projects)
+[![Status](https://img.shields.io/badge/S## 👨‍💻 Author & License
+
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)Production%20Ready-green)](https://github.com/somesh-ghaturle/Projects)
 
 ## Overview
 
@@ -775,10 +784,13 @@ python src/utils/monitoring.py
 open http://localhost:3000
 ```
 
-## 📄 License
+## �‍💻 Author & License
 
-MIT License - Open source project for educational and commercial use.
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
 
 ---
 
-**Built with 🤖 using Multi-Agent AI, LangChain, GraphQL, and modern ML frameworks**
+### Built with 🤖 using Multi-Agent AI, LangChain, GraphQL, and modern ML frameworks

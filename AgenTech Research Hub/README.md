@@ -2,10 +2,7 @@
 
 > Advanced AI Research Platform with Real Internet Search & Multi-Agent Collaboration
 
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blu├── 📁 docs/                        # Additional documentation
-│   ├── 📄 project_documentation.md # Technical documentation
-│   ├── 📄 DOCKER_SUCCESS.md       # Docker deployment guide
-│   └── 📄 PROJECT_CLEANUP_SUMMARY.md # Project organization notessvg)](https://www.python.org/downloads/)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -196,137 +193,161 @@ sequenceDiagram
 | Source | Purpose | Data Type |
 |--------|---------|-----------|
 | **DuckDuckGo** | General web search | Instant answers, web results |
-| **Wikipedia** | Authoritative content | Encyclopedia articles |
-| **Reddit** | Community insights | Discussions, trends |
-| **GitHub** | Technical content | Code repositories, documentation |
-
-## 🌐 API Endpoints
-
-### Core Endpoints
-
-```bash
-# Health check
-GET /health
-
-# Research endpoint
-POST /research
-{
-  "query": "your research topic",
-  "context": {"max_results": 10}
-}
-
-# System status
-GET /status
-```
-
-### Response Format
-
-```json
-{
-  "success": true,
-  "query": "machine learning trends 2025",
-  "sources_found": 8,
-  "sources": [
-    {
-      "source_type": "SEARCH_ENGINE",
-      "title": "ML Trends 2025",
-      "url": "https://example.com",
-      "snippet": "Latest developments...",
-      "relevance_score": 0.9
-    }
-  ],
-  "summary": "Research summary...",
-  "quality_score": 0.85
-}
-```
+| **Wikipedia** | Encyclopedia articles | Structured knowledge |
+| **Reddit** | Community discussions | Social insights, trends |
+| **GitHub** | Code repositories | Technical documentation |
 
 ## 📁 Project Structure
 
-```text
+```
 AgenTech Research Hub/
-├── 📄 README.md                    # Project documentation
-├── 📄 LICENSE                      # MIT License
-├── 📄 requirements.txt             # Python dependencies
-├── 📄 .gitignore                   # Git ignore patterns
-├── 📄 .env.example                 # Environment variables template
-├── 📄 api_server.py                # FastAPI main application (entry point)
-├── 🐳 Dockerfile                   # Container configuration
-├── � docker-compose.yml           # Multi-service Docker setup
-├── ⚙️ nginx.conf                   # Nginx reverse proxy configuration
+├── 🐳 api_server.py                 # Main FastAPI application
+├── 🐳 docker-compose.yml            # Multi-container orchestration
+├── 🐳 Dockerfile                    # Container configuration
+├── 🔧 nginx.conf                    # Reverse proxy configuration
+├── 📄 requirements.txt              # Python dependencies
+├── 🚀 start_server.sh              # Launch script (Unix)
+├── 🛑 stop_server.sh               # Stop script (Unix)
 ├── 🧪 test_docker.sh               # Docker testing script
-├── 📄 start_server.sh              # Server startup script
-├── 📄 stop_server.sh               # Server shutdown script
-├── �📁 src/                         # Main source code
-│   ├── � __init__.py              # Package initialization
-│   ├── 📄 main.py                  # Alternative main entry point
-│   ├── �📁 agents/                  # AI Agent implementations
-│   │   ├── 📄 __init__.py          
-│   │   ├── 📄 base_agent.py        # Base agent class
-│   │   └── 📄 researcher_agent.py  # Research agent with real web search
-│   ├── 📁 api/                     # API route definitions
-│   │   ├── 📄 __init__.py          
-│   │   └── 📄 routes.py            # FastAPI route handlers
-│   ├── 📁 core/                    # Core application logic
-│   │   ├── 📄 __init__.py          
-│   │   └── 📄 base.py              # Base application classes
-│   ├── 📁 config/                  # Configuration management
-│   │   ├── 📄 __init__.py          
-│   │   └── 📄 settings.py          # Application settings
-│   ├── 📁 crews/                   # Multi-agent crew definitions
-│   │   ├── 📄 __init__.py          
-│   │   └── 📄 research_crew.py     # Research crew coordination
-│   ├── 📁 utils/                   # Utility functions
-│   │   ├── 📄 __init__.py          
-│   │   └── 📄 helpers.py           # Helper functions
-│   └── 📁 workflows/               # Workflow definitions
-│       ├── 📄 __init__.py          
-│       └── 📄 research_workflow.py # Research workflow logic
-├── 📁 web-ui/                      # Frontend web interface
-│   ├── 📄 index.html               # Main web interface (with inline CSS)
-│   ├── 📄 app.js                   # JavaScript application logic
-│   └── 📄 test-connection.html     # Connection testing page
-├── 📁 tests/                       # Test suite
-│   ├── � __init__.py              
-│   ├── 📄 conftest.py              # Pytest configuration
-│   ├── � test_main.py             # Main application tests
-│   └── 📁 data/                    # Test data files
-├── 📁 scripts/                     # Utility scripts
-│   ├── 📄 setup.py                 # Setup and installation script
-│   ├── 📄 run.py                   # Application runner
-│   └── 📄 demo.py                  # Demo and examples
-├── 📁 examples/                    # Usage examples
-│   └── 📄 custom_research_queries.py # Research query examples
+├── 📖 README.md                     # This documentation
+├── 📄 LICENSE                       # Project license
+├── 📁 src/                          # Source code
+│   ├── 📁 agents/                   # AI agent implementations
+│   │   ├── 🤖 researcher_agent.py   # Main research agent
+│   │   ├── 🎯 topic_detector.py     # Topic classification
+│   │   └── 📊 quality_scorer.py     # Source quality assessment
+│   ├── 📁 api/                      # API route handlers
+│   │   ├── 🌐 routes.py             # HTTP endpoints
+│   │   └── 🔧 middleware.py         # CORS & error handling
+│   ├── 📁 core/                     # Core application logic
+│   │   ├── ⚙️ config.py             # Configuration management
+│   │   └── 📋 models.py             # Data models
+│   ├── 📁 config/                   # Configuration files
+│   │   ├── ⚙️ settings.py           # Application settings
+│   │   └── 🗄️ database.py          # Database configuration
+│   ├── 📁 crews/                    # CrewAI implementations
+│   │   ├── 👥 research_crew.py      # Multi-agent coordination
+│   │   └── 📋 crew_config.py        # Crew configuration
+│   ├── 📁 utils/                    # Utility functions
+│   │   ├── 🔧 helpers.py            # Helper functions
+│   │   └── 📝 logger.py             # Logging configuration
+│   └── 📁 workflows/                # Workflow definitions
+│       ├── 🔄 research_workflow.py  # Main research process
+│       └── 📊 analysis_workflow.py  # Data analysis process
+├── 📁 web-ui/                       # Frontend interface
+│   ├── 🌐 index.html               # Main web interface
+│   ├── 🎨 styles.css               # Professional styling
+│   ├── ⚡ script.js                # Interactive functionality
+│   └── 📱 favicon.ico              # Site icon
+├── 📁 tests/                        # Test suite
+│   ├── 🧪 test_api.py              # API endpoint tests
+│   ├── 🤖 test_agents.py           # Agent functionality tests
+│   ├── 📊 test_integration.py      # Integration tests
+│   └── 🔧 conftest.py              # Test configuration
 ├── 📁 docs/                        # Additional documentation
-│   └── � project_documentation.md # Technical documentation
-├── 📁 data/                        # Data storage directories
-│   ├── 📁 cache/                   # Cached data
-│   ├── 📁 checkpoints/             # Model checkpoints
+│   ├── 📄 project_documentation.md # Technical documentation
+│   ├── 📄 DOCKER_SUCCESS.md       # Docker deployment guide
+│   └── 📄 PROJECT_CLEANUP_SUMMARY.md # Project organization notes
+├── 📁 data/                        # Application data
+│   ├── 📁 cache/                   # Cached search results
 │   ├── 📁 logs/                    # Application logs
-│   ├── 📁 models/                  # AI model storage
+│   ├── 📁 checkpoints/             # Model checkpoints
+│   ├── 📁 models/                  # Trained models
 │   ├── 📁 outputs/                 # Generated outputs
 │   ├── 📁 processed/               # Processed data
-│   ├── 📁 raw/                     # Raw input data
-│   └── � vector_db/               # Vector database storage
-└── 📁 logs/                        # Runtime logs (Docker)
+│   ├── 📁 raw/                     # Raw data files
+│   └── 📁 vector_db/               # Vector database
+├── 📁 examples/                     # Usage examples
+│   ├── 📝 basic_usage.py           # Basic API usage
+│   ├── 🔄 workflow_example.py      # Workflow demonstration
+│   └── 📊 analysis_example.py      # Analysis examples
+├── 📁 logs/                        # System logs
+│   ├── 📋 api.log                  # API request logs
+│   ├── 🤖 agent.log               # Agent activity logs
+│   └── 🐳 docker.log              # Container logs
+└── 📁 scripts/                     # Utility scripts
+    ├── 🔧 setup.py                # Environment setup
+    ├── 📊 benchmark.py            # Performance testing
+    └── 🧹 cleanup.py              # Cleanup utilities
 ```
 
-## 🧪 Testing
+## 🎯 Features & Capabilities
+
+### 🔍 **Real Internet Search**
+- **Live Data Scraping**: Actual web scraping from multiple sources
+- **Rate Limiting**: Respectful API usage with proper delays
+- **Error Handling**: Robust fallback mechanisms for failed requests
+- **Quality Filtering**: Advanced content relevance scoring
+
+### 🤖 **AI-Powered Analysis**
+- **Topic Detection**: Automatic categorization of research queries
+- **Source Ranking**: Intelligent prioritization based on credibility
+- **Content Synthesis**: Comprehensive analysis generation
+- **Trend Identification**: Pattern recognition across data sources
+
+### 🌐 **Professional Web Interface**
+- **Responsive Design**: Mobile-friendly interface
+- **Real-time Updates**: Live search progress indicators
+- **Professional Styling**: Corporate blue theme
+- **Auto-detection**: Smart query type recognition
+
+### 🐳 **Production Ready**
+- **Docker Containerization**: Easy deployment and scaling
+- **Nginx Load Balancing**: High-performance request handling
+- **Health Monitoring**: Comprehensive system health checks
+- **Logging & Monitoring**: Detailed application insights
+
+## 📖 API Documentation
+
+### Health Check Endpoint
 
 ```bash
-# Run all tests
-pytest tests/
-
-# Test API endpoints
-curl http://localhost:8000/health
-curl -X POST http://localhost:8000/research \
-  -H "Content-Type: application/json" \
-  -d '{"query": "artificial intelligence"}'
-
-# Docker testing
-./test_docker.sh
+GET /health
 ```
 
-## ⚙️ Configuration
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "version": "1.0.0"
+}
+```
+
+### Research Endpoint
+
+```bash
+POST /api/research
+Content-Type: application/json
+
+{
+  "query": "artificial intelligence trends 2024",
+  "sources": ["duckduckgo", "wikipedia", "reddit", "github"],
+  "max_results": 10
+}
+```
+
+**Response:**
+```json
+{
+  "query": "artificial intelligence trends 2024",
+  "topic": "Technology",
+  "results": [
+    {
+      "source": "duckduckgo",
+      "title": "AI Trends 2024",
+      "url": "https://example.com/ai-trends",
+      "content": "Latest developments in AI...",
+      "quality_score": 0.95,
+      "relevance_score": 0.92
+    }
+  ],
+  "summary": "Comprehensive analysis of AI trends...",
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
+
+## 🔧 Configuration
 
 ### Environment Variables
 
@@ -334,94 +355,141 @@ curl -X POST http://localhost:8000/research \
 # API Configuration
 API_HOST=0.0.0.0
 API_PORT=8000
-LOG_LEVEL=INFO
+DEBUG=false
 
-# Optional: Add API keys for enhanced functionality
-OPENAI_API_KEY=your-key-here
-ANTHROPIC_API_KEY=your-key-here
+# Search Configuration
+ENABLE_DUCKDUCKGO=true
+ENABLE_WIKIPEDIA=true
+ENABLE_REDDIT=true
+ENABLE_GITHUB=true
+
+# Cache Configuration
+REDIS_URL=redis://localhost:6379
+CACHE_TTL=3600
+
+# Rate Limiting
+RATE_LIMIT_PER_MINUTE=60
+REQUEST_TIMEOUT=30
 ```
 
 ### Docker Configuration
 
 ```yaml
 # docker-compose.yml
+version: '3.8'
 services:
-  agentech-api:     # FastAPI backend on port 8000
-  agentech-webui:   # Nginx frontend on port 3000  
-  redis:            # Optional caching on port 6379
+  agentech-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=false
+      - API_HOST=0.0.0.0
+    
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./web-ui:/usr/share/nginx/html
 ```
 
-## 🔧 Development
+## 🧪 Testing
 
-### Adding New Search Sources
+### Run Tests
 
-1. Implement search method in `src/agents/researcher_agent.py`
-2. Add to the `_web_search` method source list
-3. Handle rate limiting and error cases
-4. Update tests and documentation
+```bash
+# Install test dependencies
+pip install pytest pytest-asyncio
 
-### Customizing the UI
+# Run all tests
+pytest tests/
 
-1. Modify `web-ui/index.html` for structure
-2. Update `web-ui/app.js` for functionality
-3. Customize `web-ui/styles.css` for styling
-4. Test responsiveness across devices
+# Run specific test categories
+pytest tests/test_api.py -v
+pytest tests/test_agents.py -v
+pytest tests/test_integration.py -v
 
-## 🚨 Troubleshooting
+# Run with coverage
+pytest --cov=src tests/
+```
+
+### Test Coverage
+
+```bash
+# Generate coverage report
+pytest --cov=src --cov-report=html tests/
+open htmlcov/index.html
+```
+
+## 🐛 Troubleshooting
 
 ### Common Issues
 
-**Port conflicts:**
+#### Docker Issues
+- **Port conflicts**: Ensure ports 3000 and 8000 are available
+- **Permission errors**: Use `sudo` for Docker commands if needed
+- **Container startup failures**: Check logs with `docker-compose logs`
+
+#### API Issues
+- **Slow responses**: Check internet connection and API rate limits
+- **Failed searches**: Verify source availability and API keys
+- **Memory issues**: Increase Docker memory allocation
+
+#### Web Interface Issues
+- **Blank page**: Check browser console for JavaScript errors
+- **API connection errors**: Verify backend is running on port 8000
+- **CORS issues**: Ensure proper CORS configuration in FastAPI
+
+### Performance Optimization
 
 ```bash
-# Check what's using the ports
-lsof -i :3000
-lsof -i :8000
+# Monitor container performance
+docker stats
 
-# Kill conflicting processes
-sudo kill -9 <PID>
+# Check API response times
+curl -w "@curl-format.txt" -o /dev/null -s "http://localhost:8000/health"
+
+# Profile memory usage
+python -m memory_profiler api_server.py
 ```
 
-**Docker issues:**
+## 🔮 Future Enhancements
 
-```bash
-# Reset Docker setup
-docker-compose down
-docker system prune -f
-docker-compose up --build -d
-```
-
-**API connection fails:**
-
-- Check if Docker daemon is running
-- Verify nginx proxy configuration
-- Check container logs: `docker-compose logs`
-
-## 📈 Performance
-
-- **Response Time**: < 3 seconds for typical research queries
-- **Concurrent Users**: Supports multiple simultaneous requests
-- **Search Sources**: 4+ integrated sources with intelligent fallbacks
-- **Cache Support**: Redis integration for improved performance
+- **AI Model Integration**: Local LLM support for offline analysis
+- **Database Storage**: Persistent storage for research history
+- **User Authentication**: Multi-user support with personalized settings
+- **Advanced Analytics**: Trend analysis and predictive insights
+- **Mobile App**: Native mobile application development
+- **API Rate Limiting**: Enhanced rate limiting and quota management
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and add tests
-4. Commit changes: `git commit -am 'Add feature'`
-5. Push to branch: `git push origin feature-name`
-6. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 🔗 Links
 
 - **Web UI**: <http://localhost:3000>
 - **API Documentation**: <http://localhost:8000/docs>
 - **Health Monitor**: <http://localhost:3000/health>
+
+---
+
+## 👨‍💻 Author & License
+
+All code and content in this repository is for educational and personal use.
+
+**Somesh Ramesh Ghaturle**  
+MS in Data Science, Pace University
+
+📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
 
 ---
 
