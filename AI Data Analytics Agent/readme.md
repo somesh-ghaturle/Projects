@@ -43,7 +43,39 @@ SOFTWARE.
 - **Import errors:** Verify all dependencies are installed with `pip install -r requirements.txt`
 - **Port conflicts:** Check if port 8501 is available or specify a different port
 
-## 🚀 Deployment Suggestions
+## � Docker (Production)
+
+We provide a production Docker image and docker-compose file to run the app.
+
+Build and start the production stack (from the project root):
+
+```bash
+cd "AI Data Analytics Agent"
+./start_production.sh
+```
+
+Stop the production stack:
+
+```bash
+docker-compose -f docker-compose.production.yml down
+```
+
+If port 8501 is already in use, stop the conflicting container or edit `docker-compose.production.yml` to map a different port.
+
+Service name and image naming conventions follow the repository pattern. The production service is named `ai-data-analytics-agent` and the image tag used is `somesh-ghaturle/ai-data-analytics:prod`.
+
+## 👨‍💻 Author & Professional Contact
+
+**Somesh Ramesh Ghaturle**  
+*MS in Data Science, Pace University*  
+
+### Professional Links
+📧 **Email**: [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub**: [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn**: [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
+
+
+## �🚀 Deployment Suggestions
 
 ### Option 1: Streamlit Cloud (Recommended)
 - Fork this repository to your GitHub account
@@ -77,14 +109,14 @@ MS in Data Science, Pace University
 
 This app is an AI-powered data analytics tool that leverages local LLMs via Ollama and provides an intuitive Streamlit web interface for comprehensive data analysis workflows. Perfect for data scientists, analysts, and researchers who need powerful, privacy-focused analytics capabilities.
 
-## 📚 Table of Contents
+│   └── web_ui.py                          # Main Streamlit application (entrypoint)
 
 - [🏗️ System Architecture](#️-system-architecture)
 - [🔄 Analytics Workflow](#-analytics-workflow)
 - [🤖 AI Processing Pipeline](#-ai-processing-pipeline)
 - [📁 Project Structure](#-project-structure)
-- [🎯 Features Overview](#-features-overview)
-- [⚙️ Installation & Usage](#️-installation--usage)
+   ```sh
+   streamlit run "web_ui.py"
 
 ## 🏗️ System Architecture
 
@@ -126,7 +158,7 @@ graph TB
     
     A --> B
     B --> E
-    E --> F
+ ## 👨‍💻 Author & License
     F --> G
     G --> H
     
@@ -254,7 +286,7 @@ AI Data Analytics Agent/
 │   └── requirements.txt                    # Python dependencies
 │
 ├── 🤖 Core Application
-│   └── Final Ai Agent.py                   # Main Streamlit application
+│   └── streamlit_app.py                   # Main Streamlit application
 │
 ├── 🔧 Configuration
 │   ├── .streamlit/                         # Streamlit configuration (if exists)
@@ -357,9 +389,9 @@ mindmap
 
 4. **Run the Application**
 
-   ```sh
-   streamlit run "Final Ai Agent.py"
-   ```
+  ```sh
+  streamlit run "streamlit_app.py"
+  ```
 
 5. **Access the App**
 

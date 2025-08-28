@@ -46,7 +46,6 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application files
 COPY app/ ./app/
-COPY frontend/ ./frontend/
 COPY multi_agent_content_api.py .
 COPY content_analytics_ui.html .
 COPY web_interface.html .

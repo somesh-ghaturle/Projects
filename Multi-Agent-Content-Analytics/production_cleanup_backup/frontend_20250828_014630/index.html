@@ -129,6 +129,32 @@
         .example-card:hover {
             transform: translateY(-5px);
         }
+
+        .api-status {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .result-card {
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .result-card h4 {
+            margin: 0 0 10px 0;
+        }
+        
+        .result-card p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
         
         /* Netflix theme */
         .netflix-theme {
@@ -192,6 +218,11 @@
         
         .netflix-theme .example-card:hover {
             box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+        }
+
+        .netflix-theme .result-card {
+            background-color: #333;
+            border: 1px solid #444;
         }
         
         /* Amazon Prime theme */
@@ -257,6 +288,11 @@
         .prime-theme .example-card:hover {
             box-shadow: 0 0 15px rgba(0, 168, 225, 0.4);
         }
+
+        .prime-theme .result-card {
+            background-color: #2a3543;
+            border: 1px solid #3a4553;
+        }
         
         /* HBO Max theme */
         .hbo-theme {
@@ -320,6 +356,11 @@
         
         .hbo-theme .example-card:hover {
             box-shadow: 0 0 15px rgba(197, 57, 180, 0.4);
+        }
+
+        .hbo-theme .result-card {
+            background-color: #36198a;
+            border: 1px solid #4f27bd;
         }
         
         /* Hulu theme */
@@ -387,6 +428,11 @@
         .hulu-theme .example-card:hover {
             box-shadow: 0 0 15px rgba(28, 231, 131, 0.4);
         }
+
+        .hulu-theme .result-card {
+            background-color: #234060;
+            border: 1px solid #2e5279;
+        }
         
         /* Disney+ theme */
         .disney-theme {
@@ -452,70 +498,14 @@
         .disney-theme .example-card:hover {
             box-shadow: 0 0 15px rgba(64, 169, 255, 0.4);
         }
-        .example-card {
-            padding: 15px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .example-card:hover {
-            background-color: #f0f0f0;
-        }
-        .example-card h4 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-        }
-        .example-card p {
-            margin: 0;
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        .api-status {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .result-card {
-            background-color: white;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .result-card h4 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 16px;
-        }
-        .result-card p {
-            margin: 5px 0;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .raw-results {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
-        .raw-results button {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
+
+        .disney-theme .result-card {
+            background-color: #2a4384;
+            border: 1px solid #355099;
         }
     </style>
 </head>
+
 <body class="netflix-theme">
     <div class="theme-switcher">
         <select id="theme-selector">
@@ -731,7 +721,7 @@ A child's laughter echoes from the walls.`
                 resultsDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
             } finally {
                 analyzeBtn.disabled = false;
-                analyzeBtn.textContent = '� Analyze with Agent';
+                analyzeBtn.textContent = '🚀 Analyze with Agent';
             }
         }
 
@@ -746,148 +736,113 @@ A child's laughter echoes from the walls.`
             `;
 
             if (agent === 'script_summarizer') {
-                // Handle new enhanced API response structure
-                const characters = results.characters?.main_characters || [];
-                const scenes = results.scenes?.scene_list || [];
-                const themes = results.themes_analysis?.primary_themes || [];
+                // Handle script summarizer results
+                const characters = results.characters || [];
+                const scenes = results.scenes || [];
+                const themes = results.themes || [];
                 
                 formattedHTML += `
                     <div class="result-card">
                         <h4>📊 Script Overview</h4>
-                        <p><strong>Summary:</strong> ${results.summary}</p>
-                        <p><strong>Word Count:</strong> ${results.word_count}</p>
+                        <p><strong>Summary:</strong> ${results.summary || 'No summary available'}</p>
+                        <p><strong>Word Count:</strong> ${results.word_count || 'N/A'}</p>
                         <p><strong>Estimated Runtime:</strong> ${results.estimated_runtime || 'N/A'}</p>
-                        <p><strong>Quality Score:</strong> ${results.script_quality_score || 'N/A'}/100</p>
                     </div>
                     <div class="result-card">
-                        <h4>🎭 Main Characters (${results.characters?.total_characters || 0} total)</h4>
+                        <h4>🎭 Characters</h4>
                         ${characters.length > 0 ? 
                             characters.slice(0, 5).map(char => 
-                                `<p><strong>${char.name}:</strong> ${char.dialogue_lines} lines 
-                                ${char.character_importance ? `(${char.character_importance} importance)` : ''}</p>`
+                                `<p><strong>${char.name || char}:</strong> ${char.description || ''}</p>`
                             ).join('') 
                             : '<p>No clear character names detected</p>'}
-                        ${results.characters?.protagonist_candidate && results.characters.protagonist_candidate !== 'Unknown' ? 
-                            `<p><strong>Protagonist:</strong> ${results.characters.protagonist_candidate}</p>` : ''}
                     </div>
                     <div class="result-card">
                         <h4>🏠 Scene Analysis</h4>
                         ${scenes.length > 0 ? 
-                            `<p><strong>Total Scenes:</strong> ${scenes.length}</p>
-                             <p><strong>Locations:</strong> ${scenes.slice(0, 3).map(s => s.location_name || s).join(', ')}${scenes.length > 3 ? '...' : ''}</p>`
+                            scenes.slice(0, 5).map(scene => 
+                                `<p><strong>${scene.setting || scene}:</strong> ${scene.description || ''}</p>`
+                            ).join('')
                             : '<p>No scene headers detected</p>'}
-                        ${results.plot_structure?.act_structure ? 
-                            `<p><strong>Structure:</strong> ${results.plot_structure.act_structure.acts} acts detected</p>` : ''}
                     </div>
-                    <div class="result-card">
-                        <h4>🎨 Content Analysis</h4>
-                        ${themes.length > 0 ? 
-                            `<p><strong>Primary Themes:</strong> ${themes.slice(0, 3).join(', ')}</p>` : ''}
-                        ${results.genre_analysis?.predicted_genre ? 
-                            `<p><strong>Predicted Genre:</strong> ${results.genre_analysis.predicted_genre}</p>` : ''}
-                        ${results.emotional_arc?.overall_tone ? 
-                            `<p><strong>Overall Tone:</strong> ${results.emotional_arc.overall_tone}</p>` : ''}
-                    </div>
-                    ${results.dialogue_analysis ? `
-                    <div class="result-card">
-                        <h4>💬 Dialogue Analysis</h4>
-                        <p><strong>Dialogue Ratio:</strong> ${(results.dialogue_analysis.dialogue_ratio * 100).toFixed(1)}%</p>
-                        <p><strong>Average Length:</strong> ${results.dialogue_analysis.avg_dialogue_length} words</p>
-                        ${results.dialogue_analysis.formality_score ? 
-                            `<p><strong>Formality:</strong> ${(results.dialogue_analysis.formality_score * 100).toFixed(0)}%</p>` : ''}
-                    </div>` : ''}
                 `;
             } else if (agent === 'genre_classifier') {
-                // Handle enhanced API response structure with fallbacks
-                const targetAudience = Array.isArray(results.target_audience) ? results.target_audience : 
-                                     results.target_audience ? [results.target_audience] : ['General audience'];
-                const characteristics = Array.isArray(results.characteristics) ? results.characteristics :
-                                      results.characteristics ? [results.characteristics] : ['Standard content'];
+                // Handle genre classifier results
+                const genres = results.genre_confidence || {};
+                const targetAudience = results.target_audience || 'General audience';
                 
                 formattedHTML += `
                     <div class="result-card">
                         <h4>🎯 Genre Classification</h4>
-                        <p><strong>Primary Genre:</strong> ${results.primary_genre?.toUpperCase() || 'UNSPECIFIED'} 
-                        ${results.confidence ? `(${(results.confidence * 100).toFixed(1)}% confident)` : ''}</p>
-                        <p><strong>Content Rating:</strong> ${results.content_rating || 'Not specified'}</p>
+                        <p><strong>Primary Genre:</strong> ${results.primary_genre || 'Unknown'}</p>
                     </div>
                     <div class="result-card">
-                        <h4>🎭 Mood Analysis</h4>
-                        <p><strong>Overall Mood:</strong> ${results.mood?.overall || 'Neutral'}</p>
-                        <p><strong>Intensity:</strong> ${results.mood?.intensity || 'Medium'}</p>
-                        <p><strong>Emotional Range:</strong> ${results.mood?.emotional_range || 'Varied'}</p>
+                        <h4>🔍 Genre Confidence</h4>
+                        ${Object.entries(genres).length > 0 ? 
+                            Object.entries(genres).map(([genre, confidence]) => {
+                                const percentage = Math.round(confidence * 100);
+                                return `
+                                    <p><strong>${genre}:</strong> ${percentage}%</p>
+                                    <div style="background-color: #444; height: 10px; border-radius: 5px; margin-top: 5px; margin-bottom: 10px;">
+                                        <div style="background-color: var(--accent-color, #e50914); height: 100%; border-radius: 5px; width: ${percentage}%;"></div>
+                                    </div>
+                                `;
+                            }).join('')
+                            : '<p>No genre confidence data available</p>'}
                     </div>
                     <div class="result-card">
                         <h4>👥 Target Audience</h4>
-                        <p>${targetAudience.join(', ')}</p>
-                    </div>
-                    <div class="result-card">
-                        <h4>📋 Content Characteristics</h4>
-                        <p>${characteristics.join(', ')}</p>
-                    </div>
-                    <div class="result-card">
-                        <h4>📊 Genre Scores</h4>
-                        ${results.genre_scores ? Object.entries(results.genre_scores)
-                            .sort((a, b) => b[1] - a[1])
-                            .slice(0, 5)
-                            .map(([genre, score]) => `<p>${genre}: ${(score * 100).toFixed(1)}%</p>`)
-                            .join('') : '<p>No genre scores available</p>'}
+                        <p>${targetAudience}</p>
                     </div>
                 `;
             } else if (agent === 'marketing_agent') {
-                // Handle API response with defensive programming
-                const marketingHooks = Array.isArray(results.marketing_hooks) ? results.marketing_hooks : [];
-                const similarContent = Array.isArray(results.similar_content) ? results.similar_content : [];
-                const taglines = Array.isArray(results.taglines) ? results.taglines : [];
-                const recommendedChannels = Array.isArray(results.recommended_channels) ? results.recommended_channels : [];
+                // Handle marketing agent results
+                const hooks = results.marketing_hooks || [];
+                const taglines = results.taglines || [];
+                const platforms = results.platforms || {};
                 
                 formattedHTML += `
                     <div class="result-card">
-                        <h4>🎯 Target Demographics</h4>
-                        <p><strong>Primary Age Group:</strong> ${results.target_demographics?.primary_age_group?.replace('_', ' ') || 'General audience'}</p>
-                        <p><strong>Gender Appeal:</strong> ${results.target_demographics?.gender_appeal || 'Universal'}</p>
+                        <h4>🎯 Target Audience</h4>
+                        <p>${results.target_audience || 'No target audience specified'}</p>
                     </div>
                     <div class="result-card">
-                        <h4>🚀 Marketing Hooks</h4>
-                        ${marketingHooks.length > 0 ? marketingHooks.map(hook => `<p>• ${hook}</p>`).join('') : '<p>No marketing hooks generated</p>'}
+                        <h4>💡 Marketing Hooks</h4>
+                        ${hooks.length > 0 ? 
+                            '<ul>' + hooks.map(hook => `<li>${hook}</li>`).join('') + '</ul>'
+                            : '<p>No marketing hooks generated</p>'}
                     </div>
                     <div class="result-card">
-                        <h4>📺 Marketing Channels</h4>
-                        ${recommendedChannels.length > 0 ? recommendedChannels.map(channel => 
-                            `<p><strong>${channel.platform || 'Platform'}:</strong> ${channel.priority || 'medium'} priority (${channel.content_type || 'various content'})</p>`
-                        ).join('') : '<p>No specific channel recommendations</p>'}
+                        <h4>📣 Suggested Taglines</h4>
+                        ${taglines.length > 0 ? 
+                            '<ul>' + taglines.map(tagline => `<li>${tagline}</li>`).join('') + '</ul>'
+                            : '<p>No taglines generated</p>'}
                     </div>
                     <div class="result-card">
-                        <h4>🎬 Similar Content</h4>
-                        <p>${similarContent.length > 0 ? similarContent.join(', ') : 'No similar content identified'}</p>
+                        <h4>📱 Recommended Platforms</h4>
+                        ${Object.entries(platforms).length > 0 ? 
+                            Object.entries(platforms).map(([platform, score]) => {
+                                const percentage = Math.round(score * 100);
+                                return `
+                                    <p><strong>${platform}:</strong> ${percentage}%</p>
+                                    <div style="background-color: #444; height: 10px; border-radius: 5px; margin-top: 5px; margin-bottom: 10px;">
+                                        <div style="background-color: var(--accent-color, #e50914); height: 100%; border-radius: 5px; width: ${percentage}%;"></div>
+                                    </div>
+                                `;
+                            }).join('')
+                            : '<p>No platform recommendations available</p>'}
                     </div>
+                `;
+            } else {
+                // Generic handler for any other agents
+                formattedHTML += `
                     <div class="result-card">
-                        <h4>💰 Budget Allocation</h4>
-                        ${results.budget_allocation ? Object.entries(results.budget_allocation).map(([category, percentage]) => 
-                            `<p><strong>${category.replace('_', ' ')}:</strong> ${percentage}</p>`
-                        ).join('') : '<p>No budget allocation specified</p>'}
-                    </div>
-                    <div class="result-card">
-                        <h4>🎪 Release Strategy</h4>
-                        <p><strong>Season:</strong> ${results.release_strategy?.recommended_season || 'Year-round'}</p>
-                        <p><strong>Platform:</strong> ${results.release_strategy?.platform_strategy || 'Multi-platform'}</p>
-                        <p><strong>International:</strong> ${results.release_strategy?.international_strategy || 'Regional rollout'}</p>
-                    </div>
-                    <div class="result-card">
-                        <h4>✨ Taglines</h4>
-                        ${taglines.length > 0 ? taglines.map(tagline => `<p>• "${tagline}"</p>`).join('') : '<p>No taglines generated</p>'}
+                        <h4>🔍 Analysis Results</h4>
+                        <pre>${JSON.stringify(results, null, 2)}</pre>
                     </div>
                 `;
             }
-
-            formattedHTML += `
-                </div>
-                <div class="raw-results">
-                    <h4>📄 Raw JSON Response <button onclick="toggleRawResults()" id="toggleBtn">Show</button></h4>
-                    <pre id="rawResults" style="display: none;">${JSON.stringify(data, null, 2)}</pre>
-                </div>
-            `;
-
+            
+            formattedHTML += `</div>`;
             return formattedHTML;
         }
 
@@ -913,8 +868,9 @@ A child's laughter echoes from the walls.`
                 
                 if (response.ok && data.agents) {
                     let agentsHTML = '<h3>🤖 Available Agents</h3><div class="results">';
-                    data.agents.forEach(agent => {
-                        agentsHTML += `<strong>${agent.name}</strong>: ${agent.description} (${agent.status})\n`;
+                    // Convert agents object to array and iterate
+                    Object.values(data.agents).forEach(agent => {
+                        agentsHTML += `<strong>${agent.name}</strong>: ${agent.description} (v${agent.version})\n`;
                     });
                     agentsHTML += '</div>';
                     resultsDiv.innerHTML = agentsHTML;
@@ -928,7 +884,6 @@ A child's laughter echoes from the walls.`
 
         function loadExample(type) {
             document.getElementById('contentInput').value = examples[type];
-            document.getElementById('analysisType').value = 'detailed';
         }
 
         // Theme selection handling

@@ -23,13 +23,13 @@ print("🚀 Opening Content Analytics Interface...")
 
 # Start server
 with socketserver.TCPServer(("", PORT), HTTPRequestHandler) as httpd:
-    print(f"\n💡 Make sure your Docker API is running on http://localhost:8000")
+    print(f"\n💡 Make sure your Docker API is running on http://localhost:8001")
     print("   To start it: docker-compose up -d")
-    print(f"\n🔗 Direct link: http://localhost:{PORT}/web_interface.html")
+    print(f"\n🔗 Direct link: http://localhost:{PORT}/hybrid_interface.html")
     print("\nPress Ctrl+C to stop the server")
     
     try:
-        webbrowser.open(f"http://localhost:{PORT}/web_interface.html")
+        webbrowser.open(f"http://localhost:{PORT}/hybrid_interface.html")
     except:
         pass
         

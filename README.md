@@ -147,7 +147,7 @@ cd "AI Data Analytics Agent"
 pip install -r requirements.txt
 ollama serve  # Start Ollama server
 ollama pull llama3  # Download model
-streamlit run "Final Ai Agent.py"
+streamlit run "streamlit_app.py"
 ```
 
 ### 📊 Analytics Capabilities

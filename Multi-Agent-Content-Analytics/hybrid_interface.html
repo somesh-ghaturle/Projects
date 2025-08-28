@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Content Analytics Platform</title>
+    <style>
+        /* Common styles for all themes */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switcher select {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background-color: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 15px;
+            resize: vertical;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        select, button {
+            padding: 10px 20px;
+            margin: 10px 5px 10px 0;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .movie-search {
+            width: 100%;
+            min-height: 150px;
+            padding: 16px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        .movie-suggestions {
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .movie-suggestion {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+        }
+        
+        .movie-suggestion:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .movie-poster {
+            width: 60px;
+            height: 90px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .movie-info {
+            flex: 1;
+        }
+        
+        .movie-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .movie-year {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .result-card {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .result-card h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .quick-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .example-card {
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .movie-details {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .movie-details h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .movie-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .movie-detail-card {
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .movie-detail-card h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .raw-results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .raw-results button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Netflix theme */
+        .netflix-theme {
+            background-color: #141414;
+            color: #e5e5e5;
+        }
+        
+        .netflix-theme .container {
+            background-color: #1a1a1a;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        
+        .netflix-theme h1 {
+            color: #e50914;
+        }
+        
+        .netflix-theme .section {
+            background-color: #222;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .netflix-theme .section h2 {
+            color: #ffffff;
+            border-bottom: 2px solid rgba(229, 9, 20, 0.5);
+            padding-bottom: 10px;
+        }
+        
+        .netflix-theme textarea {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        
+        .netflix-theme select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        
+        .netflix-theme button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+        }
+        
+        .netflix-theme button:hover {
+            background-color: #f40612;
+        }
+        
+        .netflix-theme button:disabled {
+            background-color: #5c0408;
+        }
+        
+        .netflix-theme .movie-search {
+            background-color: #2d2d2d;
+            border: none;
+            color: #fff;
+        }
+        
+        .netflix-theme .movie-suggestions {
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+        }
+        
+        .netflix-theme .movie-suggestion {
+            background-color: #2d2d2d;
+            border-bottom: 1px solid #444;
+            color: #fff;
+        }
+        
+        .netflix-theme .movie-suggestion:hover {
+            background-color: #3d3d3d;
+        }
+        
+        .netflix-theme .results {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        
+        .netflix-theme .result-card {
+            background-color: #3a3a3a;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .netflix-theme .result-card h4 {
+            color: #e50914;
+        }
+        
+        .netflix-theme .movie-details {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        
+        .netflix-theme .movie-detail-card {
+            background-color: #3a3a3a;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .netflix-theme .movie-detail-card h4 {
+            color: #e50914;
+        }
+        
+        .netflix-theme .example-card {
+            background-color: #3a3a3a;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .netflix-theme .status.success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        
+        .netflix-theme .status.error {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        .netflix-theme .raw-results {
+            background-color: #2d2d2d;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        
+        .netflix-theme .raw-results button {
+            background-color: #555;
+            color: white;
+        }
+        
+        .netflix-theme .raw-results button:hover {
+            background-color: #666;
+        }
+        
+        .hide-when-results-shown {
+            transition: opacity 0.3s, height 0.3s;
+        }
+        
+        .hide-when-results-shown.hidden {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body class="netflix-theme">
+    <div class="theme-switcher">
+        <select id="theme-selector">
+            <option value="netflix-theme">Netflix</option>
+            <option value="prime-theme">Amazon Prime</option>
+            <option value="hbo-theme">HBO Max</option>
+            <option value="hulu-theme">Hulu</option>
+            <option value="disney-theme">Disney+</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Multi-Agent Content Analytics</h1>
+            <p>Professional AI-powered script analysis and content intelligence</p>
+        </div>
+
+        <!-- Movie Search Section -->
+        <div class="section hide-when-results-shown" id="movieSearchSection">
+            <h2>🔍 Find Movie Content</h2>
+            <div class="search-container">
+                <input type="text" id="movieSearchInput" class="movie-search" placeholder="Search for a movie..." oninput="searchMovies(this.value)">
+                <div id="movieSuggestions" class="movie-suggestions"></div>
+            </div>
+        </div>
+
+        <!-- Selected Movie Details -->
+        <div class="movie-details hide-when-results-shown" id="selectedMovieDetails">
+            <h3>📽️ <span id="movieTitle"></span> <span id="movieYear"></span></h3>
+            <div class="movie-details-grid">
+                <div class="movie-detail-card">
+                    <h4>🎬 Movie Info</h4>
+                    <p><strong>Runtime:</strong> <span id="movieRuntime"></span></p>
+                    <p><strong>Genres:</strong> <span id="movieGenres"></span></p>
+                </div>
+                <div class="movie-detail-card">
+                    <h4>👥 Cast & Crew</h4>
+                    <p><strong>Director:</strong> <span id="movieDirector"></span></p>
+                    <p><strong>Cast:</strong> <span id="movieCast"></span></p>
+                </div>
+                <div class="movie-detail-card">
+                    <h4>📝 Plot</h4>
+                    <p id="moviePlot"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Analysis Section -->
+        <div class="section">
+            <h2>📝 Analyze Content with AI Agents</h2>
+            <div>
+                <label for="contentInput"><strong>Movie script or content:</strong></label>
+                <textarea id="contentInput" placeholder="Enter your movie script, story, or any content here..."></textarea>
+            </div>
+            
+            <div>
+                <label for="agentSelect"><strong>Choose AI Agent:</strong></label>
+                <select id="agentSelect">
+                    <option value="script_summarizer">📝 Script Summarizer - Extract scenes, characters, themes</option>
+                    <option value="genre_classifier">🎯 Genre Classifier - Identify genre, mood, audience</option>
+                    <option value="marketing_agent">📈 Marketing Agent - Get marketing strategy & insights</option>
+                </select>
+                
+                <button onclick="analyzeWithAgent()" id="analyzeAgentBtn">🚀 Analyze with Agent</button>
+            </div>
+
+            <div id="agentResults"></div>
+        </div>
+
+        <!-- Quick Examples -->
+        <div class="section hide-when-results-shown" id="examplesSection">
+            <h2>🚀 Quick Examples</h2>
+            <p>Click on any example below to try it:</p>
+            
+            <div class="quick-examples">
+                <div class="example-card" onclick="loadExample('scifi')">
+                    <h4>🛸 Sci-Fi Script</h4>
+                    <p>Space exploration and alien contact</p>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('romance')">
+                    <h4>💕 Romance Script</h4>
+                    <p>Coffee shop meet-cute scene</p>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('action')">
+                    <h4>🔥 Action Script</h4>
+                    <p>High-stakes chase sequence</p>
+                </div>
+                
+                <div class="example-card" onclick="loadExample('horror')">
+                    <h4>👻 Horror Script</h4>
+                    <p>Mysterious haunted house</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8001';
+        
+        // Example content
+        const examples = {
+            scifi: `FADE IN:
+
+EXT. MARS COLONY - DAY
+
+The red planet stretches endlessly. COMMANDER ALEX (40s) stands at the observation deck, watching Earth rise over the Martian horizon.
+
+ALEX
+(into comm device)
+Mission Control, we've detected something unusual. There are structures here that predate human arrival.
+
+A shadow moves across the ancient alien ruins in the distance.
+
+FADE OUT.`,
+
+            romance: `INT. COFFEE SHOP - MORNING
+
+SARAH (28) sits alone, typing on her laptop. JAMES (30) approaches nervously with two coffee cups.
+
+JAMES
+Excuse me, I couldn't help but notice you're writing something. I'm a writer too.
+
+SARAH
+(looking up, smiling)
+Really? What do you write?
+
+Their eyes meet. Something magical happens.`,
+
+            action: `EXT. CITY ROOFTOP - NIGHT
+
+AGENT CARTER sprints across rooftops, bullets whizzing past. The helicopter searchlight sweeps the area.
+
+CARTER
+(into earpiece)
+Package secured. Need immediate extraction!
+
+Carter leaps between buildings as explosions light up the night sky behind them.
+
+CARTER (CONT'D)
+This mission just went sideways!`,
+
+            horror: `INT. ABANDONED MANSION - NIGHT
+
+The floorboards creak as JENNY (20s) slowly climbs the dusty staircase. Her flashlight flickers ominously.
+
+JENNY
+(whispering)
+Hello? Is anyone there?
+
+A door slams shut somewhere in the darkness. The temperature drops noticeably.
+
+JENNY (CONT'D)
+(voice trembling)
+I shouldn't have come here alone.
+
+A child's laughter echoes from the walls.`
+        };
+
+        // Local movie database
+        const LOCAL_MOVIE_DATABASE = [
+            {
+                id: 1,
+                title: "The Shawshank Redemption",
+                year: 1994,
+                poster_path: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+                overview: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.",
+                runtime: 142,
+                genres: [{"id": 18, "name": "Drama"}, {"id": 80, "name": "Crime"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Frank Darabont"}],
+                    cast: [
+                        {"name": "Tim Robbins"}, 
+                        {"name": "Morgan Freeman"}, 
+                        {"name": "Bob Gunton"}, 
+                        {"name": "William Sadler"}, 
+                        {"name": "Clancy Brown"}
+                    ]
+                },
+                release_date: "1994-09-23"
+            },
+            {
+                id: 2,
+                title: "The Godfather",
+                year: 1972,
+                poster_path: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+                overview: "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.",
+                runtime: 175,
+                genres: [{"id": 18, "name": "Drama"}, {"id": 80, "name": "Crime"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Francis Ford Coppola"}],
+                    cast: [
+                        {"name": "Marlon Brando"}, 
+                        {"name": "Al Pacino"}, 
+                        {"name": "James Caan"}, 
+                        {"name": "Richard S. Castellano"}, 
+                        {"name": "Robert Duvall"}
+                    ]
+                },
+                release_date: "1972-03-14"
+            },
+            {
+                id: 3,
+                title: "The Dark Knight",
+                year: 2008,
+                poster_path: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+                overview: "Batman raises the stakes in his war on crime. With the help of Lt. Jim Gordon and District Attorney Harvey Dent, Batman sets out to dismantle the remaining criminal organizations that plague the streets. The partnership proves to be effective, but they soon find themselves prey to a reign of chaos unleashed by a rising criminal mastermind known to the terrified citizens of Gotham as the Joker.",
+                runtime: 152,
+                genres: [{"id": 18, "name": "Drama"}, {"id": 28, "name": "Action"}, {"id": 80, "name": "Crime"}, {"id": 53, "name": "Thriller"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Christopher Nolan"}],
+                    cast: [
+                        {"name": "Christian Bale"}, 
+                        {"name": "Heath Ledger"}, 
+                        {"name": "Aaron Eckhart"}, 
+                        {"name": "Michael Caine"}, 
+                        {"name": "Gary Oldman"}
+                    ]
+                },
+                release_date: "2008-07-16"
+            },
+            {
+                id: 4,
+                title: "Pulp Fiction",
+                year: 1994,
+                poster_path: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+                overview: "A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper. Their adventures unfurl in three stories that ingeniously trip back and forth in time.",
+                runtime: 154,
+                genres: [{"id": 53, "name": "Thriller"}, {"id": 80, "name": "Crime"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Quentin Tarantino"}],
+                    cast: [
+                        {"name": "John Travolta"}, 
+                        {"name": "Uma Thurman"}, 
+                        {"name": "Samuel L. Jackson"}, 
+                        {"name": "Bruce Willis"}, 
+                        {"name": "Ving Rhames"}
+                    ]
+                },
+                release_date: "1994-09-10"
+            },
+            {
+                id: 5,
+                title: "Inception",
+                year: 2010,
+                poster_path: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+                overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious.",
+                runtime: 148,
+                genres: [{"id": 28, "name": "Action"}, {"id": 53, "name": "Thriller"}, {"id": 878, "name": "Science Fiction"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Christopher Nolan"}],
+                    cast: [
+                        {"name": "Leonardo DiCaprio"}, 
+                        {"name": "Joseph Gordon-Levitt"}, 
+                        {"name": "Elliot Page"}, 
+                        {"name": "Tom Hardy"}, 
+                        {"name": "Ken Watanabe"}
+                    ]
+                },
+                release_date: "2010-07-15"
+            },
+            {
+                id: 6,
+                title: "Interstellar",
+                year: 2014,
+                poster_path: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+                overview: "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+                runtime: 169,
+                genres: [{"id": 12, "name": "Adventure"}, {"id": 18, "name": "Drama"}, {"id": 878, "name": "Science Fiction"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Christopher Nolan"}],
+                    cast: [
+                        {"name": "Matthew McConaughey"}, 
+                        {"name": "Anne Hathaway"}, 
+                        {"name": "Jessica Chastain"}, 
+                        {"name": "Mackenzie Foy"}, 
+                        {"name": "Michael Caine"}
+                    ]
+                },
+                release_date: "2014-11-05"
+            },
+            {
+                id: 7,
+                title: "The Matrix",
+                year: 1999,
+                poster_path: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+                overview: "Set in the 22nd century, The Matrix tells the story of a computer hacker who joins a group of underground insurgents fighting the vast and powerful computers who now rule the earth.",
+                runtime: 136,
+                genres: [{"id": 28, "name": "Action"}, {"id": 878, "name": "Science Fiction"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Lana Wachowski"}, {"job": "Director", "name": "Lilly Wachowski"}],
+                    cast: [
+                        {"name": "Keanu Reeves"}, 
+                        {"name": "Laurence Fishburne"}, 
+                        {"name": "Carrie-Anne Moss"}, 
+                        {"name": "Hugo Weaving"}, 
+                        {"name": "Joe Pantoliano"}
+                    ]
+                },
+                release_date: "1999-03-30"
+            },
+            {
+                id: 8,
+                title: "The Lord of the Rings: The Fellowship of the Ring",
+                year: 2001,
+                poster_path: "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+                overview: "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
+                runtime: 178,
+                genres: [{"id": 12, "name": "Adventure"}, {"id": 14, "name": "Fantasy"}, {"id": 28, "name": "Action"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Peter Jackson"}],
+                    cast: [
+                        {"name": "Elijah Wood"}, 
+                        {"name": "Ian McKellen"}, 
+                        {"name": "Viggo Mortensen"}, 
+                        {"name": "Sean Astin"}, 
+                        {"name": "Sean Bean"}
+                    ]
+                },
+                release_date: "2001-12-18"
+            },
+            {
+                id: 9,
+                title: "Star Wars: Episode IV - A New Hope",
+                year: 1977,
+                poster_path: "https://image.tmdb.org/t/p/w500/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+                overview: "Princess Leia is captured and held hostage by the evil Imperial forces in their effort to take over the galactic Empire. Venturesome Luke Skywalker and dashing captain Han Solo team together with the loveable robot duo R2-D2 and C-3PO to rescue the beautiful princess and restore peace and justice in the Empire.",
+                runtime: 121,
+                genres: [{"id": 12, "name": "Adventure"}, {"id": 28, "name": "Action"}, {"id": 878, "name": "Science Fiction"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "George Lucas"}],
+                    cast: [
+                        {"name": "Mark Hamill"}, 
+                        {"name": "Harrison Ford"}, 
+                        {"name": "Carrie Fisher"}, 
+                        {"name": "Peter Cushing"}, 
+                        {"name": "Alec Guinness"}
+                    ]
+                },
+                release_date: "1977-05-25"
+            },
+            {
+                id: 10,
+                title: "The Silence of the Lambs",
+                year: 1991,
+                poster_path: "https://image.tmdb.org/t/p/w500/rplLJ2hPcOQmkFhTqUte0Ql3CeQ.jpg",
+                overview: "Clarice Starling, a young FBI trainee, seeks the advice of the imprisoned Dr. Hannibal Lecter, a brilliant psychiatrist and cannibalistic serial killer to apprehend another serial killer, known only as \"Buffalo Bill\", who skins his female victims' corpses.",
+                runtime: 118,
+                genres: [{"id": 80, "name": "Crime"}, {"id": 18, "name": "Drama"}, {"id": 53, "name": "Thriller"}, {"id": 27, "name": "Horror"}],
+                credits: {
+                    crew: [{"job": "Director", "name": "Jonathan Demme"}],
+                    cast: [
+                        {"name": "Jodie Foster"}, 
+                        {"name": "Anthony Hopkins"}, 
+                        {"name": "Scott Glenn"}, 
+                        {"name": "Ted Levine"}, 
+                        {"name": "Anthony Heald"}
+                    ]
+                },
+                release_date: "1991-02-01"
+            }
+        ];
+
+        // Function to search movies from local database
+        function searchMovies(query) {
+            const suggestionsDiv = document.getElementById('movieSuggestions');
+            
+            if (!query || query.trim().length < 2) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            const lowerQuery = query.toLowerCase();
+            const results = LOCAL_MOVIE_DATABASE.filter(movie => 
+                movie.title.toLowerCase().includes(lowerQuery)
+            );
+            
+            if (results.length > 0) {
+                const html = results.map(movie => `
+                    <div class="movie-suggestion" onclick="getMovieDetails(${movie.id})">
+                        <img src="${movie.poster_path}" alt="${movie.title}" class="movie-poster">
+                        <div class="movie-info">
+                            <div class="movie-title">${movie.title}</div>
+                            <div class="movie-year">${movie.year}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                suggestionsDiv.innerHTML = html;
+                suggestionsDiv.style.display = 'block';
+            } else {
+                suggestionsDiv.innerHTML = '<div class="movie-suggestion">No movies found</div>';
+                suggestionsDiv.style.display = 'block';
+            }
+        }
+        
+        // Function to get movie details from local database
+        function getMovieDetails(movieId) {
+            try {
+                // Find the movie in the local database
+                const movie = LOCAL_MOVIE_DATABASE.find(m => m.id === movieId);
+                
+                if (movie) {
+                    // Format runtime as "X min"
+                    const runtime = movie.runtime ? `${movie.runtime} min` : 'Unknown';
+                    
+                    // Get genres as a string
+                    const genres = movie.genres ? movie.genres.map(g => g.name).join(', ') : '';
+                    
+                    // Get director from credits
+                    let director = 'Unknown';
+                    if (movie.credits && movie.credits.crew) {
+                        const directors = movie.credits.crew.filter(person => person.job === 'Director');
+                        if (directors.length > 0) {
+                            director = directors.map(d => d.name).join(', ');
+                        }
+                    }
+                    
+                    // Get cast from credits
+                    let cast = 'Unknown';
+                    if (movie.credits && movie.credits.cast) {
+                        // Get top 5 cast members
+                        cast = movie.credits.cast.slice(0, 5).map(actor => actor.name).join(', ');
+                    }
+                    
+                    // Update the movie details section
+                    document.getElementById('movieTitle').textContent = movie.title;
+                    document.getElementById('movieYear').textContent = movie.release_date ? movie.release_date.substring(0, 4) : '';
+                    document.getElementById('movieRuntime').textContent = runtime;
+                    document.getElementById('movieGenres').textContent = genres;
+                    document.getElementById('moviePlot').textContent = movie.overview;
+                    document.getElementById('movieDirector').textContent = director;
+                    document.getElementById('movieCast').textContent = cast;
+                    
+                    // Show the movie details section
+                    document.getElementById('selectedMovieDetails').style.display = 'block';
+                    
+                    // Update the contentInput with the movie info
+                    document.getElementById('contentInput').value = 
+                        `TITLE: ${movie.title}\n\n` +
+                        `GENRE: ${genres}\n\n` +
+                        `PLOT SUMMARY:\n${movie.overview}\n\n` +
+                        `DIRECTOR: ${director}\n\n` +
+                        `CAST: ${cast}\n`;
+                    
+                    // Hide the suggestions
+                    document.getElementById('movieSuggestions').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error getting movie details:', error);
+            }
+        }
+        
+        // Close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                document.getElementById('movieSuggestions').style.display = 'none';
+            }
+        });
+
+        async function analyzeWithAgent() {
+            const content = document.getElementById('contentInput').value.trim();
+            const selectedAgent = document.getElementById('agentSelect').value;
+            const resultsDiv = document.getElementById('agentResults');
+            const analyzeBtn = document.getElementById('analyzeAgentBtn');
+
+            if (!content) {
+                alert('Please enter some content to analyze!');
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '🔄 Analyzing...';
+            
+            // Hide the sections that should be hidden when results are shown
+            document.querySelectorAll('.hide-when-results-shown').forEach(element => {
+                element.classList.add('hidden');
+            });
+            
+            try {
+                const response = await fetch(`${API_URL}/agent/${selectedAgent}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        agent_name: selectedAgent
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = formatAgentResults(data);
+                } else {
+                    resultsDiv.innerHTML = `<div class="status error">Error: ${data.detail || 'Analysis failed'}</div>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '🚀 Analyze with Agent';
+            }
+        }
+
+        function formatAgentResults(data) {
+            const agent = data.agent;
+            const results = data.results;
+            
+            let formattedHTML = `
+                <h3>🤖 ${agent.replace('_', ' ').toUpperCase()} Results</h3>
+                <div class="status success">✅ Analysis completed in ${data.processing_time || 0}s</div>
+                <div class="results-grid">
+            `;
+
+            if (agent === 'script_summarizer') {
+                // Handle script summarizer results
+                const characters = results.characters?.main_characters || [];
+                const scenes = results.scenes?.scene_list || [];
+                const themes = results.themes_analysis?.primary_themes || [];
+                
+                formattedHTML += `
+                    <div class="result-card">
+                        <h4>📊 Script Overview</h4>
+                        <p><strong>Summary:</strong> ${results.summary}</p>
+                        <p><strong>Word Count:</strong> ${results.word_count}</p>
+                        <p><strong>Estimated Runtime:</strong> ${results.estimated_runtime || 'N/A'}</p>
+                        <p><strong>Quality Score:</strong> ${results.script_quality_score || 'N/A'}/100</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>🎭 Main Characters (${results.characters?.total_characters || 0} total)</h4>
+                        ${characters.length > 0 ? 
+                            characters.slice(0, 5).map(char => 
+                                `<p><strong>${char.name}:</strong> ${char.dialogue_lines} lines 
+                                ${char.character_importance ? `(${char.character_importance} importance)` : ''}</p>`
+                            ).join('') 
+                            : '<p>No clear character names detected</p>'}
+                        ${results.characters?.protagonist_candidate && results.characters.protagonist_candidate !== 'Unknown' ? 
+                            `<p><strong>Protagonist:</strong> ${results.characters.protagonist_candidate}</p>` : ''}
+                    </div>
+                    <div class="result-card">
+                        <h4>🏠 Scene Analysis</h4>
+                        ${scenes.length > 0 ? 
+                            `<p><strong>Total Scenes:</strong> ${scenes.length}</p>
+                             <p><strong>Locations:</strong> ${scenes.slice(0, 3).map(s => s.location_name || s).join(', ')}${scenes.length > 3 ? '...' : ''}</p>`
+                            : '<p>No scene headers detected</p>'}
+                        ${results.plot_structure?.act_structure ? 
+                            `<p><strong>Structure:</strong> ${results.plot_structure.act_structure.acts} acts detected</p>` : ''}
+                    </div>
+                    <div class="result-card">
+                        <h4>🎨 Content Analysis</h4>
+                        ${themes.length > 0 ? 
+                            `<p><strong>Primary Themes:</strong> ${themes.slice(0, 3).join(', ')}</p>` : ''}
+                        ${results.genre_analysis?.predicted_genre ? 
+                            `<p><strong>Predicted Genre:</strong> ${results.genre_analysis.predicted_genre}</p>` : ''}
+                        ${results.emotional_arc?.overall_tone ? 
+                            `<p><strong>Overall Tone:</strong> ${results.emotional_arc.overall_tone}</p>` : ''}
+                    </div>
+                    ${results.dialogue_analysis ? `
+                    <div class="result-card">
+                        <h4>💬 Dialogue Analysis</h4>
+                        <p><strong>Dialogue Ratio:</strong> ${(results.dialogue_analysis.dialogue_ratio * 100).toFixed(1)}%</p>
+                        <p><strong>Average Length:</strong> ${results.dialogue_analysis.avg_dialogue_length} words</p>
+                        ${results.dialogue_analysis.formality_score ? 
+                            `<p><strong>Formality:</strong> ${(results.dialogue_analysis.formality_score * 100).toFixed(0)}%</p>` : ''}
+                    </div>` : ''}
+                `;
+            } else if (agent === 'genre_classifier') {
+                // Handle genre classifier results
+                const genreScores = results.genre_scores || {};
+                const sortedGenres = Object.entries(genreScores)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const mood = results.mood_analysis || {};
+                const content_type = results.content_type || [];
+                
+                formattedHTML += `
+                    <div class="result-card">
+                        <h4>🎯 Primary Genre</h4>
+                        <p><strong>${results.predicted_genre || 'Unknown'}</strong> (${(sortedGenres[0]?.[1] * 100).toFixed(1)}% confidence)</p>
+                        <p><strong>Content Rating:</strong> ${results.suggested_rating || 'Not rated'}</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>📊 Genre Breakdown</h4>
+                        ${sortedGenres.map(([genre, score]) => 
+                            `<p><strong>${genre}:</strong> ${(score * 100).toFixed(1)}%</p>`
+                        ).join('')}
+                    </div>
+                    <div class="result-card">
+                        <h4>🎭 Mood Analysis</h4>
+                        <p><strong>Tone:</strong> ${mood.primary_tone || 'Neutral'}</p>
+                        <p><strong>Emotions:</strong> ${Object.entries(mood.emotions || {})
+                            .sort((a, b) => b[1] - a[1])
+                            .slice(0, 3)
+                            .map(([emotion, intensity]) => `${emotion} (${(intensity * 100).toFixed(0)}%)`)
+                            .join(', ')}
+                        </p>
+                    </div>
+                    <div class="result-card">
+                        <h4>👥 Target Audience</h4>
+                        <p><strong>Demographics:</strong> ${results.target_audience?.join(', ') || 'General audience'}</p>
+                        <p><strong>Content Type:</strong> ${content_type.join(', ')}</p>
+                    </div>
+                `;
+            } else if (agent === 'marketing_agent') {
+                // Handle marketing agent results
+                const demographics = results.target_demographics || {};
+                const marketingHooks = results.marketing_hooks || [];
+                const recommendedChannels = results.recommended_channels || [];
+                const similarContent = results.similar_content || [];
+                const taglines = results.taglines || [];
+                
+                formattedHTML += `
+                    <div class="result-card">
+                        <h4>👥 Target Demographics</h4>
+                        <p><strong>Age Group:</strong> ${demographics.primary_age_group || 'All ages'}</p>
+                        <p><strong>Gender Appeal:</strong> ${demographics.gender_appeal || 'Universal'}</p>
+                        <p><strong>Interest Segments:</strong> ${demographics.interest_segments?.join(', ') || 'General interest'}</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>🚀 Marketing Hooks</h4>
+                        ${marketingHooks.length > 0 ? marketingHooks.map(hook => `<p>• ${hook}</p>`).join('') : '<p>No marketing hooks generated</p>'}
+                    </div>
+                    <div class="result-card">
+                        <h4>📺 Marketing Channels</h4>
+                        ${recommendedChannels.length > 0 ? recommendedChannels.map(channel => 
+                            `<p><strong>${channel.platform || 'Platform'}:</strong> ${channel.priority || 'medium'} priority (${channel.content_type || 'various content'})</p>`
+                        ).join('') : '<p>No specific channel recommendations</p>'}
+                    </div>
+                    <div class="result-card">
+                        <h4>🎬 Similar Content</h4>
+                        <p>${similarContent.length > 0 ? similarContent.join(', ') : 'No similar content identified'}</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>💰 Budget Allocation</h4>
+                        ${results.budget_allocation ? Object.entries(results.budget_allocation).map(([category, percentage]) => 
+                            `<p><strong>${category.replace('_', ' ')}:</strong> ${percentage}</p>`
+                        ).join('') : '<p>No budget allocation specified</p>'}
+                    </div>
+                    <div class="result-card">
+                        <h4>🎪 Release Strategy</h4>
+                        <p><strong>Season:</strong> ${results.release_strategy?.recommended_season || 'Year-round'}</p>
+                        <p><strong>Platform:</strong> ${results.release_strategy?.platform_strategy || 'Multi-platform'}</p>
+                        <p><strong>International:</strong> ${results.release_strategy?.international_strategy || 'Regional rollout'}</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>✨ Taglines</h4>
+                        ${taglines.length > 0 ? taglines.map(tagline => `<p>• "${tagline}"</p>`).join('') : '<p>No taglines generated</p>'}
+                    </div>
+                `;
+            }
+
+            formattedHTML += `
+                </div>
+                <div class="raw-results">
+                    <h4>📄 Raw JSON Response <button onclick="toggleRawResults()" id="toggleBtn">Show</button></h4>
+                    <pre id="rawResults" style="display: none;">${JSON.stringify(data, null, 2)}</pre>
+                </div>
+                <button onclick="resetInterface()" style="margin-top: 20px;">← Back to Search</button>
+            `;
+
+            return formattedHTML;
+        }
+
+        function toggleRawResults() {
+            const rawResults = document.getElementById('rawResults');
+            const toggleBtn = document.getElementById('toggleBtn');
+            
+            if (rawResults.style.display === 'none') {
+                rawResults.style.display = 'block';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                rawResults.style.display = 'none';
+                toggleBtn.textContent = 'Show';
+            }
+        }
+        
+        function resetInterface() {
+            // Show hidden sections
+            document.querySelectorAll('.hide-when-results-shown').forEach(element => {
+                element.classList.remove('hidden');
+            });
+            
+            // Clear results
+            document.getElementById('agentResults').innerHTML = '';
+        }
+
+        function loadExample(type) {
+            document.getElementById('contentInput').value = examples[type];
+        }
+
+        // Theme selection handling
+        const themeSelector = document.getElementById('theme-selector');
+        const body = document.body;
+        
+        // Check if there's a saved theme preference
+        const savedTheme = localStorage.getItem('preferredTheme') || 'netflix-theme';
+        body.className = savedTheme;
+        themeSelector.value = savedTheme;
+        
+        themeSelector.addEventListener('change', function() {
+            const selectedTheme = themeSelector.value;
+            body.className = selectedTheme;
+            localStorage.setItem('preferredTheme', selectedTheme);
+            updateAccentColor();
+        });
+        
+        // Set theme-specific accent colors for charts/graphs
+        function updateAccentColor() {
+            const theme = body.className;
+            let accentColor = '#e50914'; // Netflix default
+            
+            if (theme === 'prime-theme') accentColor = '#00a8e1';
+            else if (theme === 'hbo-theme') accentColor = '#c539b4';
+            else if (theme === 'hulu-theme') accentColor = '#1ce783';
+            else if (theme === 'disney-theme') accentColor = '#40a9ff';
+            
+            document.documentElement.style.setProperty('--accent-color', accentColor);
+        }
+        
+        // Update accent color on page load
+        updateAccentColor();
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAccentColor();
+        });
+    </script>
+</body>
+</html>

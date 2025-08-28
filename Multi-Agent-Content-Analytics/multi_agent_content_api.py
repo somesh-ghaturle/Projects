@@ -968,11 +968,16 @@ async def health_check():
 async def web_interface():
     """Serve the web interface"""
     try:
-        with open("content_analytics_ui.html", "r") as f:
-            html_content = f.read()
+        # First try web_interface.html, fall back to content_analytics_ui.html
+        try:
+            with open("web_interface.html", "r") as f:
+                html_content = f.read()
+        except FileNotFoundError:
+            with open("content_analytics_ui.html", "r") as f:
+                html_content = f.read()
         return HTMLResponse(content=html_content)
     except FileNotFoundError:
-        return HTMLResponse(content="<h1>Web interface not found</h1><p>Please ensure content_analytics_ui.html exists.</p>")
+        return HTMLResponse(content="<h1>Web interface not found</h1><p>Please ensure web_interface.html or content_analytics_ui.html exists.</p>")
 
 @app.get("/ui")
 async def ui_redirect():

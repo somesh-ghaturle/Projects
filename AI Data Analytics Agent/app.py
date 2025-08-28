@@ -1,21 +1,19 @@
 """
-This file has been archived. The original implementation is stored at
-`docs/legacy/Final_Ai_Agent.orig.py`.
+Deprecated `app.py` placeholder.
+The analytics implementation has been moved to `analytics_core.py` and the
+Streamlit entrypoint is `web_ui.py`.
 
-Please use the new entrypoint: `web_ui.py`.
-Run with:
-    streamlit run web_ui.py
+If you need the original full source, see `docs/legacy/app.orig.py`.
 """
 
-if __name__ == '__main__':
-    print("This file has been archived. Run: streamlit run web_ui.py")
-"""
-This file was archived and its original contents moved to `docs/legacy/Final_Ai_Agent.orig.py`.
-Please run `streamlit run web_ui.py` (new default) or `streamlit run web_ui.py`.
-"""
+from analytics_core import OllamaAnalyticsAgent, AnalysisResult, StreamlitInterface
 
-if __name__ == '__main__':
-    print("This file has been archived. Run: streamlit run web_ui.py")
+__all__ = ["OllamaAnalyticsAgent", "AnalysisResult", "StreamlitInterface"]
+import os
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 import asyncio
@@ -28,6 +26,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
+import time
 
 # Ollama Integration
 import ollama
@@ -95,15 +94,29 @@ class OllamaAnalyticsAgent:
         # Build enhanced prompt with context
         enhanced_prompt = self._build_enhanced_prompt(prompt, context)
         try:
-            response = ollama.generate(
-                model=self.model_name,
-                prompt=enhanced_prompt,
-                options={
-                    'temperature': 0.7,
-                    'top_p': 0.9,
-                    'num_predict': 2048,
-                }
-            )
+            # Run ollama.generate in a thread with a timeout to avoid blocking the UI indefinitely.
+            import concurrent.futures
+            options = {
+                'temperature': 0.7,
+                'top_p': 0.9,
+                # Reduce token prediction to speed up responses in interactive mode
+                'num_predict': 512,
+            }
+            def _gen():
+                return ollama.generate(model=self.model_name, prompt=enhanced_prompt, options=options)
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(_gen)
+                try:
+                    t0 = time.time()
+                    response = future.result(timeout=30)  # 30s timeout for Ollama
+                    t1 = time.time()
+                    self.data_cache['last_ollama_time'] = t1 - t0
+                except concurrent.futures.TimeoutError:
+                    future.cancel()
+                    st.error("Ollama request timed out (30s). Try with a smaller dataset or run locally with more resources.")
+                    self.data_cache['last_ollama_time'] = None
+                    return "[ERROR] Ollama timeout"
             # st.info(f"[DEBUG] Ollama response: {response}")
             full_response = response.get('response', None)
             if not full_response:
@@ -115,6 +128,11 @@ class OllamaAnalyticsAgent:
                 'response': full_response,
                 'timestamp': datetime.now().isoformat()
             })
+            # Also store last response time in conversation history for quick access
+            try:
+                self.conversation_history[-1]['ollama_time'] = self.data_cache.get('last_ollama_time')
+            except Exception:
+                pass
             return full_response
         except Exception as e:
             error_msg = f"Error communicating with Ollama: {str(e)}"
@@ -152,7 +170,20 @@ class OllamaAnalyticsAgent:
             if file_path.endswith('.csv'):
                 data = pd.read_csv(file_path)
             elif file_path.endswith('.xlsx') or file_path.endswith('.xls'):
-                data = pd.read_excel(file_path)
+                try:
+                    # Explicitly use openpyxl engine for Excel files
+                    import openpyxl
+                    data = pd.read_excel(file_path, engine='openpyxl')
+                except ImportError:
+                    print("❌ Error: The openpyxl package is required for Excel files.")
+                    print("Installing openpyxl...")
+                    import subprocess
+                    subprocess.check_call(["pip", "install", "openpyxl"])
+                    print("Retrying with openpyxl...")
+                    data = pd.read_excel(file_path, engine='openpyxl')
+                except Exception as excel_error:
+                    print(f"❌ Excel-specific error: {str(excel_error)}")
+                    raise
             elif file_path.endswith('.json'):
                 data = pd.read_json(file_path)
             else:
@@ -211,7 +242,17 @@ class OllamaAnalyticsAgent:
         context = self.data_cache.get('data_summary', '')
         
         # Generate statistical analysis
-        stats_summary = self._generate_statistical_summary(data)
+        # If dataset is large, sample to speed up analysis and visualizations
+        MAX_ROWS = 20000
+        SAMPLE_ROWS = 5000
+        if data.shape[0] > MAX_ROWS:
+            sampled_data = data.sample(n=SAMPLE_ROWS, random_state=42)
+            stats_summary = self._generate_statistical_summary(sampled_data)
+            used_data = sampled_data
+            self.data_cache['analysis_used_sample'] = True
+        else:
+            stats_summary = self._generate_statistical_summary(data)
+            used_data = data
         
         prompt = f"""Analyze this dataset and provide comprehensive descriptive insights:
 
@@ -227,13 +268,25 @@ Please provide:
 """
         
         insights = self.ask_ollama_stream(prompt, context)
-        
-        # Generate visualizations
-        visualizations = self._create_descriptive_visualizations(data)
-        
+
+        # Generate visualizations (time this step)
+        t_vis0 = time.time()
+        visualizations = self._create_descriptive_visualizations(used_data)
+        t_vis1 = time.time()
+        vis_time = t_vis1 - t_vis0
+        self.data_cache['last_visualization_time'] = vis_time
+
+        results = {
+            "statistical_summary": stats_summary,
+            "timings": {
+                "ollama_seconds": self.data_cache.get('last_ollama_time'),
+                "visualization_seconds": self.data_cache.get('last_visualization_time')
+            }
+        }
+
         return AnalysisResult(
             analysis_type="descriptive",
-            results={"statistical_summary": stats_summary},
+            results=results,
             insights=insights,
             visualizations=visualizations
         )
@@ -783,13 +836,32 @@ class StreamlitInterface:
         agent = st.session_state.get('agent', None)
         data = st.session_state.get('data', None)
         if uploaded_file and agent:
-            # Save uploaded file
-            file_path = f"temp_{uploaded_file.name}"
-            with open(file_path, "wb") as f:
-                f.write(uploaded_file.getvalue())
-            # Load data
-            data = agent.load_and_analyze_data(file_path)
-            st.session_state.data = data
+            try:
+                # Ensure data directory exists
+                os.makedirs("data", exist_ok=True)
+                
+                # Save uploaded file to data directory
+                file_path = os.path.join("data", f"temp_{uploaded_file.name}")
+                with open(file_path, "wb") as f:
+                    f.write(uploaded_file.getvalue())
+                
+                # Check if it's an Excel file and show a note about openpyxl
+                if file_path.endswith('.xlsx') or file_path.endswith('.xls'):
+                    st.info("Loading Excel file... Make sure openpyxl is installed.")
+                
+                # Load data
+                with st.spinner("Loading and analyzing data..."):
+                    data = agent.load_and_analyze_data(file_path)
+                    if data is not None:
+                        st.session_state.data = data
+                        st.success(f"Data loaded successfully: {data.shape[0]} rows, {data.shape[1]} columns")
+            except Exception as e:
+                st.error(f"Error loading data: {str(e)}")
+                if "openpyxl" in str(e).lower():
+                    st.info("To fix this issue, install openpyxl: `pip install openpyxl`")
+                import traceback
+                st.expander("Error details").code(traceback.format_exc())
+                
         if data is not None and agent is not None:
             # Display data preview
             st.subheader("📋 Data Preview")
@@ -848,12 +920,6 @@ class StreamlitInterface:
                 # Show AI insights
                 st.markdown("### 🧠 AI Insights")
                 st.write(result.insights)
-                # Inform user if a sample was used for analysis
-                try:
-                    if getattr(agent, 'data_cache', {}).get('analysis_used_sample'):
-                        st.warning("Note: Dataset was large; analysis used a 5,000-row random sample to speed up results.")
-                except Exception:
-                    pass
                 
                 # Show visualizations if available
                 if result.visualizations:

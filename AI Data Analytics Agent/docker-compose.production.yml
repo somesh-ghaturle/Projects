@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  ai-data-analytics-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: somesh-ghaturle/ai-data-analytics:prod
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data:ro
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
