@@ -29,7 +29,7 @@ flowchart TB
     subgraph "User Interface"
         UI[🌐 Streamlit Web Interface<br/>Port 8501]
         UPLOAD[📁 File Upload<br/>CSV/XLSX/JSON]
-        TABS[📋 Analysis Tabs<br/>Descriptive | Predictive | Cleaning | Viz | Custom]
+        TABS[📋 Analysis Tabs<br/>Descriptive • Predictive • Cleaning • Viz • Custom]
     end
     
     subgraph "Docker Environment" 
