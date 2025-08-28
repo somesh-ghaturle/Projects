@@ -23,11 +23,100 @@
 - **🌐 Professional Web Interface**: Intuitive UI designed for industry professionals
 - **🐳 Enterprise-Ready**: Docker containerized with health monitoring and scalability
 
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TB
+    subgraph "User Interface"
+        UI[🌐 Professional Web Interface<br/>Port 8001/web]
+        INPUT[📝 Content Input<br/>Scripts & Screenplays]
+        OUTPUT[📊 Analysis Results<br/>Reports & Insights]
+    end
+    
+    subgraph "Docker Environment"
+        subgraph "API Layer"
+            API[🚀 FastAPI Backend<br/>multi_agent_content_api.py]
+            HEALTH[💚 Health Monitoring]
+            DOCS[📚 Auto Documentation]
+        end
+        
+        subgraph "Agent Orchestration"
+            ROUTER[🔄 Agent Router<br/>Request Distribution]
+            WORKFLOW[⚡ Analysis Workflow<br/>Sequential Processing]
+        end
+        
+        subgraph "AI Agent Specialists"
+            SCRIPT[🎬 Script Summarizer<br/>Scene & Character Analysis]
+            GENRE[🎭 Genre Classifier<br/>Multi-dimensional Classification]
+            MARKET[📈 Marketing Agent<br/>Audience & Strategy Analysis]
+        end
+        
+        subgraph "NLP Processing Engine"
+            TOKENIZER[🔤 Text Tokenization<br/>Advanced NLP Pipeline]
+            ANALYZER[🧠 Content Analysis<br/>Pattern Recognition]
+            SCORER[📊 Quality Scoring<br/>Confidence Metrics]
+        end
+        
+        subgraph "Intelligence Layer"
+            STRUCTURE[📐 Story Structure<br/>Plot Analysis]
+            CHARACTER[👥 Character Development<br/>Arc Tracking]
+            SENTIMENT[😊 Sentiment Analysis<br/>Emotional Mapping]
+            DEMOGRAPHICS[👤 Audience Targeting<br/>Market Segmentation]
+        end
+    end
+    
+    subgraph "Analysis Outputs"
+        SUMMARY[📋 Script Summary<br/>Scene Breakdown]
+        CLASSIFICATION[🏷️ Genre Classification<br/>Confidence Scores]
+        STRATEGY[📈 Marketing Strategy<br/>Campaign Recommendations]
+        QUALITY[⭐ Quality Assessment<br/>Improvement Suggestions]
+    end
+    
+    %% User Flow
+    INPUT --> UI
+    UI --> API
+    API --> ROUTER
+    
+    %% Agent Processing
+    ROUTER --> SCRIPT
+    ROUTER --> GENRE
+    ROUTER --> MARKET
+    
+    %% NLP Processing
+    SCRIPT --> TOKENIZER
+    GENRE --> ANALYZER
+    MARKET --> SCORER
+    
+    %% Intelligence Processing
+    TOKENIZER --> STRUCTURE
+    ANALYZER --> CHARACTER
+    SCORER --> SENTIMENT
+    STRUCTURE --> DEMOGRAPHICS
+    
+    %% Output Generation
+    CHARACTER --> SUMMARY
+    SENTIMENT --> CLASSIFICATION
+    DEMOGRAPHICS --> STRATEGY
+    SUMMARY --> QUALITY
+    
+    %% Results Flow
+    QUALITY --> OUTPUT
+    CLASSIFICATION --> OUTPUT
+    STRATEGY --> OUTPUT
+    OUTPUT --> UI
+    
+    style UI fill:#e3f2fd
+    style SCRIPT fill:#f3e5f5
+    style GENRE fill:#fff3e0
+    style MARKET fill:#e8f5e8
+    style SUMMARY fill:#fce4ec
+```
+
 ## 🏗️ Architecture & Technology Stack
 
 ### Core Components
 
-```
+```text
 Multi-Agent-Content-Analytics/
 ├── 🚀 multi_agent_content_api.py    # Advanced FastAPI application (v3.0)
 ├── 🎨 content_analytics_ui.html     # Professional web interface

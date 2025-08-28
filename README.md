@@ -18,6 +18,50 @@ Projects/
 └── README.md                                      # This file
 ```
 
+## 🏗️ Project Ecosystem Overview
+
+```mermaid
+flowchart TB
+    subgraph "AI & Data Science Projects"
+        RESEARCH[🔬 AgenTech Research Hub<br/>Multi-Agent AI Research<br/>CrewAI + LangGraph + AutoGen]
+        ANALYTICS[📊 AI Data Analytics Agent<br/>Streamlit + Ollama LLM<br/>Data Analysis Platform]
+        CONTENT[🎭 Multi-Agent Content Analytics<br/>Movie Script Analysis<br/>NLP + Marketing Intelligence]
+        FINANCE[🏦 Agentic Finance Workflow<br/>Financial Analysis Platform<br/>Portfolio Optimization + Risk]
+    end
+    
+    subgraph "Specialized Tools"
+        MCP[📚 Personal Document Assistant<br/>MCP Server + RAG<br/>VS Code Integration]
+        TRADING[📈 Stock Price Prediction<br/>n8n Workflow Automation<br/>Discord Notifications]
+    end
+    
+    subgraph "Technology Stack"
+        AI_TECH[🤖 AI Technologies<br/>CrewAI, LangGraph, AutoGen<br/>Ollama LLM, FastAPI]
+        DATA_TECH[📊 Data Technologies<br/>Pandas, NumPy, Plotly<br/>Streamlit, Docker]
+        WORKFLOW_TECH[🔄 Workflow Technologies<br/>n8n, MCP Protocol<br/>REST APIs, WebUI]
+    end
+    
+    %% Project Connections
+    RESEARCH --> AI_TECH
+    ANALYTICS --> AI_TECH
+    CONTENT --> AI_TECH
+    FINANCE --> AI_TECH
+    
+    ANALYTICS --> DATA_TECH
+    CONTENT --> DATA_TECH
+    FINANCE --> DATA_TECH
+    
+    MCP --> WORKFLOW_TECH
+    TRADING --> WORKFLOW_TECH
+    
+    %% Styling
+    style RESEARCH fill:#e3f2fd
+    style ANALYTICS fill:#f3e5f5
+    style CONTENT fill:#fff3e0
+    style FINANCE fill:#e8f5e8
+    style MCP fill:#fce4ec
+    style TRADING fill:#f1f8e9
+```
+
 ## Notable Projects
 
 - **AgenTech Research Hub**: Advanced multi-agent AI research system with dynamic topic detection, real-time source gathering, and comprehensive REST API integration using CrewAI, LangGraph, and AutoGen frameworks.
