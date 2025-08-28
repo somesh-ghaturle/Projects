@@ -53,7 +53,7 @@ flowchart TB
     
     subgraph "File System"
         UPLOADS[📂 Upload Directory<br/>/tmp/app_uploads]
-        DATA[📁 Data Mount<br/>/app/data (read-only)]
+        DATA[📁 Data Mount<br/>/app/data - read-only]
     end
     
     %% User Flow
