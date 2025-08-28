@@ -21,7 +21,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
-COPY simple_app.py .
+COPY multi_agent_content_api.py .
+COPY content_analytics_ui.html .
 COPY .env.example .
 
 # Expose port
@@ -32,4 +33,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
 # Run the application
-CMD ["python", "-m", "uvicorn", "simple_app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "multi_agent_content_api:app", "--host", "0.0.0.0", "--port", "8000"]

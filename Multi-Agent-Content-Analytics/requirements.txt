@@ -1,15 +1,13 @@
-# Core Framework Dependencies for Docker Deployment
-fastapi==0.116.1
-uvicorn[standard]==0.35.0
-pydantic==2.11.7
-python-dotenv==1.1.1
+# Multi-Agent Content Analytics Platform - Minimal Working Requirements
+# Essential dependencies for the application to function
 
-# HTTP Client for health checks
-httpx==0.28.1
+# Core FastAPI and web framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
 
-# Testing
-pytest==8.4.1
-pytest-asyncio==1.1.0
+# Web server and static files
+python-multipart==0.0.6
 
-# Security
-python-multipart==0.0.9
+# Optional but helpful
+python-dotenv==1.0.0

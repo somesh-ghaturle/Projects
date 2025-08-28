@@ -382,94 +382,136 @@ A child's laughter echoes from the walls.`
             `;
 
             if (agent === 'script_summarizer') {
+                // Handle new enhanced API response structure
+                const characters = results.characters?.main_characters || [];
+                const scenes = results.scenes?.scene_list || [];
+                const themes = results.themes_analysis?.primary_themes || [];
+                
                 formattedHTML += `
                     <div class="result-card">
                         <h4>📊 Script Overview</h4>
                         <p><strong>Summary:</strong> ${results.summary}</p>
                         <p><strong>Word Count:</strong> ${results.word_count}</p>
-                        <p><strong>Estimated Runtime:</strong> ${results.estimated_runtime}</p>
-                        <p><strong>Dialogue Ratio:</strong> ${(results.dialogue_ratio * 100).toFixed(1)}%</p>
+                        <p><strong>Estimated Runtime:</strong> ${results.estimated_runtime || 'N/A'}</p>
+                        <p><strong>Quality Score:</strong> ${results.script_quality_score || 'N/A'}/100</p>
                     </div>
                     <div class="result-card">
-                        <h4>🎭 Characters</h4>
-                        <p>${results.characters.length > 0 ? results.characters.join(', ') : 'No clear character names detected'}</p>
+                        <h4>🎭 Main Characters (${results.characters?.total_characters || 0} total)</h4>
+                        ${characters.length > 0 ? 
+                            characters.slice(0, 5).map(char => 
+                                `<p><strong>${char.name}:</strong> ${char.dialogue_lines} lines 
+                                ${char.character_importance ? `(${char.character_importance} importance)` : ''}</p>`
+                            ).join('') 
+                            : '<p>No clear character names detected</p>'}
+                        ${results.characters?.protagonist_candidate && results.characters.protagonist_candidate !== 'Unknown' ? 
+                            `<p><strong>Protagonist:</strong> ${results.characters.protagonist_candidate}</p>` : ''}
                     </div>
                     <div class="result-card">
-                        <h4>🏠 Scenes</h4>
-                        <p>${results.scenes.length > 0 ? results.scenes.join(', ') : 'No scene headers detected'}</p>
+                        <h4>🏠 Scene Analysis</h4>
+                        ${scenes.length > 0 ? 
+                            `<p><strong>Total Scenes:</strong> ${scenes.length}</p>
+                             <p><strong>Locations:</strong> ${scenes.slice(0, 3).map(s => s.location_name || s).join(', ')}${scenes.length > 3 ? '...' : ''}</p>`
+                            : '<p>No scene headers detected</p>'}
+                        ${results.plot_structure?.act_structure ? 
+                            `<p><strong>Structure:</strong> ${results.plot_structure.act_structure.acts} acts detected</p>` : ''}
                     </div>
                     <div class="result-card">
-                        <h4>🎨 Themes & Genre</h4>
-                        <p><strong>Themes:</strong> ${results.themes.join(', ')}</p>
-                        <p><strong>Suggested Genre:</strong> ${results.suggested_genre}</p>
+                        <h4>🎨 Content Analysis</h4>
+                        ${themes.length > 0 ? 
+                            `<p><strong>Primary Themes:</strong> ${themes.slice(0, 3).join(', ')}</p>` : ''}
+                        ${results.genre_analysis?.predicted_genre ? 
+                            `<p><strong>Predicted Genre:</strong> ${results.genre_analysis.predicted_genre}</p>` : ''}
+                        ${results.emotional_arc?.overall_tone ? 
+                            `<p><strong>Overall Tone:</strong> ${results.emotional_arc.overall_tone}</p>` : ''}
                     </div>
+                    ${results.dialogue_analysis ? `
+                    <div class="result-card">
+                        <h4>💬 Dialogue Analysis</h4>
+                        <p><strong>Dialogue Ratio:</strong> ${(results.dialogue_analysis.dialogue_ratio * 100).toFixed(1)}%</p>
+                        <p><strong>Average Length:</strong> ${results.dialogue_analysis.avg_dialogue_length} words</p>
+                        ${results.dialogue_analysis.formality_score ? 
+                            `<p><strong>Formality:</strong> ${(results.dialogue_analysis.formality_score * 100).toFixed(0)}%</p>` : ''}
+                    </div>` : ''}
                 `;
             } else if (agent === 'genre_classifier') {
+                // Handle enhanced API response structure with fallbacks
+                const targetAudience = Array.isArray(results.target_audience) ? results.target_audience : 
+                                     results.target_audience ? [results.target_audience] : ['General audience'];
+                const characteristics = Array.isArray(results.characteristics) ? results.characteristics :
+                                      results.characteristics ? [results.characteristics] : ['Standard content'];
+                
                 formattedHTML += `
                     <div class="result-card">
                         <h4>🎯 Genre Classification</h4>
-                        <p><strong>Primary Genre:</strong> ${results.primary_genre.toUpperCase()} (${(results.confidence * 100).toFixed(1)}% confident)</p>
-                        <p><strong>Content Rating:</strong> ${results.content_rating}</p>
+                        <p><strong>Primary Genre:</strong> ${results.primary_genre?.toUpperCase() || 'UNSPECIFIED'} 
+                        ${results.confidence ? `(${(results.confidence * 100).toFixed(1)}% confident)` : ''}</p>
+                        <p><strong>Content Rating:</strong> ${results.content_rating || 'Not specified'}</p>
                     </div>
                     <div class="result-card">
                         <h4>🎭 Mood Analysis</h4>
-                        <p><strong>Overall Mood:</strong> ${results.mood.overall}</p>
-                        <p><strong>Intensity:</strong> ${results.mood.intensity}</p>
-                        <p><strong>Emotional Range:</strong> ${results.mood.emotional_range}</p>
+                        <p><strong>Overall Mood:</strong> ${results.mood?.overall || 'Neutral'}</p>
+                        <p><strong>Intensity:</strong> ${results.mood?.intensity || 'Medium'}</p>
+                        <p><strong>Emotional Range:</strong> ${results.mood?.emotional_range || 'Varied'}</p>
                     </div>
                     <div class="result-card">
                         <h4>👥 Target Audience</h4>
-                        <p>${results.target_audience.join(', ')}</p>
+                        <p>${targetAudience.join(', ')}</p>
                     </div>
                     <div class="result-card">
                         <h4>📋 Content Characteristics</h4>
-                        <p>${results.characteristics.join(', ')}</p>
+                        <p>${characteristics.join(', ')}</p>
                     </div>
                     <div class="result-card">
                         <h4>📊 Genre Scores</h4>
-                        ${Object.entries(results.genre_scores)
+                        ${results.genre_scores ? Object.entries(results.genre_scores)
                             .sort((a, b) => b[1] - a[1])
                             .slice(0, 5)
                             .map(([genre, score]) => `<p>${genre}: ${(score * 100).toFixed(1)}%</p>`)
-                            .join('')}
+                            .join('') : '<p>No genre scores available</p>'}
                     </div>
                 `;
             } else if (agent === 'marketing_agent') {
+                // Handle API response with defensive programming
+                const marketingHooks = Array.isArray(results.marketing_hooks) ? results.marketing_hooks : [];
+                const similarContent = Array.isArray(results.similar_content) ? results.similar_content : [];
+                const taglines = Array.isArray(results.taglines) ? results.taglines : [];
+                const recommendedChannels = Array.isArray(results.recommended_channels) ? results.recommended_channels : [];
+                
                 formattedHTML += `
                     <div class="result-card">
                         <h4>🎯 Target Demographics</h4>
-                        <p><strong>Primary Age Group:</strong> ${results.target_demographics.primary_age_group.replace('_', ' ')}</p>
-                        <p><strong>Gender Appeal:</strong> ${results.target_demographics.gender_appeal}</p>
+                        <p><strong>Primary Age Group:</strong> ${results.target_demographics?.primary_age_group?.replace('_', ' ') || 'General audience'}</p>
+                        <p><strong>Gender Appeal:</strong> ${results.target_demographics?.gender_appeal || 'Universal'}</p>
                     </div>
                     <div class="result-card">
                         <h4>🚀 Marketing Hooks</h4>
-                        ${results.marketing_hooks.map(hook => `<p>• ${hook}</p>`).join('')}
+                        ${marketingHooks.length > 0 ? marketingHooks.map(hook => `<p>• ${hook}</p>`).join('') : '<p>No marketing hooks generated</p>'}
                     </div>
                     <div class="result-card">
                         <h4>📺 Marketing Channels</h4>
-                        ${results.recommended_channels.map(channel => 
-                            `<p><strong>${channel.platform}:</strong> ${channel.priority} priority (${channel.content_type})</p>`
-                        ).join('')}
+                        ${recommendedChannels.length > 0 ? recommendedChannels.map(channel => 
+                            `<p><strong>${channel.platform || 'Platform'}:</strong> ${channel.priority || 'medium'} priority (${channel.content_type || 'various content'})</p>`
+                        ).join('') : '<p>No specific channel recommendations</p>'}
                     </div>
                     <div class="result-card">
                         <h4>🎬 Similar Content</h4>
-                        <p>${results.similar_content.join(', ')}</p>
+                        <p>${similarContent.length > 0 ? similarContent.join(', ') : 'No similar content identified'}</p>
                     </div>
                     <div class="result-card">
                         <h4>💰 Budget Allocation</h4>
-                        ${Object.entries(results.budget_allocation).map(([category, percentage]) => 
+                        ${results.budget_allocation ? Object.entries(results.budget_allocation).map(([category, percentage]) => 
                             `<p><strong>${category.replace('_', ' ')}:</strong> ${percentage}</p>`
-                        ).join('')}
+                        ).join('') : '<p>No budget allocation specified</p>'}
                     </div>
                     <div class="result-card">
                         <h4>🎪 Release Strategy</h4>
-                        <p><strong>Season:</strong> ${results.release_strategy.recommended_season}</p>
-                        <p><strong>Platform:</strong> ${results.release_strategy.platform_strategy}</p>
-                        <p><strong>International:</strong> ${results.release_strategy.international_strategy}</p>
+                        <p><strong>Season:</strong> ${results.release_strategy?.recommended_season || 'Year-round'}</p>
+                        <p><strong>Platform:</strong> ${results.release_strategy?.platform_strategy || 'Multi-platform'}</p>
+                        <p><strong>International:</strong> ${results.release_strategy?.international_strategy || 'Regional rollout'}</p>
                     </div>
                     <div class="result-card">
                         <h4>✨ Taglines</h4>
-                        ${results.taglines.map(tagline => `<p>• "${tagline}"</p>`).join('')}
+                        ${taglines.length > 0 ? taglines.map(tagline => `<p>• "${tagline}"</p>`).join('') : '<p>No taglines generated</p>'}
                     </div>
                 `;
             }

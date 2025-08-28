@@ -3,7 +3,7 @@ services:
   api:
     build: .
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
