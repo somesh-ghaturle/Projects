@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Finance Analytics Platform</title>
+    
+    <!-- Chart.js and required libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-bg: #0a0f1c;
+            --secondary-bg: #1a1f2e;
+            --card-bg: #242938;
+            --border-color: #3a3f4e;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Header */
+        .navbar {
+            background: var(--secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-select,
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select option {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--gradient-warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Main Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Results Section */
+        .results-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            min-height: 400px;
+        }
+
+        .results-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .results-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .results-content {
+            padding: 2rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Analytics Cards */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .analytics-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-change {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .change-positive {
+            color: var(--accent-green);
+        }
+
+        .change-negative {
+            color: var(--accent-red);
+        }
+
+        /* Charts Section */
+        .charts-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .charts-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--secondary-bg);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .chart-tab:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+        }
+
+        .chart-tab.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .chart-container {
+            padding: 2rem;
+            height: 400px;
+            position: relative;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error States */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fca5a5;
+            font-size: 0.875rem;
+        }
+
+        /* Success States */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #6ee7b7;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .control-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Prediction specific styles */
+        .prediction-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .prediction-item {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .prediction-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .prediction-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .prediction-change {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Agentic Finance Analytics</div>
+            <div class="nav-status">
+                <span class="status-indicator" id="status-indicator"></span>
+                <span id="api-status-text">Connecting...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h2 class="panel-title">Analysis Controls</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Agent Type</label>
+                <select id="agent-select" class="form-select">
+                    <option value="risk">Risk Analysis Agent</option>
+                    <option value="cleaner">Data Cleaner Agent</option>
+                    <option value="prediction">Prediction Agent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Stock Symbol</label>
+                <select id="symbol-select" class="form-select">
+                    <option value="AAPL">AAPL - Apple Inc.</option>
+                    <option value="GOOGL">GOOGL - Alphabet Inc.</option>
+                    <option value="MSFT">MSFT - Microsoft Corp.</option>
+                    <option value="AMZN">AMZN - Amazon.com Inc.</option>
+                    <option value="TSLA">TSLA - Tesla Inc.</option>
+                    <option value="META">META - Meta Platforms</option>
+                    <option value="NFLX">NFLX - Netflix Inc.</option>
+                    <option value="NVDA">NVDA - NVIDIA Corp.</option>
+                    <option value="AMD">AMD - Advanced Micro Devices</option>
+                    <option value="INTC">INTC - Intel Corp.</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Analysis Period</label>
+                <select id="period-select" class="form-select">
+                    <option value="30">30 Days</option>
+                    <option value="60">60 Days</option>
+                    <option value="90">90 Days</option>
+                    <option value="180">180 Days</option>
+                    <option value="365">1 Year</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="analyzeWithAgent()">
+                <span id="analyze-btn-text">Run Analysis</span>
+            </button>
+            
+            <button class="btn btn-success" onclick="runCompleteWorkflow()">
+                <span id="workflow-btn-text">Complete Workflow</span>
+            </button>
+            
+            <button class="btn btn-warning" onclick="predictPrice()">
+                <span id="predict-btn-text">Generate Predictions</span>
+            </button>
+            
+            <button class="btn btn-danger" onclick="clearResults()">Clear Results</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Results Container -->
+            <div class="results-container">
+                <div class="results-header">
+                    <h3 class="results-title">Analysis Results</h3>
+                    <span class="results-timestamp" id="last-updated">No data</span>
+                </div>
+                <div class="results-content" id="results-content">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>Select an analysis type and click "Run Analysis" to get started</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section" id="charts-section" style="display: none;">
+                <div class="charts-header">
+                    <h3 class="results-title">Visualizations</h3>
+                    <div class="chart-tabs">
+                        <div class="chart-tab active" data-chart="main">Main Chart</div>
+                        <div class="chart-tab" data-chart="risk">Risk Analysis</div>
+                        <div class="chart-tab" data-chart="prediction">Predictions</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="main-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8001';
+        
+        // Global variables
+        let currentChart = null;
+        let isLoading = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiStatus();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Chart tab switching
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // API Status Check
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    updateApiStatus(true, 'Connected');
+                } else {
+                    updateApiStatus(false, 'Error');
+                }
+            } catch (error) {
+                updateApiStatus(false, 'Disconnected');
+            }
+        }
+
+        function updateApiStatus(isHealthy, status) {
+            const indicator = document.getElementById('status-indicator');
+            const text = document.getElementById('api-status-text');
+            
+            if (isHealthy) {
+                indicator.style.background = 'var(--accent-green)';
+                text.textContent = status;
+                text.style.color = 'var(--accent-green)';
+            } else {
+                indicator.style.background = 'var(--accent-red)';
+                text.textContent = status;
+                text.style.color = 'var(--accent-red)';
+            }
+        }
+
+        // Loading state management
+        function setLoading(loading, buttonId = null) {
+            isLoading = loading;
+            
+            if (buttonId) {
+                const button = document.querySelector(`#${buttonId}`);
+                const text = document.querySelector(`#${buttonId}-text`);
+                
+                if (loading) {
+                    button.disabled = true;
+                    text.innerHTML = '<span class="spinner"></span> Processing...';
+                } else {
+                    button.disabled = false;
+                    text.textContent = getButtonText(buttonId);
+                }
+            }
+        }
+
+        function getButtonText(buttonId) {
+            const texts = {
+                'analyze-btn': 'Run Analysis',
+                'workflow-btn': 'Complete Workflow',
+                'predict-btn': 'Generate Predictions'
+            };
+            return texts[buttonId] || 'Process';
+        }
+
+        // Main Analysis Functions
+        async function analyzeWithAgent() {
+            const symbol = document.getElementById('symbol-select').value;
+            const agentType = document.getElementById('agent-select').value;
+            const period = document.getElementById('period-select').value;
+
+            setLoading(true, 'analyze-btn');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/analyze/${symbol}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        agent_type: agentType,
+                        days: parseInt(period)
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayAnalysisResult(result, symbol, agentType);
+
+            } catch (error) {
+                displayError(`Analysis failed: ${error.message}`);
+            } finally {
+                setLoading(false, 'analyze-btn');
+            }
+        }
+
+        async function runCompleteWorkflow() {
+            const symbol = document.getElementById('symbol-select').value;
+            const period = document.getElementById('period-select').value;
+
+            setLoading(true, 'workflow-btn');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/workflow`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        symbols: [symbol],
+                        analysis_type: 'comprehensive',
+                        days: parseInt(period)
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayWorkflowResult(result);
+
+            } catch (error) {
+                displayError(`Workflow failed: ${error.message}`);
+            } finally {
+                setLoading(false, 'workflow-btn');
+            }
+        }
+
+        async function predictPrice() {
+            const symbol = document.getElementById('symbol-select').value;
+            const period = document.getElementById('period-select').value;
+
+            setLoading(true, 'predict-btn');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/predict/${symbol}?days=${period}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayPredictionResult(result, symbol);
+
+            } catch (error) {
+                displayError(`Prediction failed: ${error.message}`);
+            } finally {
+                setLoading(false, 'predict-btn');
+            }
+        }
+
+        // Display Functions
+        function displayAnalysisResult(result, symbol, agentType) {
+            const container = document.getElementById('results-content');
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+            container.innerHTML = `
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <span class="card-title">Symbol</span>
+                        </div>
+                        <div class="card-value">${symbol}</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <span class="card-title">Agent</span>
+                        </div>
+                        <div class="card-value">${agentType}</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <span class="card-title">Status</span>
+                        </div>
+                        <div class="card-value change-positive">Success</div>
+                    </div>
+                </div>
+                
+                <div class="success-message">
+                    Analysis completed successfully. View detailed results below.
+                </div>
+                
+                <details style="margin-top: 1rem;">
+                    <summary style="cursor: pointer; font-weight: 600; color: var(--text-secondary);">
+                        View Raw Data
+                    </summary>
+                    <pre style="background: var(--primary-bg); padding: 1rem; border-radius: 8px; font-size: 0.75rem; margin-top: 1rem; overflow-x: auto;">${JSON.stringify(result, null, 2)}</pre>
+                </details>
+            `;
+
+            showChartsSection();
+        }
+
+        function displayWorkflowResult(result) {
+            const container = document.getElementById('results-content');
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+            const symbolsAnalyzed = result.symbols_analyzed || 0;
+            const totalAgents = result.total_agents || 0;
+
+            container.innerHTML = `
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <span class="card-title">Symbols Analyzed</span>
+                        </div>
+                        <div class="card-value">${symbolsAnalyzed}</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <span class="card-title">Agents Used</span>
+                        </div>
+                        <div class="card-value">${totalAgents}</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-header">
+                            <span class="card-title">Workflow Type</span>
+                        </div>
+                        <div class="card-value">${result.workflow_type || 'Comprehensive'}</div>
+                    </div>
+                </div>
+                
+                <div class="success-message">
+                    Complete workflow executed successfully across all agents.
+                </div>
+                
+                <details style="margin-top: 1rem;">
+                    <summary style="cursor: pointer; font-weight: 600; color: var(--text-secondary);">
+                        View Complete Results
+                    </summary>
+                    <pre style="background: var(--primary-bg); padding: 1rem; border-radius: 8px; font-size: 0.75rem; margin-top: 1rem; overflow-x: auto;">${JSON.stringify(result, null, 2)}</pre>
+                </details>
+            `;
+
+            showChartsSection();
+        }
+
+        function displayPredictionResult(result, symbol) {
+            const container = document.getElementById('results-content');
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+            if (result.status === 'success') {
+                const predictions = result.predictions || [];
+                const currentPrice = result.current_price || 0;
+                const trend = result.trend || 'neutral';
+                const accuracy = ((result.model_accuracy || 0.85) * 100).toFixed(1);
+
+                container.innerHTML = `
+                    <div class="prediction-summary">
+                        <div class="prediction-item">
+                            <div class="prediction-label">Current Price</div>
+                            <div class="prediction-value">$${currentPrice.toFixed(2)}</div>
+                        </div>
+                        <div class="prediction-item">
+                            <div class="prediction-label">Trend</div>
+                            <div class="prediction-value ${trend === 'bullish' ? 'change-positive' : 'change-negative'}">
+                                ${trend.toUpperCase()}
+                            </div>
+                        </div>
+                        <div class="prediction-item">
+                            <div class="prediction-label">Model Accuracy</div>
+                            <div class="prediction-value">${accuracy}%</div>
+                        </div>
+                        <div class="prediction-item">
+                            <div class="prediction-label">Predictions</div>
+                            <div class="prediction-value">${predictions.length}</div>
+                        </div>
+                    </div>
+
+                    ${predictions.length > 0 ? `
+                        <div class="analytics-grid">
+                            ${predictions.slice(0, 5).map(p => `
+                                <div class="analytics-card">
+                                    <div class="card-header">
+                                        <span class="card-title">Day ${p.day}</span>
+                                    </div>
+                                    <div class="card-value">$${p.predicted_price.toFixed(2)}</div>
+                                    <div class="prediction-change change-positive">
+                                        ±$${((p.upper_bound - p.lower_bound) / 2).toFixed(2)}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="success-message">
+                        Price predictions generated successfully using advanced AI models.
+                    </div>
+                    
+                    <details style="margin-top: 1rem;">
+                        <summary style="cursor: pointer; font-weight: 600; color: var(--text-secondary);">
+                            View Prediction Data
+                        </summary>
+                        <pre style="background: var(--primary-bg); padding: 1rem; border-radius: 8px; font-size: 0.75rem; margin-top: 1rem; overflow-x: auto;">${JSON.stringify(result, null, 2)}</pre>
+                    </details>
+                `;
+
+                // Create prediction chart
+                createPredictionChart(result, symbol);
+            } else {
+                container.innerHTML = `
+                    <div class="error-message">
+                        Prediction failed: ${result.error || 'Unknown error occurred'}
+                    </div>
+                `;
+            }
+
+            showChartsSection();
+        }
+
+        function displayError(message) {
+            const container = document.getElementById('results-content');
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+            container.innerHTML = `
+                <div class="error-message">
+                    ${message}
+                </div>
+            `;
+        }
+
+        function clearResults() {
+            const container = document.getElementById('results-content');
+            document.getElementById('last-updated').textContent = 'No data';
+            
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <p>Select an analysis type and click "Run Analysis" to get started</p>
+                </div>
+            `;
+
+            document.getElementById('charts-section').style.display = 'none';
+            
+            if (currentChart) {
+                currentChart.destroy();
+                currentChart = null;
+            }
+        }
+
+        function showChartsSection() {
+            document.getElementById('charts-section').style.display = 'block';
+        }
+
+        function createPredictionChart(result, symbol) {
+            const ctx = document.getElementById('main-chart').getContext('2d');
+            
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            const predictions = result.predictions || [];
+            const labels = predictions.map(p => `Day ${p.day}`);
+            const prices = predictions.map(p => p.predicted_price);
+            const upperBounds = predictions.map(p => p.upper_bound);
+            const lowerBounds = predictions.map(p => p.lower_bound);
+
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Predicted Price',
+                            data: prices,
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Upper Bound',
+                            data: upperBounds,
+                            borderColor: 'rgba(16, 185, 129, 0.5)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 1,
+                            fill: '+1',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Lower Bound',
+                            data: lowerBounds,
+                            borderColor: 'rgba(16, 185, 129, 0.5)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${symbol} Price Predictions`,
+                            color: '#e5e7eb',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            labels: { color: '#9ca3af' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(58, 63, 78, 0.5)' },
+                            ticks: { 
+                                color: '#9ca3af',
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(58, 63, 78, 0.5)' },
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Auto-refresh API status
+        setInterval(checkApiStatus, 30000);
+    </script>
+</body>
+</html>
