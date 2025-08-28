@@ -1,0 +1,204 @@
+# Production Docker Compose Configuration
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: agentech-postgres
+    environment:
+      POSTGRES_DB: agentech_research_hub
+      POSTGRES_USER: ${POSTGRES_USER:-agentech}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_password_change_this}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - agentech-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agentech}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis for caching and task queue
+  redis:
+    image: redis:7-alpine
+    container_name: agentech-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password_change_this}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - agentech-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # AgenTech Research Hub API
+  agentech-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: agentech-research-hub
+    environment:
+      - APP_ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-agentech}:${POSTGRES_PASSWORD:-secure_password_change_this}@postgres:5432/agentech_research_hub
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_password_change_this}@redis:6379/0
+    env_file:
+      - .env.production
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - agentech-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  # Celery Worker for background tasks
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agentech-celery-worker
+    command: celery -A src.core.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      - APP_ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-agentech}:${POSTGRES_PASSWORD:-secure_password_change_this}@postgres:5432/agentech_research_hub
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_password_change_this}@redis:6379/0
+    env_file:
+      - .env.production
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - agentech-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 3G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+
+  # Celery Beat for scheduled tasks
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agentech-celery-beat
+    command: celery -A src.core.celery_app beat --loglevel=info
+    environment:
+      - APP_ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-agentech}:${POSTGRES_PASSWORD:-secure_password_change_this}@postgres:5432/agentech_research_hub
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_password_change_this}@redis:6379/0
+    env_file:
+      - .env.production
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - agentech-network
+
+  # Nginx Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: agentech-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./web-ui:/usr/share/nginx/html:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - agentech-api
+    restart: unless-stopped
+    networks:
+      - agentech-network
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: agentech-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - agentech-network
+
+  # Grafana for metrics visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: agentech-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+    networks:
+      - agentech-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  agentech-network:
+    driver: bridge

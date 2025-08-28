@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgenTech Research Hub - AI-Powered Research Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(44, 62, 80, 0.95) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .research-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .research-input {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .research-input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .research-btn {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .research-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .results-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .source-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .source-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .api-status {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 1rem;
+            border-left: 5px solid var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-atom me-2"></i>
+                AgenTech Research Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#research">Research</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#api-docs" onclick="openApiDocs()">API Docs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- API Status Indicator -->
+    <div class="api-status">
+        <div id="apiStatusBadge" class="badge bg-secondary">
+            <i class="fas fa-circle-notch fa-spin me-1"></i>
+            Checking API...
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container main-container">
+        <!-- Hero Section -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center text-white">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-brain me-3"></i>
+                    AI-Powered Research Platform
+                </h1>
+                <p class="lead mb-4">
+                    Harness the power of artificial intelligence to conduct comprehensive research across multiple sources. 
+                    Get instant insights, summaries, and quality-assessed information.
+                </p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section id="features" class="mb-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <i class="fas fa-search feature-icon"></i>
+                        <h5>Multi-Source Research</h5>
+                        <p>Search across web, academic papers, and news articles simultaneously</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <i class="fas fa-chart-line feature-icon"></i>
+                        <h5>Quality Assessment</h5>
+                        <p>AI-powered quality scoring and relevance ranking for all sources</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <i class="fas fa-bolt feature-icon"></i>
+                        <h5>Real-time Results</h5>
+                        <p>Get comprehensive research results in seconds, not hours</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="research-card">
+                        <h3 class="text-center mb-4">
+                            <i class="fas fa-microscope me-2"></i>
+                            Start Your Research
+                        </h3>
+                        
+                        <form id="researchForm">
+                            <div class="mb-3">
+                                <label for="researchQuery" class="form-label fw-bold">Research Query</label>
+                                <textarea 
+                                    id="researchQuery" 
+                                    class="form-control research-input" 
+                                    rows="3" 
+                                    placeholder="Enter your research question or topic... (e.g., 'Latest developments in artificial intelligence for healthcare')"
+                                    required></textarea>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn research-btn">
+                                    <i class="fas fa-rocket me-2"></i>
+                                    Conduct Research
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Loading Spinner -->
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Analyzing your query and gathering information...</p>
+                        </div>
+
+                        <!-- Results Container -->
+                        <div class="results-container" id="resultsContainer">
+                            <!-- Summary Section -->
+                            <div class="summary-section" id="summarySection">
+                                <h4><i class="fas fa-lightbulb me-2"></i>Research Summary</h4>
+                                <p id="researchSummary"></p>
+                                <div class="row mt-3">
+                                    <div class="col-md-3">
+                                        <strong>Sources Found:</strong>
+                                        <span id="sourcesCount" class="badge bg-primary ms-2">0</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Quality Score:</strong>
+                                        <span id="qualityScore" class="badge bg-success ms-2">0%</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Execution Time:</strong>
+                                        <span id="executionTime" class="badge bg-info ms-2">0s</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Status:</strong>
+                                        <span id="researchStatus" class="badge bg-success ms-2">Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sources Section -->
+                            <div class="mt-4">
+                                <h4><i class="fas fa-book me-2"></i>Research Sources</h4>
+                                <div id="sourcesContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const API_BASE_URL = window.location.origin;
+        
+        // Check API status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiStatus();
+            setInterval(checkApiStatus, 30000); // Check every 30 seconds
+        });
+
+        // Check API health status
+        async function checkApiStatus() {
+            const statusBadge = document.getElementById('apiStatusBadge');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    statusBadge.className = 'badge bg-success';
+                    statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>API Online';
+                } else {
+                    statusBadge.className = 'badge bg-warning';
+                    statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>API Issues';
+                }
+            } catch (error) {
+                statusBadge.className = 'badge bg-danger';
+                statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i>API Offline';
+            }
+        }
+
+        // Handle research form submission
+        document.getElementById('researchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const query = document.getElementById('researchQuery').value.trim();
+            if (!query) return;
+
+            showLoading();
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/research`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        context: {}
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayResults(data);
+                
+            } catch (error) {
+                console.error('Research error:', error);
+                showError('Failed to conduct research. Please check if the API server is running and try again.');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('resultsContainer').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        function displayResults(data) {
+            // Show results container
+            document.getElementById('resultsContainer').style.display = 'block';
+            
+            // Update summary
+            document.getElementById('researchSummary').textContent = data.summary;
+            document.getElementById('sourcesCount').textContent = data.sources_found;
+            document.getElementById('qualityScore').textContent = Math.round(data.quality_score * 100) + '%';
+            document.getElementById('executionTime').textContent = data.execution_time + 's';
+            document.getElementById('researchStatus').textContent = data.success ? 'Complete' : 'Failed';
+            
+            // Display sources
+            const sourcesContainer = document.getElementById('sourcesContainer');
+            sourcesContainer.innerHTML = '';
+            
+            if (data.sources && data.sources.length > 0) {
+                data.sources.forEach((source, index) => {
+                    const sourceCard = createSourceCard(source, index + 1);
+                    sourcesContainer.appendChild(sourceCard);
+                });
+            } else {
+                sourcesContainer.innerHTML = '<p class="text-muted">No sources found for this query.</p>';
+            }
+            
+            // Scroll to results
+            document.getElementById('resultsContainer').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        function createSourceCard(source, index) {
+            const card = document.createElement('div');
+            card.className = 'source-card';
+            
+            const relevanceColor = source.relevance_score > 0.8 ? 'success' : 
+                                  source.relevance_score > 0.6 ? 'warning' : 'secondary';
+            
+            card.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="mb-0">
+                        <span class="badge bg-primary me-2">${index}</span>
+                        ${source.title}
+                    </h6>
+                    <span class="badge bg-${relevanceColor}">${Math.round(source.relevance_score * 100)}% relevant</span>
+                </div>
+                <p class="text-muted mb-2">${source.snippet}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="${source.url}" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-external-link-alt me-1"></i>
+                        View Source
+                    </a>
+                    <small class="text-muted">${new URL(source.url).hostname}</small>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function showError(message) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.style.display = 'block';
+            resultsContainer.innerHTML = `
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    ${message}
+                </div>
+            `;
+        }
+
+        function openApiDocs() {
+            window.open(`${API_BASE_URL}/docs`, '_blank');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
