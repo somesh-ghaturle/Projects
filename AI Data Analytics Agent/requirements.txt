@@ -6,3 +6,4 @@ seaborn
 matplotlib
 scipy
 ollama
+openpyxl

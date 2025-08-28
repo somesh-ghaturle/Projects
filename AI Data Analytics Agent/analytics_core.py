@@ -133,23 +133,35 @@ class OllamaAnalyticsAgent:
 	def load_and_analyze_data(self, file_path: str) -> pd.DataFrame:
 		"""Load a dataset from CSV/Excel/JSON and cache a lightweight summary."""
 		try:
-			if file_path.endswith('.csv'):
+			low = file_path.lower()
+			if low.endswith('.csv'):
 				data = pd.read_csv(file_path)
-			elif file_path.endswith('.xlsx') or file_path.endswith('.xls'):
+			elif low.endswith('.xlsx') or low.endswith('.xls'):
 				# prefer openpyxl engine when available
 				try:
 					data = pd.read_excel(file_path, engine='openpyxl')
 				except Exception:
+					# fallback to default engine
 					data = pd.read_excel(file_path)
-			elif file_path.endswith('.json'):
-				data = pd.read_json(file_path)
+			elif low.endswith('.json'):
+				try:
+					data = pd.read_json(file_path)
+				except ValueError:
+					# try treating as ndjson / lines
+					data = pd.read_json(file_path, lines=True)
 			else:
 				raise ValueError("Unsupported file format. Use CSV, Excel, or JSON.")
 
 			self.data_cache['current_data'] = data
 			self.data_cache['data_summary'] = self._generate_data_summary(data)
 			return data
-		except Exception:
+		except Exception as e:
+			# record a load error for the UI to display
+			try:
+				self.data_cache['load_error'] = str(e)
+			except Exception:
+				# ignore cache write failures
+				pass
 			return None
 
 	def _generate_data_summary(self, data: pd.DataFrame) -> str:

@@ -26,418 +26,118 @@ of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+#!/usr/bin/env markdown
+# AI Data Analytics Agent — Production README
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This folder contains the AI Data Analytics Agent: a Streamlit UI wired to a local Ollama LLM-backed analytics engine. The instructions below show how to run the project in production using the provided Dockerfile and docker-compose manifest.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-``` sure `ollama serve` is running and the model is pulled
-- **Memory issues:** Try using a smaller LLM model or reduce dataset size
-- **Import errors:** Verify all dependencies are installed with `pip install -r requirements.txt`
-- **Port conflicts:** Check if port 8501 is available or specify a different port
+## Quick checklist (what this README covers)
 
-## � Docker (Production)
+- Build a production Docker image
+- Start/stop the production service with `docker-compose`
+- Required environment variables and defaults
+- How uploads are handled (writable path inside container)
+- Simple verification and troubleshooting steps
 
-We provide a production Docker image and docker-compose file to run the app.
+---
 
-Build and start the production stack (from the project root):
+## Requirements
+
+- Docker and docker-compose (or Docker Desktop)
+- Ollama running on the Docker host and at a reachable URL (see `OLLAMA_HOST` below)
+
+This project was developed for Python 3.11 and Streamlit, but when running via Docker you don't need a local Python installation.
+
+---
+
+## Recommended environment variables
+
+- `OLLAMA_HOST` — URL for Ollama; default used in `docker-compose.production.yml` is `http://host.docker.internal:11434`. Set to the host that runs Ollama so the container can reach it.
+- `OLLAMA_PREFERRED_MODEL` — optional. If set, the UI will prefer this model string when auto-initializing the analytics agent.
+- `APP_UPLOAD_DIR` — optional. Directory inside the container where user uploads will be written. Default: `/tmp/app_uploads` (writable inside container). Do NOT point this to `/app/data` if you've mounted `./data:/app/data:ro`.
+
+---
+
+## Production: build and run (quick)
+
+From the project root run:
 
 ```bash
 cd "AI Data Analytics Agent"
-./start_production.sh
+# Build the production image (uses Dockerfile.production)
+docker-compose -f docker-compose.production.yml build --no-cache
+
+# Start the stack (detached)
+docker-compose -f docker-compose.production.yml up -d
+
+# Check container health and logs
+docker ps --filter name=ai-data-analytics -a
+docker logs --tail 200 <container_id>
 ```
 
-Stop the production stack:
+To stop:
 
 ```bash
 docker-compose -f docker-compose.production.yml down
 ```
 
-If port 8501 is already in use, stop the conflicting container or edit `docker-compose.production.yml` to map a different port.
+Notes:
 
-Service name and image naming conventions follow the repository pattern. The production service is named `ai-data-analytics-agent` and the image tag used is `somesh-ghaturle/ai-data-analytics:prod`.
+- The included compose file mounts `./data:/app/data:ro`. That mount is read-only by design so uploaded files must be written elsewhere inside the container (see `APP_UPLOAD_DIR` or `/tmp/app_uploads`).
+- The production image is tagged as `somesh-ghaturle/ai-data-analytics:prod` in the compose file; change if you want a different name.
 
-## 👨‍💻 Author & Professional Contact
+---
 
-**Somesh Ramesh Ghaturle**  
-*MS in Data Science, Pace University*  
+## Local development (optional)
 
-### Professional Links
-📧 **Email**: [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
-🐙 **GitHub**: [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
-💼 **LinkedIn**: [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
-
-
-## �🚀 Deployment Suggestions
-
-### Option 1: Streamlit Cloud (Recommended)
-- Fork this repository to your GitHub account
-- Sign up for free at [Streamlit Cloud](https://streamlit.io/cloud)
-- Connect your GitHub repository and deploy
-- **Note**: You'll need to modify the app to use cloud-based LLM APIs instead of local Ollama
-
-### Option 2: Local Network Deployment
-- Deploy on your local network using `streamlit run --server.address 0.0.0.0`
-- Access from other devices on your network
-- Keep Ollama running locally for AI processing
-
-### Option 3: Cloud Hosting
-- **Heroku**: Deploy with Streamlit and cloud LLM integration
-- **AWS EC2**: Full control over environment with Ollama installation
-- **Google Cloud**: Use Streamlit with Vertex AI integration
-
-## �👨‍💻 Author & Licenseuthor & License
-
-All code and content in this repository is for educational and personal use.
-
-**Somesh Ramesh Ghaturle**  
-MS in Data Science, Pace University
-
-📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
-🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
-💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)go=Streamlit&logoColor=white)](https://streamlit.io/)
-[![Ollama](https://img.shields.io/badge/Ollama-000000?style=flat&logo=llama&logoColor=white)](https://ollama.ai/)
-
-## Overview
-
-This app is an AI-powered data analytics tool that leverages local LLMs via Ollama and provides an intuitive Streamlit web interface for comprehensive data analysis workflows. Perfect for data scientists, analysts, and researchers who need powerful, privacy-focused analytics capabilities.
-
-│   └── web_ui.py                          # Main Streamlit application (entrypoint)
-
-- [🏗️ System Architecture](#️-system-architecture)
-- [🔄 Analytics Workflow](#-analytics-workflow)
-- [🤖 AI Processing Pipeline](#-ai-processing-pipeline)
-- [📁 Project Structure](#-project-structure)
-   ```sh
-   streamlit run "web_ui.py"
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TB
-    subgraph "User Interface Layer"
-        A[Streamlit Web App]
-        B[File Upload Interface]
-        C[Analytics Dashboard]
-        D[Visualization Panel]
-    end
-    
-    subgraph "Data Processing Layer"
-        E[Data Loader]
-        F[Data Validator]
-        G[Data Cleaner]
-        H[Feature Engineer]
-    end
-    
-    subgraph "AI Analytics Engine"
-        I[Ollama LLM Server]
-        J[Analytics Agent]
-        K[Visualization Agent]
-        L[Insights Generator]
-    end
-    
-    subgraph "Analytics Modules"
-        M[Descriptive Analytics]
-        N[Predictive Analytics]
-        O[Data Cleaning]
-        P[Visualization Engine]
-    end
-    
-    subgraph "Data Storage"
-        Q[(Local File System)]
-        R[Session State]
-        S[Cache Layer]
-    end
-    
-    A --> B
-    B --> E
- ## 👨‍💻 Author & License
-    F --> G
-    G --> H
-    
-    H --> J
-    J --> I
-    I --> L
-    L --> M
-    L --> N
-    L --> O
-    L --> P
-    
-    M --> C
-    N --> C
-    O --> C
-    P --> D
-    
-    E --> Q
-    F --> R
-    G --> S
-    
-    style I fill:#ff9999
-    style J fill:#ff9999
-    style A fill:#99ccff
-    style C fill:#99ccff
-    style Q fill:#99ff99
-```
-
-## 🔄 Analytics Workflow
-
-```mermaid
-flowchart TD
-    START([User Opens App]) --> UPLOAD{File Upload}
-    
-    UPLOAD -->|CSV| PARSE_CSV[Parse CSV Data]
-    UPLOAD -->|Excel| PARSE_EXCEL[Parse Excel Data]
-    UPLOAD -->|JSON| PARSE_JSON[Parse JSON Data]
-    
-    PARSE_CSV --> VALIDATE[Data Validation]
-    PARSE_EXCEL --> VALIDATE
-    PARSE_JSON --> VALIDATE
-    
-    VALIDATE --> VALID{Data Valid?}
-    VALID -->|No| ERROR[Show Error Message]
-    VALID -->|Yes| PREVIEW[Data Preview]
-    
-    ERROR --> UPLOAD
-    PREVIEW --> SELECT{Select Analytics Type}
-    
-    SELECT -->|Descriptive| DESC[Descriptive Analytics]
-    SELECT -->|Predictive| PRED[Predictive Analytics]
-    SELECT -->|Cleaning| CLEAN[Data Cleaning]
-    SELECT -->|Visualization| VIZ[Data Visualization]
-    
-    DESC --> AI_DESC[AI Analysis Engine]
-    PRED --> AI_PRED[AI Prediction Engine]
-    CLEAN --> AI_CLEAN[AI Cleaning Engine]
-    VIZ --> AI_VIZ[AI Visualization Engine]
-    
-    AI_DESC --> INSIGHTS[Generate Insights]
-    AI_PRED --> INSIGHTS
-    AI_CLEAN --> INSIGHTS
-    AI_VIZ --> INSIGHTS
-    
-    INSIGHTS --> DISPLAY[Display Results]
-    DISPLAY --> EXPORT{Export Results?}
-    
-    EXPORT -->|Yes| SAVE[Save Analysis]
-    EXPORT -->|No| NEW{New Analysis?}
-    
-    SAVE --> NEW
-    NEW -->|Yes| SELECT
-    NEW -->|No| END([Session Complete])
-    
-    style START fill:#90EE90
-    style END fill:#90EE90
-    style ERROR fill:#FFB6C1
-    style AI_DESC fill:#DDA0DD
-    style AI_PRED fill:#DDA0DD
-    style AI_CLEAN fill:#DDA0DD
-    style AI_VIZ fill:#DDA0DD
-```
-
-## 🤖 AI Processing Pipeline
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Streamlit as Streamlit App
-    participant Processor as Data Processor
-    participant Ollama as Ollama LLM
-    participant Engine as Analytics Engine
-    participant Display as Result Display
-    
-    User->>Streamlit: Upload Data File
-    Streamlit->>Processor: Process File
-    
-    Note over Processor: Data Validation & Cleaning
-    Processor->>Streamlit: Processed Data
-    
-    User->>Streamlit: Select Analytics Type
-    Streamlit->>Engine: Initialize Analysis
-    
-    Engine->>Ollama: Send Analysis Request
-    Note over Ollama: Local LLM Processing
-    Ollama->>Engine: Return Analysis
-    
-    Engine->>Processor: Apply Transformations
-    Processor->>Engine: Processed Results
-    
-    Engine->>Display: Format Results
-    Display->>Streamlit: Render Output
-    Streamlit->>User: Show Analysis Results
-    
-    Note over User,Display: Interactive Analytics Session
-```
-
-## 📁 Project Structure
+- If you're developing locally and have Python set up, run the Streamlit app directly:
 
 ```bash
-AI Data Analytics Agent/
-│
-├── 📋 Documentation
-│   ├── README.md                           # This file
-│   ├── AI Data Analytics Agent Documentation.pdf
-│   └── requirements.txt                    # Python dependencies
-│
-├── 🤖 Core Application
-│   └── streamlit_app.py                   # Main Streamlit application
-│
-├── 🔧 Configuration
-│   ├── .streamlit/                         # Streamlit configuration (if exists)
-│   └── config/                            # App configuration files (if exists)
-│
-├── 📊 Data Processing Modules
-│   ├── data_loader.py                     # Data loading utilities (embedded)
-│   ├── data_cleaner.py                    # Data cleaning functions (embedded)
-│   └── visualization.py                   # Chart generation (embedded)
-│
-├── 🧠 AI Analytics Engine
-│   ├── ollama_client.py                   # Ollama integration (embedded)
-│   ├── analytics_agent.py                # Analytics processing (embedded)
-│   └── insights_generator.py             # Insights generation (embedded)
-│
-└── 💾 Data & Cache
-    ├── uploads/                           # Temporary uploaded files
-    ├── cache/                            # Session cache
-    └── exports/                          # Generated reports
+pip install -r requirements.txt
+streamlit run web_ui.py
 ```
 
-## 🎯 Features Overview
+This will run the app on port 8501 by default.
 
-```mermaid
-mindmap
-  root((AI Analytics Agent))
-    Data Upload
-      CSV Files
-      Excel Files
-      JSON Files
-      Drag & Drop
-    Analytics Types
-      Descriptive
-        Summary Statistics
-        Data Profiling
-        Missing Values
-        Correlations
-      Predictive
-        Trend Analysis
-        Forecasting
-        ML Predictions
-        Pattern Recognition
-      Cleaning
-        Missing Data
-        Outlier Detection
-        Data Transformation
-        Quality Assessment
-      Visualization
-        Charts & Graphs
-        Interactive Plots
-        Custom Dashboards
-        Export Options
-    AI Capabilities
-      Local LLM Processing
-      Natural Language Insights
-      Automated Analysis
-      Intelligent Recommendations
-    User Experience
-      Web Interface
-      Real-time Processing
-      Interactive Results
-      Export Functionality
+---
+
+## Verification & smoke tests
+
+- A Playwright-based smoke test exists at `tests/ui_playwright_smoke.py`. It uploads a small CSV and saves `tests/ui_smoke_result.png`.
+- In-container quick test (example):
+
+```bash
+docker exec <container_id> python3 -c "from analytics_core import OllamaAnalyticsAgent; print('import ok'); a=OllamaAnalyticsAgent(); print('model',a.model_name)"
 ```
 
-## ⚙️ Installation & Usage
+---
 
-### Prerequisites
+## Troubleshooting
 
-- Python 3.8+
-- Ollama installed and running locally
-- Required Python packages (see requirements.txt)
+- Ollama unreachable: confirm `OLLAMA_HOST` points to a reachable host. For local Docker on macOS use `http://host.docker.internal:11434` (the compose file sets this by default).
+- Read-only file errors: do not attempt to write to `/app/data` if it's mounted read-only. Use `/tmp/app_uploads` or set `APP_UPLOAD_DIR` to a writable path inside the container. To persist uploads, map a host directory to `/tmp/app_uploads` in `docker-compose.production.yml` (example below).
+- Long LLM calls or timeouts: the analytics agent runs LLM calls inside a short worker timeout; if you see repeated timeouts, use a smaller model or increase Ollama resources.
+- Port conflict on 8501: change the port mapping in `docker-compose.production.yml` or stop the conflicting service.
 
-### Setup Instructions
+Example persistent upload mapping (edit `docker-compose.production.yml`):
 
-1. **Install Ollama**
+```yaml
+services:
+  ai-data-analytics-agent:
+    ...
+    volumes:
+      - ./data:/app/data:ro
+      - ./uploads:/tmp/app_uploads # host directory for uploads (writable)
+```
 
-   ```sh
-   # macOS
-   curl -fsSL https://ollama.ai/install.sh | sh
-   
-   # Start Ollama service
-   ollama serve
-   ```
+---
 
-2. **Pull a Language Model**
+## Files of interest
 
-   ```sh
-   # Pull a lightweight model (recommended)
-   ollama pull llama2:7b
-   
-   # Or pull other models
-   ollama pull codellama
-   ```
-
-3. **Install Python Dependencies**
-
-   ```sh
-   pip install -r requirements.txt
-   ```
-
-4. **Run the Application**
-
-  ```sh
-  streamlit run "streamlit_app.py"
-  ```
-
-5. **Access the App**
-
-   ```sh
-   # Open in browser
-   http://localhost:8501
-   ```
-
-### Usage Workflow
-
-1. **Start the Application** - Launch the Streamlit app
-2. **Upload Your Data** - Drag and drop CSV, Excel, or JSON files
-3. **Choose Analytics Type** - Select from descriptive, predictive, cleaning, or visualization
-4. **AI Processing** - Let the local LLM analyze your data
-5. **Review Results** - Examine insights, charts, and recommendations
-6. **Export Analysis** - Save results for future reference
-
-### Key Features
-
-- Upload CSV, Excel, or JSON data
-- AI-powered descriptive and predictive analytics
-- Automated data cleaning and quality assessment
-- Interactive visualizations and dashboards
-- Natural language insights generation
-- Privacy-focused local processing
-
-### Important Notes
-
-- Ollama must be running locally for the app to work
-- Ensure you have sufficient RAM for the chosen LLM model
-- Large datasets may take longer to process
-- All data processing happens locally for privacy
-
-### Troubleshooting
-
-- **Ollama connection error:** Make sure `ollama serve` is running and the model is pulled
-- **Memory issues:** Try using a smaller LLM model or reduce dataset size
-- **Import errors:** Verify all dependencies are installed with `pip install -r requirements.txt`
-- **Port conflicts:** Check if port 8501 is available or specify a different port
-
-## �‍💻 Author & License
-
-All code and content in this repository is for educational and personal use.
-
-**Somesh Ramesh Ghaturle**  
-MS in Data Science, Pace University
+- `web_ui.py` — Streamlit entrypoint (production UI)
+- `analytics_core.py` — analytics engine and Ollama wrapper
+- `Dockerfile.production` — production image build
+- `docker-compose.production.yml` — compose manifest used for production runs
 
 ---
 
