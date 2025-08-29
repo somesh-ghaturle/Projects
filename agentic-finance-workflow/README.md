@@ -190,6 +190,126 @@ Executes coordinated multi-agent analysis workflow with all four agents.
 - **Prediction Agent**: Generates ML-powered price forecasts
 - **Data Generator Agent**: Provides fallback synthetic data when APIs are unavailable
 
+## 🔄 System Workflow Flowchart
+
+```mermaid
+flowchart TD
+    %% User Interface Layer
+    subgraph "🌐 Frontend Layer"
+        USER[👤 User] 
+        BROWSER[🌍 Web Browser]
+        HTML[📄 web_interface_professional.html]
+        CHARTS[📊 Chart.js v3.9.1<br/>401,474 bytes]
+    end
+
+    %% Load Balancer
+    subgraph "⚖️ Load Balancer"
+        NGINX[🌐 nginx Proxy<br/>Port 8080]
+        NGINX_CONFIG[📋 nginx/nginx.conf]
+    end
+
+    %% API Layer
+    subgraph "🚀 API Layer"
+        FASTAPI[⚡ FastAPI Server<br/>Port 8001]
+        API_FILE[📄 agentic_finance_api.py]
+        HEALTH[💚 Health Endpoints]
+        API_DOCS[📚 Auto API Documentation]
+    end
+
+    %% Multi-Agent System
+    subgraph "🤖 Multi-Agent System"
+        ORCHESTRATOR[🎯 Agent Orchestrator<br/>agents/orchestrator/]
+        
+        subgraph "🔧 Processing Agents"
+            CLEANER[🧹 Data Cleaner Agent<br/>agents/cleaner/]
+            RISK[📊 Risk Analysis Agent]
+            PREDICTOR[🔮 Prediction Agent]
+            GENERATOR[🎲 Data Generator Agent]
+        end
+    end
+
+    %% Configuration & Workflows
+    subgraph "⚙️ Configuration Layer"
+        CONFIGS[📋 configs/]
+        WORKFLOWS[🔄 workflows/]
+        REQUIREMENTS[📦 requirements.production.txt]
+    end
+
+    %% External Data Sources
+    subgraph "🌍 External Data"
+        YAHOO[📈 Yahoo Finance API<br/>Real-time Market Data]
+        ALPHA[📊 Alpha Vantage API<br/>Additional Financial Data]
+    end
+
+    %% Docker Environment
+    subgraph "🐳 Docker Environment"
+        DOCKERFILE[🐳 Dockerfile.production]
+        COMPOSE[🔧 docker-compose.production.yml]
+        CONTAINER1[📦 FastAPI Container]
+        CONTAINER2[📦 nginx Container]
+    end
+
+    %% Data Flow Connections
+    USER --> BROWSER
+    BROWSER --> HTML
+    HTML --> CHARTS
+    BROWSER --> NGINX
+    NGINX --> NGINX_CONFIG
+    NGINX --> FASTAPI
+    
+    FASTAPI --> API_FILE
+    FASTAPI --> HEALTH
+    FASTAPI --> API_DOCS
+    FASTAPI --> ORCHESTRATOR
+    
+    ORCHESTRATOR --> CLEANER
+    ORCHESTRATOR --> RISK
+    ORCHESTRATOR --> PREDICTOR
+    ORCHESTRATOR --> GENERATOR
+    
+    CLEANER --> YAHOO
+    RISK --> ALPHA
+    PREDICTOR --> YAHOO
+    
+    CONFIGS --> ORCHESTRATOR
+    WORKFLOWS --> ORCHESTRATOR
+    
+    COMPOSE --> CONTAINER1
+    COMPOSE --> CONTAINER2
+    DOCKERFILE --> CONTAINER1
+    NGINX_CONFIG --> CONTAINER2
+    API_FILE --> CONTAINER1
+    
+    %% Styling
+    classDef userLayer fill:#e1f5fe
+    classDef apiLayer fill:#f3e5f5
+    classDef agentLayer fill:#e8f5e8
+    classDef dataLayer fill:#fff3e0
+    classDef dockerLayer fill:#fce4ec
+    
+    class USER,BROWSER,HTML,CHARTS userLayer
+    class NGINX,FASTAPI,API_FILE,HEALTH,API_DOCS apiLayer
+    class ORCHESTRATOR,CLEANER,RISK,PREDICTOR,GENERATOR agentLayer
+    class YAHOO,ALPHA,CONFIGS,WORKFLOWS dataLayer
+    class DOCKERFILE,COMPOSE,CONTAINER1,CONTAINER2 dockerLayer
+```
+
+### 📋 Workflow Process
+
+1. **🌍 User Interaction**: User accesses the web interface through browser
+2. **⚖️ Load Balancing**: nginx proxy routes requests to FastAPI server
+3. **🚀 API Processing**: FastAPI handles requests and serves Chart.js library
+4. **🎯 Agent Orchestration**: Orchestrator coordinates multi-agent workflow
+5. **🔧 Data Processing**: Specialized agents process financial data
+6. **📊 Visualization**: Processed data rendered via Chart.js charts
+7. **🐳 Containerization**: Entire system runs in Docker containers
+
+### 🔄 Data Flow Pipeline
+
+```
+📥 User Request → 🌐 nginx → ⚡ FastAPI → 🎯 Orchestrator → 🤖 Agents → 📊 Processing → 📈 Charts → 👤 User
+```
+
 ## 🐳 Docker Configuration
 
 ### Production Setup
