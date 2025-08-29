@@ -8,6 +8,10 @@ A sophisticated multi-agent financial analysis platform that provides profession
 ![Docker](https://img.shields.io/badge/Docker-Supported-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
+## 📱 App Preview
+
+![Agentic Finance Dashboard](ai%20finance.png)
+
 ## ✨ Key Features
 
 ### 🔥 Core Capabilities
