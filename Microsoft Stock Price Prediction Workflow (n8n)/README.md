@@ -169,7 +169,39 @@ docker-compose ps
 
 ## 🏗️ Architecture
 
-### 🔧 **System Components**
+### � **Project Structure**
+
+```
+Microsoft Stock Price Prediction Workflow (n8n)/
+├── 📊 workflows/                          # n8n workflow definitions
+│   ├── complete-trading-workflow.json     # Full AI trading system
+│   └── simple-test.json                   # Basic connectivity test
+├── 🐳 Docker Configuration
+│   ├── docker-compose.yml                 # Main orchestration
+│   ├── docker-compose.production.yml      # Production config
+│   └── Dockerfile                         # Container definition
+├── 🔧 Scripts & Configuration
+│   ├── start-production.sh                # Production launcher
+│   ├── start-development.sh               # Development launcher
+│   ├── stop.sh                            # Service stopper
+│   ├── nginx/nginx.conf                   # Proxy configuration
+│   └── scripts/                           # Health checks & utilities
+├── ⚙️ Environment & Setup
+│   ├── .env.example                       # Environment template
+│   ├── .gitignore                         # Excluded files
+│   └── LICENSE                            # MIT License
+└── 📚 Documentation
+    └── README.md                          # This file
+
+# Excluded from Git (see .gitignore):
+├── 🤖 ollama/                             # AI models (2-8GB each)
+├── 📝 .env                                # Local environment
+└── 📊 logs/                               # Runtime logs
+```
+
+> **💾 Storage Note**: Ollama AI models are excluded from git due to their large size (2-8GB each). They are automatically downloaded when first used and stored in Docker volumes.
+
+### �🔧 **System Components**
 
 ```mermaid
 graph TB
@@ -279,6 +311,25 @@ curl http://localhost:11434/api/tags
 # Pull additional models (optional)
 docker exec n8n-ollama ollama pull llama3.2:latest
 docker exec n8n-ollama ollama pull codellama:latest
+```
+
+> **📝 Note on Ollama Models**: Ollama models are downloaded automatically when first used and stored in Docker volumes. The `ollama/` directory containing model files is excluded from git due to large file sizes (2-8GB per model). Models will be downloaded automatically when you first run the workflows.
+
+**Available Models:**
+- `llama3:latest` (8B parameters) - Recommended for trading analysis
+- `llama3.2:latest` (3.2B parameters) - Faster, lighter option
+- `codellama:latest` - For technical analysis and code generation
+
+**Model Management:**
+```bash
+# List downloaded models
+docker exec n8n-ollama ollama list
+
+# Remove unused models to save space
+docker exec n8n-ollama ollama rm llama3.2:latest
+
+# Check model disk usage
+docker exec n8n-ollama du -sh /root/.ollama/models
 ```
 
 ### 📊 **Trading Parameters**

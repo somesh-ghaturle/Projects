@@ -1,0 +1,47 @@
+# Environment files
+.env
+
+# Ollama models directory (large files)
+ollama/
+
+# Logs and temporary files
+logs/
+*.log
+temp/
+tmp/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker volumes and data
+volumes/
+data/
+
+# Node modules (if any)
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Backup files
+backup/
+*.backup
+*.bak
