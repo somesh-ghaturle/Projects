@@ -8,25 +8,6 @@ A sophisticated multi-agent financial analysis platform that provides profession
 ![Docker](https://img.shields.io/badge/Docker-Supported-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## 🎯 Live Application Preview
-
-<div align="center">
-
-![Agentic Finance Dashboard](ai%20finance.png)
-
-**🏆 Professional BlackRock-Style Financial Dashboard**  
-*Real-time market analytics • Interactive Chart.js visualizations • Multi-agent intelligence*
-
-</div>
-
-## 📊 Dashboard Preview
-
-The application features a BlackRock-style professional dashboard with real-time financial analytics:
-
-![Agentic Finance Dashboard](ai%20finance.png)
-
-*Professional Financial Dashboard with Chart.js v3.9.1 Visualizations - Real-time market data and interactive charts*
-
 ## ✨ Key Features
 
 ### 🔥 Core Capabilities
@@ -47,7 +28,7 @@ The application features a BlackRock-style professional dashboard with real-time
 
 ### 🏗️ Technical Stack
 - **Backend**: FastAPI with async support
-- **Frontend**: Professional BlackRock-style HTML5/CSS3/JavaScript interface
+- **Frontend**: Professional HTML5/CSS3/JavaScript interface
 - **Charts**: Chart.js v3.9.1 (standalone version - 401,474 bytes)
 - **Data Sources**: Yahoo Finance, Alpha Vantage (optional)
 - **Deployment**: Docker Compose with nginx load balancing
@@ -75,7 +56,7 @@ Open your browser and navigate to:
 http://localhost:8080
 ```
 
-You should see the professional BlackRock-style financial dashboard with:
+You should see the professional financial dashboard with:
 - ✅ Chart.js v3.9.1 loading confirmation (green banner)
 - 📊 Six interactive chart types with real AAPL data
 - 🔄 Multi-agent system status indicators
@@ -252,7 +233,7 @@ agentic-finance-workflow/
 ├── 🔧 requirements.production.txt         # Python dependencies
 ├── 
 ├── 🚀 agentic_finance_api.py              # Main FastAPI application
-├── 🎨 web_interface_professional.html     # BlackRock-style dashboard
+├── 🎨 web_interface_professional.html     # Professional dashboard
 ├── 📊 chart.standalone.js                 # Chart.js v3.9.1 (401,474 bytes)
 ├── 
 ├── 🤖 agents/                             # Multi-agent system
