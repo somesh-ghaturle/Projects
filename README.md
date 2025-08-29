@@ -1,6 +1,4 @@
-# 🚀 AI & Data Science Projects P    subgraph "📈 Trading & Automation"
-        TRADING[📈 Microsoft Stock Trading Platform<br/>n8n + Ollama AI Integration<br/>Real-time Analysis + Email Alerts]
-    endfolio
+# 🚀 AI & Data Science Projects Portfolio
 
 > **Professional AI/ML Projects Collection** | *Advanced Multi-Agent Systems, Financial Analytics, and Data Science Solutions*
 
