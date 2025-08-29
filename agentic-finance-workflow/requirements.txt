@@ -18,6 +18,8 @@ pytest-cov
 pytest-asyncio
 black
 flake8
+yfinance
+alpha_vantage
 mypy
 pre-commit
 docker
