@@ -1,266 +1,244 @@
-# Personal Learning Projects Repository
+# 🚀 AI & Data Science Projects Portfolio
 
-This repository contains my personal learning projects developed during my Master's degree in Data Science at Pace University.
+> **Professional AI/ML Projects Collection** | *Advanced Multi-Agent Systems, Financial Analytics, and Data Science Solutions*
 
-## Overview
+This repository showcases a comprehensive collection of production-ready AI and data science projects developed during my Master's degree in Data Science at Pace University. Each project demonstrates expertise in modern AI frameworks, financial technologies, and scalable system architecture.
 
-- Each subfolder represents a different project or experiment completed as part of coursework, self-study, or exploration in data science, machine learning, and AI.
-- Projects may include code, documentation, and sample data.
+## 🎯 Portfolio Overview
+
+A curated selection of **5 professional AI/ML projects** spanning financial analytics, multi-agent systems, content analysis, research automation, and algorithmic trading. All projects feature production deployment capabilities, comprehensive documentation, and modern tech stacks.
 
 ## 📁 Project Structure
 
 ```text
 Projects/
-├── AgenTech Research Hub/                          # Multi-agent AI research system
-├── Personal-Document-Assistant-MCP/               # MCP server with RAG capabilities  
-├── AI Data Analytics Agent/                       # Streamlit + Ollama analytics tool
-├── Microsoft Stock Price Prediction Workflow (n8n)/ # n8n trading automation workflow
-└── README.md                                      # This file
+├── 🏦 agentic-finance-workflow/                    # AI Financial Analytics Platform
+├── 🔬 AgenTech Research Hub/                       # Multi-Agent AI Research System
+├── 📊 AI Data Analytics Agent/                     # Streamlit + Ollama Analytics Tool
+├── 🎭 Multi-Agent-Content-Analytics/              # AI Content Analysis Platform
+├── 📈 Microsoft Stock Price Prediction Workflow/  # n8n Trading Automation
+└── 📖 README.md                                   # Portfolio Documentation
 ```
 
-## 🏗️ Project Ecosystem Overview
+## 🏗️ Portfolio Architecture
 
 ```mermaid
 flowchart TB
-    subgraph "AI & Data Science Projects"
+    subgraph "🤖 AI & Financial Analytics"
+        FINANCE[🏦 Agentic Finance Workflow<br/>Financial Analysis Platform<br/>Chart.js + Multi-Agent System]
         RESEARCH[🔬 AgenTech Research Hub<br/>Multi-Agent AI Research<br/>CrewAI + LangGraph + AutoGen]
-        ANALYTICS[📊 AI Data Analytics Agent<br/>Streamlit + Ollama LLM<br/>Data Analysis Platform]
+        ANALYTICS[📊 AI Data Analytics Agent<br/>Streamlit + Ollama LLM<br/>Local Data Analysis Platform]
         CONTENT[🎭 Multi-Agent Content Analytics<br/>Movie Script Analysis<br/>NLP + Marketing Intelligence]
-        FINANCE[🏦 Agentic Finance Workflow<br/>Financial Analysis Platform<br/>Portfolio Optimization + Risk]
     end
     
-    subgraph "Specialized Tools"
-        MCP[📚 Personal Document Assistant<br/>MCP Server + RAG<br/>VS Code Integration]
-        TRADING[📈 Stock Price Prediction<br/>n8n Workflow Automation<br/>Discord Notifications]
+    subgraph "� Trading & Automation"
+        TRADING[📈 Stock Price Prediction<br/>n8n Workflow Automation<br/>LSTM/GRU + Discord Alerts]
     end
     
-    subgraph "Technology Stack"
+    subgraph "🛠️ Technology Stack"
         AI_TECH[🤖 AI Technologies<br/>CrewAI, LangGraph, AutoGen<br/>Ollama LLM, FastAPI]
-        DATA_TECH[📊 Data Technologies<br/>Pandas, NumPy, Plotly<br/>Streamlit, Docker]
-        WORKFLOW_TECH[🔄 Workflow Technologies<br/>n8n, MCP Protocol<br/>REST APIs, WebUI]
+        WEB_TECH[🌐 Web Technologies<br/>Chart.js, HTML5, CSS3<br/>Responsive Design, REST APIs]
+        DATA_TECH[📊 Data Technologies<br/>Pandas, NumPy, Plotly<br/>Streamlit, Docker, nginx]
+        WORKFLOW_TECH[🔄 Automation Technologies<br/>n8n, Yahoo Finance API<br/>Discord Integration, LSTM/GRU]
     end
     
     %% Project Connections
+    FINANCE --> AI_TECH
+    FINANCE --> WEB_TECH
     RESEARCH --> AI_TECH
     ANALYTICS --> AI_TECH
-    CONTENT --> AI_TECH
-    FINANCE --> AI_TECH
-    
     ANALYTICS --> DATA_TECH
+    CONTENT --> AI_TECH
     CONTENT --> DATA_TECH
-    FINANCE --> DATA_TECH
     
-    MCP --> WORKFLOW_TECH
     TRADING --> WORKFLOW_TECH
     
     %% Styling
+    style FINANCE fill:#e8f5e8
     style RESEARCH fill:#e3f2fd
     style ANALYTICS fill:#f3e5f5
     style CONTENT fill:#fff3e0
-    style FINANCE fill:#e8f5e8
-    style MCP fill:#fce4ec
     style TRADING fill:#f1f8e9
 ```
 
-## Notable Projects
+## 🌟 Featured Projects
 
-- **AgenTech Research Hub**: Advanced multi-agent AI research system with dynamic topic detection, real-time source gathering, and comprehensive REST API integration using CrewAI, LangGraph, and AutoGen frameworks.
-- **Personal Document Assistant MCP Server**: A powerful Model Context Protocol server with RAG capabilities for VS Code integration, featuring local LLM processing and intelligent document management.
-- **AI Data Analytics Agent**: An AI-powered analytics tool using Streamlit and Ollama for local LLM-based data analysis with support for CSV, Excel, and JSON data processing.
-- **Microsoft Stock Price Prediction Workflow**: An automated n8n workflow for generating algorithmic trading signals (BUY/SELL/HOLD) for Microsoft stock using simulated LSTM/GRU predictions with Discord notifications.
+### 🏦 Agentic Finance Workflow
+> **AI-Powered Financial Analytics Platform with Real-time Visualizations**
+
+![Agentic Finance Platform](./agentic-finance-workflow/ai%20finance.png)
+
+An advanced financial analysis platform featuring multi-agent AI systems, real-time Chart.js visualizations, and comprehensive portfolio analytics. Built with FastAPI, nginx, and production Docker deployment.
+
+**Key Features:**
+- Real-time financial data visualization with Chart.js v3.9.1
+- Multi-agent AI system for market analysis and insights
+- Production-ready Docker deployment with nginx reverse proxy
+- Comprehensive REST API for financial data processing
+- Advanced portfolio optimization and risk assessment tools
+
+**Tech Stack:** `FastAPI` `Chart.js` `Docker` `nginx` `Multi-Agent AI` `Financial APIs`
 
 ---
 
-## AgenTech Research Hub
+### 🔬 AgenTech Research Hub
+> **Multi-Agent AI Research System with Dynamic Topic Detection**
 
-An advanced multi-agent AI research system that leverages multiple AI frameworks for comprehensive research automation. The system provides intelligent topic detection, authoritative source gathering, and seamless integration across different operating modes.
+![AgenTech Research Platform](./AgenTech%20Research%20Hub/research.png)
 
-### 🚀 Features
+Advanced multi-agent AI research system leveraging CrewAI, LangGraph, and AutoGen frameworks for comprehensive research automation with intelligent topic detection and authoritative source gathering.
 
-- **Multi-Agent Architecture**: Integrates CrewAI, LangGraph, and AutoGen frameworks
-- **Dynamic Topic Detection**: Intelligent categorization across 15+ research domains
-- **Authoritative Sources**: Real working URLs to trusted sources (WHO, NASA, IEEE, etc.)
-- **Three Operating Modes**: Demo, Interactive, and REST API
-- **Real-time Research**: Automated research with quality scoring and relevance ranking
-- **Production Ready**: Comprehensive logging, error handling, and monitoring
+**Key Features:**
+- Multi-agent architecture with CrewAI, LangGraph, and AutoGen integration
+- Dynamic topic detection across 15+ research domains
+- Real-time authoritative source gathering (WHO, NASA, IEEE, etc.)
+- Three operating modes: Demo, Interactive, and REST API
+- Production-ready with Prometheus monitoring and comprehensive logging
 
-### 🛠️ Installation
+**Tech Stack:** `CrewAI` `LangGraph` `AutoGen` `FastAPI` `Prometheus` `Docker`
 
+---
+
+### 📊 AI Data Analytics Agent
+> **Local LLM-Powered Analytics Platform with Ollama Integration**
+
+![AI Analytics Platform](./AI%20Data%20Analytics%20Agent/ai%20agent.png)
+
+Intelligent data analytics tool combining local Large Language Models via Ollama with intuitive Streamlit interface for privacy-first data analysis without cloud dependencies.
+
+**Key Features:**
+- Multi-format data support (CSV, Excel, JSON)
+- Local LLM integration with Ollama (Llama3, Mistral, etc.)
+- Comprehensive analytics suite with predictive modeling
+- Interactive Streamlit dashboard with data visualization
+- Privacy-first approach with local processing
+
+**Tech Stack:** `Streamlit` `Ollama` `LLM` `Pandas` `NumPy` `Docker`
+
+---
+
+### 🎭 Multi-Agent Content Analytics
+> **AI-Powered Movie Script Analysis for Entertainment Industry**
+
+![Content Analytics Platform](./Multi-Agent-Content-Analytics/multiagent.png)
+
+Sophisticated AI-powered content analysis platform designed for movie scripts and entertainment industry analytics, featuring specialized NLP agents and marketing intelligence capabilities.
+
+**Key Features:**
+- Multi-agent content analysis system for movie scripts
+- Specialized NLP agents for entertainment industry insights
+- Marketing intelligence and audience targeting recommendations
+- Production-ready deployment with comprehensive monitoring
+- Advanced content processing and sentiment analysis
+
+**Tech Stack:** `FastAPI` `NLP` `Multi-Agent AI` `Docker` `nginx` `Content Analysis`
+
+---
+
+### 📈 Microsoft Stock Price Prediction Workflow
+> **Automated Trading Workflow with LSTM/GRU Neural Networks**
+
+![Trading Workflow](./Microsoft%20Stock%20Price%20Prediction%20Workflow%20(n8n)/workflow-preview.png)
+
+Sophisticated automated trading workflow built with n8n combining financial data fetching, machine learning predictions, and real-time Discord notifications for MSFT stock trading signals.
+
+**Key Features:**
+- Automated daily execution with customizable scheduling
+- LSTM/GRU neural network models for price forecasting
+- Yahoo Finance API integration for real-time stock data
+- Intelligent trading signal generation (BUY/SELL/HOLD)
+- Real-time Discord notifications and workflow automation
+
+**Tech Stack:** `n8n` `LSTM/GRU` `Yahoo Finance API` `Discord` `Neural Networks`
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+```bash
+# Required installations
+docker --version          # Docker for containerization
+python3 --version         # Python 3.8+
+node --version            # Node.js for web components
+git --version             # Git for version control
+```
+
+### Running Projects
+
+**Financial Analytics Platform:**
+```bash
+cd agentic-finance-workflow
+./start_development.sh    # Development mode
+./start_production.sh     # Production deployment
+```
+
+**AI Research Hub:**
 ```bash
 cd "AgenTech Research Hub"
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python3 src/main.py
+python3 src/main.py       # Interactive research system
+python3 api_server.py     # REST API server
 ```
 
-### 🎮 Operating Modes
-
-**Demo Mode**: Automated research across 7 predefined topics
-
-```bash
-echo "1" | python3 src/main.py
-```
-
-**Interactive Mode**: Custom research queries with dynamic topic detection
-
-```bash
-echo "2" | python3 src/main.py
-```
-
-**API Mode**: REST API server for programmatic access
-
-```bash
-echo "3" | python3 src/main.py
-# OR standalone API server
-python3 api_server.py
-```
-
-### 📋 API Endpoints
-
-- `GET /health` - Health check
-- `GET /status` - System status
-- `POST /research` - Perform research query
-
-### 🔧 Supported Research Categories
-
-Technology, Health, Environment, Finance, Education, Science, Food, Travel, Sports, Entertainment, Business, History, Politics, Arts, and General topics with specialized authoritative source mapping.
-
----
-
-## Personal Document Assistant MCP Server
-
-A powerful Model Context Protocol (MCP) server that provides intelligent document management and RAG (Retrieval-Augmented Generation) capabilities for VS Code.
-
-### ✨ Key Features
-
-- **Document Processing**: Upload and process PDF, DOCX, TXT, HTML documents
-- **Semantic Search**: ChromaDB vector embeddings for intelligent document search
-- **RAG Q&A**: Ask questions about your documents using local LLM
-- **VS Code Integration**: Native integration through MCP protocol
-- **Privacy-First**: All processing happens locally using Ollama
-
-### ⚡ Setup Instructions
-
-```bash
-cd "Personal-Document-Assistant-MCP"
-./setup.sh              # Install dependencies
-ollama serve            # Start Ollama server
-cd src && python demo.py   # Try the interactive demo
-```
-
-### 🎮 Interactive Demo
-
-Experience all features with the built-in demo:
-
-- Document processing with text chunking
-- Live AI responses from local Ollama
-- Storage system demonstration
-- Complete workflow overview
-
-### 📋 VS Code Integration
-
-1. Install MCP extension in VS Code
-2. Add server configuration to settings.json
-3. Start uploading documents and asking questions!
-
-**Available Tools**: upload_document, query_documents, search_documents, list_documents, get_document_info, delete_document, get_system_stats
-
----
-
-## AI Data Analytics Agent (Ollama + Streamlit)
-
-An intelligent data analytics tool that combines the power of local Large Language Models (LLMs) via Ollama with an intuitive Streamlit web interface. This application empowers users to perform comprehensive data analysis without relying on cloud-based AI services, ensuring privacy and data security.
-
-### 🎯 Core Features
-
-- **Multi-Format Data Support**: Upload and analyze CSV, Excel, or JSON datasets
-- **Comprehensive Analytics Suite**:
-  - Descriptive analytics for data exploration
-  - Predictive modeling capabilities
-  - Data cleaning and preprocessing tools
-  - Interactive data visualization
-- **Local LLM Integration**: Powered by Ollama models (Llama3, Mistral, etc.)
-- **Privacy-First**: All processing happens locally on your machine
-- **Interactive Interface**: User-friendly Streamlit dashboard
-
-### 🚀 Quick Start
-
+**Data Analytics Agent:**
 ```bash
 cd "AI Data Analytics Agent"
-pip install -r requirements.txt
-ollama serve  # Start Ollama server
-ollama pull llama3  # Download model
-streamlit run "streamlit_app.py"
+streamlit run streamlit_app.py  # Launch analytics dashboard
 ```
 
-### 📊 Analytics Capabilities
+**Content Analytics:**
+```bash
+cd Multi-Agent-Content-Analytics
+python3 multi_agent_content_api.py  # Start content analysis API
+```
 
-- **Data Profiling**: Automatic data type detection, missing value analysis, statistical summaries
-- **Visualization**: Generate charts, plots, and graphs based on your data patterns
-- **AI-Powered Insights**: Natural language explanations of data trends and patterns
-- **Export Results**: Save analysis results and visualizations
+**Stock Prediction Workflow:**
+```bash
+cd "Microsoft Stock Price Prediction Workflow (n8n)"
+# Import trading-workflow.json into n8n platform
+```
 
----
+## 💼 Professional Applications
 
-## Microsoft Stock Price Prediction Workflow (n8n)
+### � Financial Technology
+- **Real-time Portfolio Analytics**: Advanced financial data visualization
+- **Risk Assessment**: Multi-agent AI for market analysis and insights
+- **Algorithmic Trading**: Automated trading signals with ML predictions
 
-A sophisticated automated trading workflow built with n8n that combines financial data fetching, machine learning predictions, and real-time notifications for Microsoft (MSFT) stock trading signals.
+### 🔬 Research & Analytics
+- **Academic Research**: Multi-agent system for comprehensive topic analysis
+- **Data Science**: Local LLM-powered analytics with privacy protection
+- **Content Intelligence**: AI-driven entertainment industry insights
 
-### 🔄 Workflow Architecture
+### �️ Production Features
+- **Docker Deployment**: All projects containerized for easy deployment
+- **REST APIs**: Comprehensive API endpoints for integration
+- **Monitoring**: Prometheus metrics and health checks
+- **Security**: nginx reverse proxy and secure configurations
 
-- **Daily Automation**: Scheduled execution with customizable timing
-- **Data Pipeline**: Fetches MSFT historical prices from Yahoo Finance API
-- **AI Predictions**: Simulates LSTM/GRU neural network models for price forecasting
-- **Signal Generation**: Intelligent trading recommendations (BUY/SELL/HOLD)
-- **Notification System**: Real-time alerts sent to Discord channels
-- **Visual Workflow**: Complete n8n automation with error handling
+## � Technologies & Frameworks
 
-### ⚙️ Technical Components
+### 🤖 AI & Machine Learning
+- **Multi-Agent Frameworks**: CrewAI, LangGraph, AutoGen
+- **Large Language Models**: Ollama (Llama3, Mistral)
+- **Neural Networks**: LSTM/GRU for time series prediction
+- **NLP Processing**: Advanced content analysis and sentiment detection
 
-- **Data Source**: Yahoo Finance API for real-time stock data
-- **ML Models**: LSTM/GRU neural networks for time series prediction
-- **Automation Platform**: n8n workflow orchestration
-- **Communication**: Discord webhook integration
-- **Scheduling**: Configurable execution timing
+### � Web & API Development
+- **Backend**: FastAPI, uvicorn, Python
+- **Frontend**: Chart.js v3.9.1, HTML5, CSS3, JavaScript
+- **API Integration**: Yahoo Finance, Discord webhooks
+- **Data Visualization**: Interactive charts and real-time updates
 
-### 🎯 Use Cases
+### 🚀 DevOps & Deployment
+- **Containerization**: Docker, docker-compose
+- **Web Server**: nginx reverse proxy
+- **Monitoring**: Prometheus metrics
+- **Automation**: n8n workflow orchestration
 
-- **Algorithmic Trading**: Automated signal generation for trading decisions
-- **Market Analysis**: Daily stock price movement predictions
-- **Portfolio Management**: Risk assessment and position sizing recommendations
-- **Educational**: Learn about automated trading systems and ML in finance
-
----
-
-## Other Projects
-
-### Trading LSTM - Microsoft n8n
-
-An automated trading workflow that combines LSTM neural networks with n8n automation for Microsoft stock predictions.
-
-**Features:**
-
-- Automated daily execution with customizable scheduling
-- Fetches MSFT historical prices from Yahoo Finance API
-- Simulates LSTM/GRU model predictions for price movement
-- Generates intelligent trading signals (BUY/SELL/HOLD)
-- Sends formatted notifications to Discord channels
-- Complete workflow automation using n8n platform
-
-**Technologies:** Python, LSTM/GRU Neural Networks, n8n, Yahoo Finance API, Discord Integration
-
-## 🔧 Technologies Used
-
-- **Languages**: Python, HTML, CSS, JavaScript
-- **ML/AI**: scikit-learn, TensorFlow, LSTM/GRU Networks, Ollama, ChromaDB
-- **AI Frameworks**: CrewAI, LangGraph, AutoGen
-- **Web Frameworks**: Streamlit, FastAPI, uvicorn
-- **Data Processing**: pandas, numpy, matplotlib, seaborn
-- **Automation**: n8n workflow automation
-- **APIs**: Yahoo Finance API, Discord API, REST APIs
-- **Protocols**: Model Context Protocol (MCP)
-- **Tools**: VS Code, Git, Docker
+### 📊 Data & Analytics
+- **Data Processing**: Pandas, NumPy, Plotly
+- **Databases**: ChromaDB for vector embeddings
+- **File Formats**: CSV, Excel, JSON, PDF processing
+- **Streaming**: Streamlit for interactive dashboards
 
 ## 👨‍💻 Author & License
 
@@ -275,7 +253,7 @@ MS in Data Science, Pace University
 
 ### 📄 MIT License
 
-```
+```text
 MIT License
 
 Copyright (c) 2025 Somesh Ramesh Ghaturle
@@ -298,3 +276,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+---
+
+### 🌟 Built with passion for AI, Data Science, and Financial Technology

@@ -8,6 +8,10 @@
 [![AI Powered](https://img.shields.io/badge/AI-Powered-purple.svg)](https://github.com/somesh-ghaturle/Projects)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 📱 App Preview
+
+![Multi-Agent Content Analytics Dashboard](multiagent.png)
+
 ## 🎯 Overview
 
 **Multi-Agent Content Analytics Platform** is a next-generation AI system that revolutionizes content analysis through specialized intelligent agents. Built for entertainment industry professionals, writers, and content creators, the platform provides comprehensive insights into movie scripts, story structures, character development, and market potential.

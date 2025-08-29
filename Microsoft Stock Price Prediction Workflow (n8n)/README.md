@@ -29,6 +29,12 @@
 - Trigger via CloudWatch Events or Cloud Scheduler
 - Send notifications via SNS or Cloud Pub/Sub
 
+## 📱 Workflow Preview
+
+![n8n Workflow Visualization](https://via.placeholder.com/800x400/EA4B71/FFFFFF?text=Microsoft+Stock+Prediction+Workflow)
+
+*Professional n8n workflow with automated LSTM/GRU predictions and Discord notifications*
+
 ## Overview
 
 This project contains an automated n8n workflow for generating algorithmic trading signals (BUY/SELL/HOLD) for Microsoft (MSFT) stock using simulated LSTM/GRU predictions. The workflow integrates multiple data sources, applies machine learning predictions, and delivers actionable trading insights through Discord notifications.
