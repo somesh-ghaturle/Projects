@@ -1,530 +1,583 @@
-# Microsoft Stock Price Prediction Workflow (n8n) 📈
+# 🤖 AI-Powered Microsoft Stock Trading Platform
 
-> Automated algorithmic trading signals using n8n workflow automation, LSTM/GRU predictions, and Discord notifications
+<div align="center">
 
-[![n8n](https://img.shields.io/badge/n8n-Workflow-EA4B71)](https://n8n.io/)
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Yahoo Finance](https://img.shields.io/badge/Yahoo%20Finance-API-purple)](https://finance.yahoo.com/)
-[![Discord## 👨‍- **Prediction Accuracy**: Consider implementing real ML models for production use
+![Microsoft Stock Trading](n8n.png)
 
-## 🚀 Deployment Suggestions
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://docker.com)
+[![n8n](https://img.shields.io/badge/n8n-Workflow-orange?logo=n8n)](https://n8n.io)
+[![Ollama](https://img.shields.io/badge/Ollama-AI%20Analysis-green?logo=ollama)](https://ollama.ai)
+[![Yahoo Finance](https://img.shields.io/badge/Yahoo-Finance%20API-purple)](https://finance.yahoo.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-### Option 1: n8n Cloud
-- Deploy your workflow on [n8n Cloud](https://n8n.io/cloud/) for managed hosting
-- Import the `trading-workflow.json` file directly
-- Set up scheduled triggers for automated trading signals
+*Intelligent stock trading automation with AI-powered analysis and real-time email alerts*
 
-### Option 2: Self-Hosted n8n
-- Deploy n8n on your own server using Docker
-- Perfect for custom configurations and data privacy
-- Can integrate with local databases and custom APIs
+[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-architecture) • [Workflows](#-workflows) • [API Reference](#-api-reference)
 
-### Option 3: Streamlit Dashboard
-- Create a Streamlit interface to display trading signals
-- Deploy on [Streamlit Cloud](https://streamlit.io/cloud)
-- **Note**: Would require adapting n8n workflow to work with Streamlit
+</div>
 
-### Option 4: Cloud Functions
-- Convert workflow logic to **AWS Lambda** or **Google Cloud Functions**
-- Trigger via CloudWatch Events or Cloud Scheduler
-- Send notifications via SNS or Cloud Pub/Sub
+---
 
-## 📱 Workflow Preview
+## 📋 Table of Contents
 
-![n8n Workflow Visualization](https://via.placeholder.com/800x400/EA4B71/FFFFFF?text=Microsoft+Stock+Prediction+Workflow)
+- [🎯 Overview](#-overview)
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [🏗️ Architecture](#️-architecture)
+- [📊 Workflows](#-workflows)
+- [🔧 Configuration](#-configuration)
+- [📖 API Reference](#-api-reference)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [🛠️ Development](#️-development)
+- [📈 Usage Examples](#-usage-examples)
+- [🔍 Troubleshooting](#-troubleshooting)
+- [🤝 Contributing](#-contributing)
+- [📝 License](#-license)
 
-*Professional n8n workflow with automated LSTM/GRU predictions and Discord notifications*
+---
 
-## Overview
+## 📸 Preview
 
-This project contains an automated n8n workflow for generating algorithmic trading signals (BUY/SELL/HOLD) for Microsoft (MSFT) stock using simulated LSTM/GRU predictions. The workflow integrates multiple data sources, applies machine learning predictions, and delivers actionable trading insights through Discord notifications.
+### 🖥️ **n8n Workflow Interface**
+![Microsoft Stock Trading Platform](n8n.png)
 
-## 📚 Table of Contents
+### 🎯 **Live Demo Features**
+- **Real-time MSFT data processing** from Yahoo Finance API
+- **AI-powered analysis** using local Ollama LLM models  
+- **Professional email notifications** with trading recommendations
+- **Visual workflow editor** for easy customization
+- **Complete Docker environment** with health monitoring
 
-- [🏗️ Workflow Architecture](#️-workflow-architecture)
-- [🔄 Trading Process Flow](#-trading-process-flow)
-- [📊 Data Pipeline](#-data-pipeline)
-- [🤖 Prediction Engine](#-prediction-engine)
-- [📱 Notification System](#-notification-system)
-- [📁 Project Structure](#-project-structure)
-- [⚙️ Setup & Configuration](#️-setup--configuration)
-
-## 🏗️ Workflow Architecture
-
-```mermaid
-graph TB
-    subgraph "Scheduling Layer"
-        A[Schedule Trigger]
-        B[Cron Configuration]
-        C[Execution Monitor]
-    end
-    
-    subgraph "Data Acquisition"
-        D[Yahoo Finance API]
-        E[Historical Data Fetcher]
-        F[Data Validator]
-        G[Price Aggregator]
-    end
-    
-    subgraph "Prediction Engine"
-        H[LSTM Model Simulator]
-        I[GRU Model Simulator]
-        J[Feature Engineering]
-        K[Price Prediction]
-    end
-    
-    subgraph "Signal Generation"
-        L[Technical Analysis]
-        M[Threshold Calculator]
-        N[Signal Logic Engine]
-        O[Risk Assessment]
-    end
-    
-    subgraph "Notification System"
-        P[Discord Webhook]
-        Q[Message Formatter]
-        R[Alert Dispatcher]
-        S[Delivery Confirmation]
-    end
-    
-    subgraph "Monitoring & Logging"
-        T[Execution Logs]
-        U[Error Handling]
-        V[Performance Metrics]
-        W[Audit Trail]
-    end
-    
-    A --> D
-    B --> E
-    C --> F
-    
-    D --> H
-    E --> I
-    F --> J
-    G --> K
-    
-    H --> L
-    I --> M
-    J --> N
-    K --> O
-    
-    L --> P
-    M --> Q
-    N --> R
-    O --> S
-    
-    P --> T
-    Q --> U
-    R --> V
-    S --> W
-    
-    style A fill:#e1f5fe
-    style H fill:#fff3e0
-    style L fill:#fce4ec
-    style P fill:#f1f8e9
-    style T fill:#f3e5f5
+### 📊 **Sample Trading Alert Email**
 ```
+📈 Microsoft Stock Trading Analysis
 
-## 🔄 Trading Process Flow
+🏷️ Symbol: MSFT
+💰 Current Price: $410.60
+🎯 Predicted Price: $415.50
+📊 Recommendation: BUY
+⚖️ Risk Level: MODERATE
 
-```mermaid
-flowchart TD
-    START([Daily Schedule Trigger]) --> CONFIG[Configure Parameters]
-    
-    CONFIG --> TICKER[Set Ticker Symbol: MSFT]
-    TICKER --> DATES[Calculate Date Range: Last 100 Days]
-    
-    DATES --> FETCH[Fetch Historical Data]
-    FETCH --> VALIDATE{Data Quality Check}
-    
-    VALIDATE -->|Valid| PREPARE[Prepare Features]
-    VALIDATE -->|Invalid| ERROR[Log Error & Retry]
-    
-    ERROR --> FETCH
-    PREPARE --> PREDICT[Run LSTM/GRU Prediction]
-    
-    PREDICT --> ANALYZE[Technical Analysis]
-    ANALYZE --> CALCULATE[Calculate Price Target]
-    
-    CALCULATE --> SIGNAL{Generate Signal}
-    
-    SIGNAL -->|> +2%| BUY[BUY Signal]
-    SIGNAL -->|< -2%| SELL[SELL Signal]
-    SIGNAL -->|-2% to +2%| HOLD[HOLD Signal]
-    
-    BUY --> FORMAT_BUY[Format BUY Message]
-    SELL --> FORMAT_SELL[Format SELL Message]
-    HOLD --> FORMAT_HOLD[Format HOLD Message]
-    
-    FORMAT_BUY --> DISCORD[Send Discord Notification]
-    FORMAT_SELL --> DISCORD
-    FORMAT_HOLD --> DISCORD
-    
-    DISCORD --> LOG[Log Execution]
-    LOG --> COMPLETE([Workflow Complete])
-    
-    style START fill:#90EE90
-    style COMPLETE fill:#90EE90
-    style BUY fill:#90EE90
-    style SELL fill:#FFB6C1
-    style HOLD fill:#FFD700
-    style ERROR fill:#FF6B6B
-```
+💭 Analysis:
+The stock shows positive momentum with strong fundamentals.
+Recent 10-day trend indicates upward trajectory with good volume.
+Technical indicators suggest continued growth potential.
 
-## 📊 Data Pipeline
-
-```mermaid
-sequenceDiagram
-    participant Trigger as Schedule Trigger
-    participant Config as Configuration Node
-    participant Yahoo as Yahoo Finance API
-    participant Model as Prediction Model
-    participant Signal as Signal Generator
-    participant Discord as Discord Webhook
-    participant Monitor as Monitoring System
-    
-    Trigger->>Config: Daily Execution
-    Config->>Config: Set MSFT & Date Range
-    
-    Config->>Yahoo: Request Historical Data
-    Yahoo->>Yahoo: Fetch Last 100 Days
-    Yahoo->>Config: Return Price Data
-    
-    Config->>Model: Send Price Data
-    Model->>Model: LSTM/GRU Processing
-    Model->>Signal: Return Prediction
-    
-    Signal->>Signal: Calculate Signal Logic
-    Signal->>Signal: Apply Thresholds (±2%)
-    
-    alt BUY Signal
-        Signal->>Discord: Send BUY Alert
-    else SELL Signal
-        Signal->>Discord: Send SELL Alert
-    else HOLD Signal
-        Signal->>Discord: Send HOLD Alert
-    end
-    
-    Discord->>Monitor: Log Notification
-    Monitor->>Monitor: Update Metrics
-    
-    Note over Trigger,Monitor: Automated Daily Execution Cycle
-```
-
-## 🤖 Prediction Engine
-
-```mermaid
-graph LR
-    subgraph "Input Processing"
-        A[Historical Prices]
-        B[Volume Data]
-        C[Technical Indicators]
-        D[Market Context]
-    end
-    
-    subgraph "Feature Engineering"
-        E[Price Normalization]
-        F[Moving Averages]
-        G[Volatility Metrics]
-        H[Momentum Indicators]
-    end
-    
-    subgraph "Model Simulation"
-        I[LSTM Network]
-        J[GRU Network]
-        K[Ensemble Method]
-        L[Prediction Confidence]
-    end
-    
-    subgraph "Signal Processing"
-        M[Price Target Calculation]
-        N[Trend Analysis]
-        O[Risk Assessment]
-        P[Signal Strength]
-    end
-    
-    A --> E
-    B --> F
-    C --> G
-    D --> H
-    
-    E --> I
-    F --> J
-    G --> K
-    H --> L
-    
-    I --> M
-    J --> N
-    K --> O
-    L --> P
-    
-    style I fill:#FFE4B5
-    style J fill:#FFE4B5
-    style K fill:#FFE4B5
-    style M fill:#E6E6FA
-```
-
-## 📱 Notification System
-
-```mermaid
-flowchart LR
-    subgraph "Signal Input"
-        A[Trading Signal]
-        B[Price Data]
-        C[Confidence Score]
-        D[Market Context]
-    end
-    
-    subgraph "Message Formatting"
-        E[Template Engine]
-        F[Dynamic Content]
-        G[Rich Formatting]
-        H[Emoji Integration]
-    end
-    
-    subgraph "Discord Integration"
-        I[Webhook Configuration]
-        J[Message Builder]
-        K[Delivery System]
-        L[Confirmation Handler]
-    end
-    
-    subgraph "Monitoring"
-        M[Delivery Status]
-        N[Error Tracking]
-        O[Performance Metrics]
-        P[Audit Logs]
-    end
-    
-    A --> E
-    B --> F
-    C --> G
-    D --> H
-    
-    E --> I
-    F --> J
-    G --> K
-    H --> L
-    
-    I --> M
-    J --> N
-    K --> O
-    L --> P
-    
-    style I fill:#5865F2
-    style J fill:#5865F2
-    style K fill:#5865F2
-```
-
-## 📁 Project Structure
-
-```bash
-Microsoft Stock Price Prediction Workflow (n8n)/
-│
-├── 📋 Documentation
-│   └── README.md                           # This comprehensive documentation
-│
-├── 🔄 Workflow Definition
-│   └── trading-workflow.json              # Complete n8n workflow configuration
-│
-├── 🏗️ Workflow Components
-│   ├── 01_schedule_trigger.json           # Daily execution scheduler
-│   ├── 02_parameter_config.json           # MSFT ticker and date configuration
-│   ├── 03_data_fetcher.json              # Yahoo Finance API integration
-│   ├── 04_prediction_model.json          # LSTM/GRU simulation engine
-│   ├── 05_signal_generator.json          # Trading signal logic
-│   └── 06_discord_notifier.json          # Discord webhook notification
-│
-├── 📊 Configuration Files
-│   ├── credentials.json                   # API keys and webhook URLs (template)
-│   ├── workflow_settings.json            # Execution parameters
-│   └── notification_templates.json       # Discord message formats
-│
-├── 📈 Data & Outputs
-│   ├── historical_data/                  # Downloaded price data cache
-│   ├── predictions/                      # Model prediction outputs
-│   ├── signals/                         # Generated trading signals
-│   └── logs/                            # Execution and error logs
-│
-└── 🛠️ Development Tools
-    ├── test_workflow.json               # Testing configuration
-    ├── backup_workflow.json            # Workflow backup
-    └── deployment_guide.md             # Setup instructions
-```
-
-## ⚙️ Setup & Configuration
-
-### Prerequisites
-
-- [n8n](https://n8n.io/) (self-hosted or desktop application)
-- Python 3.8+ (for code nodes in n8n)
-- Discord account with webhook access
-- Internet connection for Yahoo Finance API access
-
-### Installation Steps
-
-1. **Install n8n**
-
-   ```bash
-   # Option 1: Global installation
-   npm install n8n -g
-   
-   # Option 2: Docker
-   docker run -it --rm --name n8n -p 5678:5678 n8nio/n8n
-   
-   # Option 3: Desktop App
-   # Download from https://n8n.io/download/
-   ```
-
-2. **Start n8n Service**
-
-   ```bash
-   # Command line
-   n8n start
-   
-   # Access at http://localhost:5678
-   ```
-
-3. **Import Workflow**
-
-   ```bash
-   # In n8n interface:
-   # 1. Go to "Workflows" → "Import from File"
-   # 2. Select trading-workflow.json
-   # 3. Confirm import
-   ```
-
-4. **Configure Discord Webhook**
-
-   ```bash
-   # Create Discord webhook:
-   # 1. Discord Server Settings → Integrations → Webhooks
-   # 2. Copy webhook URL
-   # 3. Add to n8n credentials as "Discord Webhook"
-   ```
-
-5. **Set Up Credentials**
-
-   ```bash
-   # In n8n:
-   # 1. Go to Settings → Credentials
-   # 2. Add "Discord Webhook" credential
-   # 3. Paste your webhook URL
-   # 4. Link to notification node
-   ```
-
-6. **Test Workflow**
-
-   ```bash
-   # Manual test:
-   # 1. Open workflow in n8n
-   # 2. Click "Execute Workflow"
-   # 3. Check Discord for notification
-   # 4. Review execution logs
-   ```
-
-### Configuration Options
-
-#### Trading Parameters
-
-```json
-{
-  "ticker": "MSFT",
-  "days_history": 100,
-  "buy_threshold": 0.02,
-  "sell_threshold": -0.02,
-  "schedule": "0 9 * * 1-5"
-}
-```
-
-#### Notification Templates
-
-```json
-{
-  "buy_signal": "🚀 **BUY SIGNAL** for ${ticker}\n📈 Predicted: +${percentage}%\n💰 Current: $${price}\n🎯 Target: $${target}",
-  "sell_signal": "🔻 **SELL SIGNAL** for ${ticker}\n📉 Predicted: ${percentage}%\n💸 Current: $${price}\n🎯 Target: $${target}",
-  "hold_signal": "⏸️ **HOLD SIGNAL** for ${ticker}\n📊 Predicted: ${percentage}%\n💼 Current: $${price}\n🔄 Maintain Position"
-}
-```
-
-### Key Features
-
-- **Automated Execution**: Daily schedule (customizable timing)
-- **Real-time Data**: Yahoo Finance API integration
-- **ML Predictions**: LSTM/GRU model simulation (replaceable with real models)
-- **Smart Signaling**: Threshold-based BUY/SELL/HOLD logic
-- **Rich Notifications**: Formatted Discord alerts with emojis and data
-- **Error Handling**: Robust error management and retry logic
-- **Monitoring**: Comprehensive logging and execution tracking
-
-### Advanced Customization
-
-#### Replace Simulated Model
-
-```javascript
-// Replace simulation node with HTTP Request to real ML API
-const response = await fetch('https://your-ml-api.com/predict', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ ticker: 'MSFT', data: historicalData })
-});
-const prediction = await response.json();
-```
-
-#### Multi-Asset Support
-
-```javascript
-// Extend for multiple tickers
-const tickers = ['MSFT', 'AAPL', 'GOOGL', 'AMZN'];
-for (const ticker of tickers) {
-  // Execute prediction workflow for each ticker
-}
-```
-
-### Troubleshooting
-
-- **Yahoo Finance Errors**: Check API rate limits and internet connection
-- **Discord Webhook Issues**: Verify webhook URL and Discord server permissions
-- **n8n Execution Failures**: Review workflow logs and node configurations
-- **Prediction Accuracy**: Consider implementing real ML models for production use
-
-## 👨‍💻 Author & License
-
-All code and content in this repository is for educational and personal use.
-
-**Somesh Ramesh Ghaturle**  
-MS in Data Science, Pace University
-
-📧 **Email:** [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
-🐙 **GitHub:** [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
-💼 **LinkedIn:** [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
-
-### 📄 MIT License
-
-```
-MIT License
-
-Copyright (c) 2025 Somesh Ramesh Ghaturle
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+🕐 Generated: 2025-08-29T01:15:00.000Z
+---
+Automated by AI Trading System
 ```
 
 ---
 
-### Built with 📊 using n8n, Python, Yahoo Finance API, and Discord
+## 🎯 Overview
+
+The **AI-Powered Microsoft Stock Trading Platform** is an intelligent, automated trading system that combines real-time market data analysis with advanced AI decision-making. Built on n8n workflow automation, it provides sophisticated trading signals, risk assessment, and automated email notifications for Microsoft (MSFT) stock trading.
+
+### 🌟 Key Highlights
+
+- **🧠 AI-Driven Analysis**: Local Ollama LLM provides intelligent trading recommendations
+- **📊 Real-Time Data**: Yahoo Finance API integration for live market data
+- **📧 Smart Alerts**: Professional email notifications with trading signals
+- **🐳 Production-Ready**: Complete Docker containerization with health monitoring
+- **🔒 Secure**: Local AI processing with no external API dependencies
+- **⚡ High Performance**: Optimized workflow execution with Redis caching
+
+---
+
+## ✨ Features
+
+### 🎯 **Core Trading Features**
+- **Real-Time Market Data**: Live MSFT stock price feeds from Yahoo Finance
+- **AI Trading Analysis**: Advanced pattern recognition and trend analysis
+- **Automated Recommendations**: BUY/SELL/HOLD signals with confidence scoring
+- **Risk Assessment**: Comprehensive risk evaluation with each recommendation
+- **Price Predictions**: Next-day price forecasting using AI models
+
+### 🔧 **Technical Features**
+- **Workflow Automation**: Visual n8n workflows for complex trading logic
+- **Local AI Processing**: Ollama integration for private, secure AI analysis
+- **Professional Notifications**: HTML email templates with trading metrics
+- **Health Monitoring**: Complete service health checks and monitoring
+- **Scalable Architecture**: Docker Compose orchestration for easy scaling
+
+### 📊 **Analytics & Reporting**
+- **Historical Analysis**: 10-day moving average and trend analysis
+- **Performance Tracking**: Trading signal accuracy and performance metrics
+- **Email Alerts**: Instant notifications with comprehensive trading data
+- **Visual Insights**: Rich data presentation in email reports
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Docker & Docker Compose** (Latest version)
+- **Git** for cloning the repository
+- **Email Account** for trading alerts
+
+### 1️⃣ Clone & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/somesh-ghaturle/Projects.git
+cd "Projects/Microsoft Stock Price Prediction Workflow (n8n)"
+
+# Copy environment template
+cp .env.example .env
+```
+
+### 2️⃣ Configure Environment
+
+Edit `.env` file with your settings:
+
+```bash
+# n8n Configuration
+N8N_USER=admin
+N8N_PASSWORD=your_secure_password
+
+# Email Configuration
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+
+# Database
+DB_PASSWORD=secure_db_password
+```
+
+### 3️⃣ Launch Platform
+
+```bash
+# Start all services
+./start-production.sh
+
+# Verify deployment
+docker-compose ps
+```
+
+### 4️⃣ Access & Configure
+
+1. **Open n8n Interface**: http://localhost:5678
+2. **Login** with credentials from `.env`
+3. **Import Workflow**: Upload `workflows/complete-trading-workflow.json`
+4. **Configure Email**: Set up SMTP credentials in the email node
+5. **Test Workflow**: Execute manually to verify functionality
+
+---
+
+## 🏗️ Architecture
+
+### 🔧 **System Components**
+
+```mermaid
+graph TB
+    A[Yahoo Finance API] --> B[n8n Workflow Engine]
+    B --> C[Data Processing]
+    C --> D[Ollama AI Analysis]
+    D --> E[Trading Signal Generation]
+    E --> F[Email Notifications]
+    
+    G[PostgreSQL] --> B
+    H[Redis Cache] --> B
+    I[Nginx Proxy] --> B
+    
+    subgraph "Docker Environment"
+        B
+        G
+        H
+        I
+        J[Ollama LLM]
+    end
+```
+
+### 🐳 **Docker Services**
+
+| Service | Purpose | Port | Health Check |
+|---------|---------|------|-------------|
+| **n8n** | Workflow automation platform | 5678 | HTTP /healthz |
+| **PostgreSQL** | Workflow and execution data | 5432 | Connection test |
+| **Redis** | Caching and session storage | 6379 | PING command |
+| **Ollama** | Local AI inference engine | 11434 | API version check |
+| **Nginx** | Reverse proxy and load balancer | 80 | HTTP response |
+
+### 🔄 **Data Flow**
+
+1. **Data Ingestion**: Yahoo Finance API → Raw market data
+2. **Processing**: n8n workflows → Structured analysis
+3. **AI Analysis**: Ollama LLM → Trading insights
+4. **Decision Making**: Rule engine → Trading signals
+5. **Notification**: Email system → User alerts
+
+---
+
+## 📊 Workflows
+
+### 🎯 **Complete Trading Workflow**
+**File**: `workflows/complete-trading-workflow.json`
+
+**Purpose**: End-to-end automated trading analysis with AI recommendations
+
+**Components**:
+- **Data Fetcher**: Yahoo Finance integration
+- **Data Processor**: Stock price analysis and trend calculation
+- **AI Analyzer**: Ollama-powered trading recommendations
+- **Result Formatter**: Professional report generation
+- **Email Sender**: SMTP-based notification system
+
+### 🧪 **Simple Test Workflow**
+**File**: `workflows/simple-test.json`
+
+**Purpose**: Basic API connectivity and data fetching test
+
+**Components**:
+- **Stock Data Setter**: Hardcoded MSFT parameters
+- **API Tester**: Yahoo Finance connectivity verification
+
+### 📋 **Workflow Execution**
+
+```bash
+# Import workflow via n8n UI
+1. Navigate to http://localhost:5678
+2. Click "Import from file"
+3. Select workflow JSON file
+4. Configure email credentials
+5. Execute workflow
+
+# Or via API
+curl -X POST http://localhost:5678/webhook/trading-signal \
+  -H "Content-Type: application/json" \
+  -d '{"symbol": "MSFT", "action": "analyze"}'
+```
+
+---
+
+## 🔧 Configuration
+
+### 📧 **Email Setup**
+
+#### Gmail App Password Method:
+1. Enable 2-Factor Authentication
+2. Generate App Password: Google Account → Security → App passwords
+3. Configure SMTP settings:
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-16-char-app-password
+SMTP_SECURE=true
+```
+
+### 🤖 **AI Model Configuration**
+
+```bash
+# Check available models
+curl http://localhost:11434/api/tags
+
+# Pull additional models (optional)
+docker exec n8n-ollama ollama pull llama3.2:latest
+docker exec n8n-ollama ollama pull codellama:latest
+```
+
+### 📊 **Trading Parameters**
+
+Edit workflow parameters in n8n:
+
+```javascript
+// Stock configuration
+{
+  "ticker": "MSFT",
+  "interval": "1d",
+  "period": "30d",
+  "analysis_depth": 10
+}
+
+// AI prompt customization
+{
+  "prompt_template": "Analyze MSFT with focus on...",
+  "risk_tolerance": "moderate",
+  "prediction_horizon": "1d"
+}
+```
+
+---
+
+## 📖 API Reference
+
+### 🔌 **Yahoo Finance Integration**
+
+```bash
+# Get stock data
+GET https://query1.finance.yahoo.com/v8/finance/chart/MSFT
+Parameters:
+  - interval: 1d, 1h, 5m
+  - period1: Unix timestamp (start)
+  - period2: Unix timestamp (end)
+```
+
+### 🧠 **Ollama AI API**
+
+```bash
+# Generate trading analysis
+POST http://ollama:11434/api/generate
+{
+  "model": "llama3:latest",
+  "prompt": "Analyze stock data and provide trading recommendation",
+  "stream": false
+}
+```
+
+### 📧 **Email Notification Format**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MSFT Trading Alert</title>
+</head>
+<body>
+    <h2>📈 Microsoft Stock Trading Analysis</h2>
+    <p><strong>Symbol:</strong> MSFT</p>
+    <p><strong>Current Price:</strong> $410.60</p>
+    <p><strong>Recommendation:</strong> BUY</p>
+    <p><strong>Predicted Price:</strong> $415.50</p>
+    <p><strong>Risk Level:</strong> MODERATE</p>
+    <p><strong>Analysis:</strong> Positive trend with strong fundamentals...</p>
+</body>
+</html>
+```
+
+---
+
+## 🐳 Docker Deployment
+
+### 🚀 **Production Deployment**
+
+```bash
+# Quick production start
+./start-production.sh
+
+# Manual deployment
+docker-compose -f docker-compose.production.yml up -d
+
+# Health check
+./scripts/health_check.sh
+```
+
+### 📊 **Service Management**
+
+```bash
+# View logs
+docker-compose logs -f n8n
+docker-compose logs -f ollama
+
+# Restart services
+docker-compose restart n8n
+docker-compose restart ollama
+
+# Scale services
+docker-compose up -d --scale n8n=2
+```
+
+### 🔍 **Monitoring**
+
+```bash
+# Check service status
+docker-compose ps
+
+# Resource usage
+docker stats
+
+# Health checks
+curl http://localhost:5678/healthz
+curl http://localhost:11434/api/version
+```
+
+---
+
+## 🛠️ Development
+
+### 🏃‍♂️ **Development Setup**
+
+```bash
+# Start development environment
+./start-development.sh
+
+# Enable debug mode
+export N8N_LOG_LEVEL=debug
+docker-compose up
+
+# Develop workflows
+# Edit workflows in n8n UI
+# Export workflows to /workflows directory
+```
+
+### 🧪 **Testing**
+
+```bash
+# Test Yahoo Finance API
+curl "https://query1.finance.yahoo.com/v8/finance/chart/MSFT?interval=1d"
+
+# Test Ollama
+curl -X POST http://localhost:11434/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model": "llama3:latest", "prompt": "Test prompt", "stream": false}'
+
+# Test workflow execution
+./test_web_interface.sh
+```
+
+### 📝 **Workflow Development**
+
+1. **Design in n8n UI**: Visual workflow editor
+2. **Test individually**: Execute nodes step-by-step
+3. **Export workflow**: Download as JSON
+4. **Version control**: Commit to `/workflows` directory
+
+---
+
+## 📈 Usage Examples
+
+### 🎯 **Manual Execution**
+
+```bash
+# Execute workflow via webhook
+curl -X POST http://localhost:5678/webhook/msft-analysis \
+  -H "Content-Type: application/json" \
+  -d '{"trigger": "manual", "symbol": "MSFT"}'
+```
+
+### ⏰ **Scheduled Execution**
+
+Configure in n8n:
+```javascript
+// Daily at market open (9:30 AM EST)
+{
+  "schedule": "30 9 * * 1-5",
+  "timezone": "America/New_York"
+}
+```
+
+### 📊 **Custom Analysis**
+
+```javascript
+// Custom prompt for specific analysis
+{
+  "prompt": "Focus on earnings impact and technical indicators for MSFT",
+  "analysis_type": "earnings_focused",
+  "risk_tolerance": "conservative"
+}
+```
+
+---
+
+## 🔍 Troubleshooting
+
+### ❗ **Common Issues**
+
+#### Connection Refused (Ollama)
+```bash
+# Check Ollama container
+docker logs n8n-ollama
+
+# Verify URL in workflow
+# Use: http://ollama:11434 (not localhost)
+```
+
+#### Yahoo Finance 404 Errors
+```bash
+# Check date parameters
+# Ensure period1 < period2
+# Use Unix timestamps
+
+# Test API directly
+curl "https://query1.finance.yahoo.com/v8/finance/chart/MSFT"
+```
+
+#### Email Delivery Issues
+```bash
+# Verify SMTP credentials
+# Check Gmail App Password
+# Test SMTP connection
+
+# Use test email service
+docker run --rm -it -p 1025:1025 mailhog/mailhog
+```
+
+### 🔧 **Debug Commands**
+
+```bash
+# Service health
+docker-compose ps
+docker-compose logs n8n
+
+# Workflow debugging
+# Enable debug mode in n8n
+# Check execution logs in UI
+
+# Network connectivity
+docker exec n8n-trading-platform ping ollama
+docker exec n8n-trading-platform nslookup yahoo.com
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### 📋 **Development Process**
+
+1. **Fork** the repository
+2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to branch (`git push origin feature/amazing-feature`)
+5. **Open** Pull Request
+
+### 🐛 **Bug Reports**
+
+Please use the [Issue Tracker](https://github.com/somesh-ghaturle/Projects/issues) with:
+- Clear description
+- Steps to reproduce
+- Expected behavior
+- System information
+- Logs (if applicable)
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+## 👨‍💻 Created by Somesh Ghaturle
+
+**Senior Software Engineer & AI Enthusiast**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/somesh-ghaturle)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/somesh-ghaturle)
+[![Email](https://img.shields.io/badge/Email-Contact-red?logo=gmail)](mailto:someshghaturle@gmail.com)
+
+### 🌟 **Expertise**
+- **AI/ML Engineering**: Advanced machine learning systems and model deployment
+- **Financial Technology**: Algorithmic trading and quantitative analysis
+- **Cloud Architecture**: Scalable distributed systems and microservices
+- **Automation**: Workflow orchestration and intelligent process automation
+
+### 🚀 **Other Projects**
+- [AgenTech Research Hub](../AgenTech%20Research%20Hub/) - Multi-agent AI research platform
+- [AI Data Analytics Agent](../AI%20Data%20Analytics%20Agent/) - Intelligent data analysis system
+- [Multi-Agent Content Analytics](../Multi-Agent-Content-Analytics/) - Advanced content processing
+
+---
+
+⭐ **If this project helped you, please give it a star!** ⭐
+
+*Built with ❤️ using n8n, Docker, Ollama, and modern AI technologies*
+
+</div>

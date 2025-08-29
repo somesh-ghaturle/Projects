@@ -1,4 +1,6 @@
-# 🚀 AI & Data Science Projects Portfolio
+# 🚀 AI & Data Science Projects P    subgraph "📈 Trading & Automation"
+        TRADING[📈 Microsoft Stock Trading Platform<br/>n8n + Ollama AI Integration<br/>Real-time Analysis + Email Alerts]
+    endfolio
 
 > **Professional AI/ML Projects Collection** | *Advanced Multi-Agent Systems, Financial Analytics, and Data Science Solutions*
 
@@ -136,18 +138,21 @@ Sophisticated AI-powered content analysis platform designed for movie scripts an
 ---
 
 ### 📈 Microsoft Stock Price Prediction Workflow
-> **Automated Trading Workflow with LSTM/GRU Neural Networks**
+> **AI-Powered Trading Platform with n8n Workflow Automation**
 
-![Trading Workflow](./Microsoft%20Stock%20Price%20Prediction%20Workflow%20(n8n)/workflow-preview.png)
+![AI Trading Platform](./n8n-trading.png)
 
-Sophisticated automated trading workflow built with n8n combining financial data fetching, machine learning predictions, and real-time Discord notifications for MSFT stock trading signals.
+Intelligent automated trading system combining real-time market data analysis with advanced AI decision-making. Built on n8n workflow automation with local Ollama LLM integration for sophisticated trading signals and email notifications.
 
 **Key Features:**
-- Automated daily execution with customizable scheduling
-- LSTM/GRU neural network models for price forecasting
-- Yahoo Finance API integration for real-time stock data
-- Intelligent trading signal generation (BUY/SELL/HOLD)
-- Real-time Discord notifications and workflow automation
+- Real-time MSFT stock data processing from Yahoo Finance API
+- Local Ollama AI integration for intelligent trading analysis
+- Professional email notifications with trading recommendations
+- Complete Docker containerization with health monitoring
+- Visual n8n workflow editor for easy customization
+- BUY/SELL/HOLD signals with risk assessment and price predictions
+
+**Tech Stack:** `n8n` `Ollama AI` `Docker` `PostgreSQL` `Redis` `Yahoo Finance API` `Email Automation`
 
 **Tech Stack:** `n8n` `LSTM/GRU` `Yahoo Finance API` `Discord` `Neural Networks`
 

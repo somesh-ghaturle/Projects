@@ -1,0 +1,98 @@
+{
+  "name": "Simple MSFT Stock Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "start-node",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "ticker",
+              "value": "MSFT"
+            },
+            {
+              "name": "startDate", 
+              "value": "1722211200"
+            },
+            {
+              "name": "endDate",
+              "value": "1724889600"
+            }
+          ]
+        }
+      },
+      "id": "set-data",
+      "name": "Set Stock Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/MSFT",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "interval",
+              "value": "1d"
+            },
+            {
+              "name": "period1",
+              "value": "1722211200"
+            },
+            {
+              "name": "period2", 
+              "value": "1724889600"
+            }
+          ]
+        }
+      },
+      "id": "fetch-stock",
+      "name": "Fetch MSFT Stock Data", 
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [640, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Stock Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Stock Data": {
+      "main": [
+        [
+          {
+            "node": "Fetch MSFT Stock Data",
+            "type": "main", 
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-08-29T00:00:00.000Z",
+  "versionId": "1"
+}
