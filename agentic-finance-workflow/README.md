@@ -304,12 +304,6 @@ flowchart TD
 6. **📊 Visualization**: Processed data rendered via Chart.js charts
 7. **🐳 Containerization**: Entire system runs in Docker containers
 
-### 🔄 Data Flow Pipeline
-
-```
-📥 User Request → 🌐 nginx → ⚡ FastAPI → 🎯 Orchestrator → 🤖 Agents → 📊 Processing → 📈 Charts → 👤 User
-```
-
 ## 🐳 Docker Configuration
 
 ### Production Setup
@@ -601,7 +595,7 @@ This project is licensed under the MIT License:
 ```text
 MIT License
 
-Copyright (c) 2025 Agentic Finance Workflow
+Copyright (c) 2025 Somesh Ramesh Ghaturle
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -644,11 +638,27 @@ SOFTWARE.
 - 📚 **Documentation**: Check troubleshooting section
 - 🔍 **Debugging**: Review application logs
 
+### 👨‍💻 Developer
+
+**Somesh Ramesh Ghaturle**  
+*MS in Data Science, Pace University*  
+*AI/ML Engineer & Financial Analytics Specialist*
+
+### Professional Links
+📧 **Email**: [someshghaturle@gmail.com](mailto:someshghaturle@gmail.com)  
+🐙 **GitHub**: [https://github.com/somesh-ghaturle](https://github.com/somesh-ghaturle)  
+💼 **LinkedIn**: [https://www.linkedin.com/in/someshghaturle/](https://www.linkedin.com/in/someshghaturle/)
+
+### Academic & Research Background
+- **Specialization**: Machine Learning, Financial Analytics, Multi-Agent Systems
+- **Research Interests**: AI-driven financial analysis, Risk modeling, Predictive analytics
+- **Applications**: Professional-grade financial intelligence platforms
+
 ### Professional Services
 For enterprise deployment, custom features, or professional support:
-- 📧 Email: [your-email@domain.com]
-- 💼 LinkedIn: [Your LinkedIn Profile]
-- 🌐 Website: [Your Website]
+- � **Financial AI Consulting**: Custom multi-agent financial systems
+- 🏢 **Enterprise Integration**: Scalable financial analytics platforms
+- � **Training & Workshops**: Financial AI and machine learning
 
 ---
 
