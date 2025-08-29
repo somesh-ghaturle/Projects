@@ -138,7 +138,7 @@ Sophisticated AI-powered content analysis platform designed for movie scripts an
 ### 📈 Microsoft Stock Price Prediction Workflow
 > **AI-Powered Trading Platform with n8n Workflow Automation**
 
-![AI Trading Platform](./n8n-trading.png)
+![AI Trading Platform](./Microsoft%20Stock%20Price%20Prediction%20Workflow%20(n8n)/n8n.png)
 
 Intelligent automated trading system combining real-time market data analysis with advanced AI decision-making. Built on n8n workflow automation with local Ollama LLM integration for sophisticated trading signals and email notifications.
 
