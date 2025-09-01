@@ -10,7 +10,8 @@ A sophisticated research-oriented multi-agent platform designed for comprehensiv
 
 ## 📱 App Preview
 
-![AgenTech Research Hub Dashboard](research.png)
+![AgenTech Research Hub Dashboard](app%20preview.png)
+*Modern Grok-inspired research interface with professional dark theme and comprehensive AI research capabilities*
 
 ### 🎯 Sample Research Test
 
