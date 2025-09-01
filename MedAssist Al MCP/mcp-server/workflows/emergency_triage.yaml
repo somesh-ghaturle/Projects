@@ -1,0 +1,93 @@
+workflow_id: "emergency_triage_workflow"
+name: "Emergency Triage Workflow"
+description: "Critical workflow for handling emergency medical situations with rapid assessment and escalation"
+version: "1.0"
+
+global_config:
+  priority: "high"
+  auto_escalate: true
+  emergency_keywords: ["chest pain", "difficulty breathing", "severe headache", "unconscious", "bleeding"]
+  response_time_target: 300  # seconds
+
+error_handling:
+  continue_on_error: false
+  max_retries: 2
+  retry_delay: 10
+  escalate_to_human: true
+
+human_review_required: true
+
+steps:
+  - step_id: "symptom_assessment"
+    agent_type: "symptom_checker"
+    agent_config:
+      enable_ai_enhancement: true
+      confidence_threshold: 0.8
+      emergency_detection: true
+    input_mapping:
+      symptoms: "patient_symptoms"
+      medical_history: "patient_history"
+    output_mapping:
+      diagnosis: "initial_diagnosis"
+      severity: "severity_level"
+      confidence: "confidence_score"
+      emergency_flag: "emergency_detected"
+    depends_on: []
+    parallel: false
+    retry_on_failure: true
+    timeout_seconds: 120
+
+  - step_id: "drug_interaction_check"
+    agent_type: "drug_info"
+    agent_config:
+      check_interactions: true
+      emergency_mode: true
+    input_mapping:
+      current_medications: "patient_medications"
+      symptoms: "patient_symptoms"
+    output_mapping:
+      interactions: "drug_interactions"
+      contraindications: "contraindications"
+      recommendations: "drug_recommendations"
+    depends_on: ["symptom_assessment"]
+    parallel: true
+    retry_on_failure: true
+    timeout_seconds: 180
+
+  - step_id: "literature_review"
+    agent_type: "literature_search"
+    agent_config:
+      emergency_focus: true
+      max_results: 5
+      relevance_threshold: 0.7
+    input_mapping:
+      query: "generated_query"
+      diagnosis: "initial_diagnosis"
+    output_mapping:
+      relevant_studies: "emergency_studies"
+      treatment_protocols: "treatment_protocols"
+      evidence_level: "evidence_level"
+    depends_on: ["symptom_assessment"]
+    parallel: true
+    retry_on_failure: false
+    timeout_seconds: 300
+
+  - step_id: "escalation_decision"
+    agent_type: "patient_interaction"
+    agent_config:
+      escalation_mode: true
+      priority_routing: true
+    input_mapping:
+      severity: "severity_level"
+      emergency_flag: "emergency_detected"
+      diagnosis: "initial_diagnosis"
+      recommendations: "consolidated_recommendations"
+    output_mapping:
+      action_required: "required_action"
+      priority_level: "routing_priority"
+      specialist_referral: "specialist_needed"
+      immediate_instructions: "patient_instructions"
+    depends_on: ["symptom_assessment", "drug_interaction_check", "literature_review"]
+    parallel: false
+    retry_on_failure: true
+    timeout_seconds: 60

@@ -1,12 +1,12 @@
 # 🚀 AI & Data Science Projects Portfolio
 
-> **Professional AI/ML Projects Collection** | *Advanced Multi-Agent Systems, Financial Analytics, and Data Science Solutions*
+> **Professional AI/ML Projects Collection** | *Advanced Multi-Agent Systems, Financial Analytics, Healthcare AI, and Data Science Solutions*
 
-This repository showcases a comprehensive collection of production-ready AI and data science projects developed during my Master's degree in Data Science at Pace University. Each project demonstrates expertise in modern AI frameworks, financial technologies, and scalable system architecture.
+This repository showcases a comprehensive collection of production-ready AI and data science projects developed during my Master's degree in Data Science at Pace University. Each project demonstrates expertise in modern AI frameworks, financial technologies, healthcare systems, and scalable system architecture.
 
 ## 🎯 Portfolio Overview
 
-A curated selection of **5 professional AI/ML projects** spanning financial analytics, multi-agent systems, content analysis, research automation, and algorithmic trading. All projects feature production deployment capabilities, comprehensive documentation, and modern tech stacks.
+A curated selection of **6 professional AI/ML projects** spanning financial analytics, healthcare AI systems, multi-agent architectures, content analysis, research automation, and algorithmic trading. All projects feature production deployment capabilities, comprehensive documentation, and modern tech stacks.
 
 ## 📁 Project Structure
 
@@ -17,6 +17,7 @@ Projects/
 ├── 📊 AI Data Analytics Agent/                     # Streamlit + Ollama Analytics Tool
 ├── 🎭 Multi-Agent-Content-Analytics/              # AI Content Analysis Platform
 ├── 📈 Microsoft Stock Price Prediction Workflow/  # n8n Trading Automation
+├── 🏥 MedAssist Al MCP/                           # Healthcare AI MCP Server
 └── 📖 README.md                                   # Portfolio Documentation
 ```
 
@@ -152,7 +153,24 @@ Intelligent automated trading system combining real-time market data analysis wi
 
 **Tech Stack:** `n8n` `Ollama AI` `Docker` `PostgreSQL` `Redis` `Yahoo Finance API` `Email Automation`
 
-**Tech Stack:** `n8n` `LSTM/GRU` `Yahoo Finance API` `Discord` `Neural Networks`
+---
+
+### 🏥 MedAssist AI MCP Server
+> **Healthcare AI Platform with HIPAA-Compliant Multi-Agent System**
+
+![MedAssist AI Platform](./MedAssist%20Al%20MCP/medassist%20ai.png)
+
+Advanced medical AI assistance platform implementing the Model Context Protocol (MCP) with specialized healthcare agents. Features comprehensive HIPAA compliance, real-time monitoring, and production-ready deployment for healthcare applications.
+
+**Key Features:**
+- MCP-compliant multi-agent healthcare system with specialized medical agents
+- HIPAA-compliant data handling with encryption and audit logging
+- Real-time health monitoring with Prometheus and Grafana dashboards
+- Interactive web interface for symptom checking and medical consultations
+- Production deployment with SSL/TLS, nginx reverse proxy, and health checks
+- Comprehensive medical knowledge base integration with FDA and PubMed APIs
+
+**Tech Stack:** `MCP Protocol` `FastAPI` `PostgreSQL` `Redis` `HIPAA Compliance` `Medical AI` `Docker`
 
 ## 🚀 Quick Start Guide
 
@@ -211,6 +229,12 @@ cd "Microsoft Stock Price Prediction Workflow (n8n)"
 - **Data Science**: Local LLM-powered analytics with privacy protection
 - **Content Intelligence**: AI-driven entertainment industry insights
 
+### 🏥 Healthcare Technology
+- **Medical AI Assistants**: HIPAA-compliant healthcare agent systems
+- **Clinical Decision Support**: AI-powered symptom checking and medical consultation
+- **Healthcare APIs**: Integration with FDA and PubMed medical databases
+- **Patient Data Security**: Encrypted data handling with audit logging
+
 ### �️ Production Features
 - **Docker Deployment**: All projects containerized for easy deployment
 - **REST APIs**: Comprehensive API endpoints for integration
@@ -220,10 +244,11 @@ cd "Microsoft Stock Price Prediction Workflow (n8n)"
 ## � Technologies & Frameworks
 
 ### 🤖 AI & Machine Learning
-- **Multi-Agent Frameworks**: CrewAI, LangGraph, AutoGen
+- **Multi-Agent Frameworks**: CrewAI, LangGraph, AutoGen, MCP Protocol
 - **Large Language Models**: Ollama (Llama3, Mistral)
 - **Neural Networks**: LSTM/GRU for time series prediction
 - **NLP Processing**: Advanced content analysis and sentiment detection
+- **Healthcare AI**: Medical knowledge bases, symptom analysis, clinical decision support
 
 ### � Web & API Development
 - **Backend**: FastAPI, uvicorn, Python
@@ -239,9 +264,10 @@ cd "Microsoft Stock Price Prediction Workflow (n8n)"
 
 ### 📊 Data & Analytics
 - **Data Processing**: Pandas, NumPy, Plotly
-- **Databases**: ChromaDB for vector embeddings
+- **Databases**: ChromaDB for vector embeddings, PostgreSQL, Redis
 - **File Formats**: CSV, Excel, JSON, PDF processing
 - **Streaming**: Streamlit for interactive dashboards
+- **Healthcare Data**: HIPAA-compliant storage, medical API integration (FDA, PubMed)
 
 ## 👨‍💻 Author & License
 

@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  medassist-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: medassist_api_prod
+    environment:
+      - ENVIRONMENT=production
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - LOG_LEVEL=INFO
+      - MEDICAL_MODE=production
+      - HIPAA_COMPLIANCE=true
+      - SECURE_HEADERS=true
+      - CACHE_TTL=300
+      - AGENT_TIMEOUT=60
+      - MEDICAL_RESPONSE_CACHE=true
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - medassist-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  nginx:
+    image: nginx:alpine
+    container_name: medassist_nginx_prod
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/var/www/html:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - medassist-api
+    networks:
+      - medassist-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: medassist_redis_prod
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-medassist_redis_2025}
+    volumes:
+      - redis_data:/data
+    networks:
+      - medassist-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: medassist_postgres_prod
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-medassist_db}
+      - POSTGRES_USER=${POSTGRES_USER:-medassist_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-medassist_password_2025}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    networks:
+      - medassist-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-medassist_user} -d ${POSTGRES_DB:-medassist_db}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: medassist_prometheus_prod
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - medassist-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: medassist_grafana_prod
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-medassist_admin_2025}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - medassist-network
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  medassist-network:
+    driver: bridge

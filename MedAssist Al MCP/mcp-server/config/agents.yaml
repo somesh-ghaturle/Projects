@@ -1,0 +1,122 @@
+# Multi-Agent Medical Assistant MCP - Advanced Configuration
+development:
+  database:
+    host: localhost
+    port: 5432
+    name: medical_assistant_dev
+    user: postgres
+    password: password
+
+  redis:
+    host: localhost
+    port: 6379
+    db: 0
+
+  api_keys:
+    pubmed_email: ${PUBMED_EMAIL}
+    fda_api_key: ${FDA_API_KEY}
+    openai_api_key: ${OPENAI_API_KEY}
+
+  agents:
+    symptom_checker:
+      max_workers: 3
+      timeout: 120
+      confidence_threshold: 0.7
+      enable_ai_enhancement: true
+    drug_info:
+      max_workers: 2
+      timeout: 180
+      cache_ttl: 3600
+      enable_fda_integration: true
+    literature_search:
+      max_workers: 2
+      timeout: 300
+      max_results: 10
+      enable_pubmed_integration: true
+    patient_interaction:
+      max_workers: 4
+      timeout: 60
+      enable_scheduling: true
+      enable_qa: true
+
+  workflows:
+    emergency_triage:
+      enabled: true
+      priority: high
+      auto_escalate: true
+    routine_checkup:
+      enabled: true
+      priority: medium
+      auto_escalate: false
+    drug_interaction_check:
+      enabled: true
+      priority: high
+      auto_escalate: true
+
+production:
+  database:
+    host: ${DB_HOST}
+    port: ${DB_PORT}
+    name: ${DB_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    db: 0
+    password: ${REDIS_PASSWORD}
+
+  api_keys:
+    pubmed_email: ${PUBMED_EMAIL}
+    fda_api_key: ${FDA_API_KEY}
+    openai_api_key: ${OPENAI_API_KEY}
+
+  agents:
+    symptom_checker:
+      max_workers: 5
+      timeout: 180
+      confidence_threshold: 0.8
+      enable_ai_enhancement: true
+    drug_info:
+      max_workers: 4
+      timeout: 240
+      cache_ttl: 7200
+      enable_fda_integration: true
+    literature_search:
+      max_workers: 3
+      timeout: 600
+      max_results: 20
+      enable_pubmed_integration: true
+    patient_interaction:
+      max_workers: 8
+      timeout: 90
+      enable_scheduling: true
+      enable_qa: true
+
+  workflows:
+    emergency_triage:
+      enabled: true
+      priority: high
+      auto_escalate: true
+    routine_checkup:
+      enabled: true
+      priority: medium
+      auto_escalate: false
+    drug_interaction_check:
+      enabled: true
+      priority: high
+      auto_escalate: true
+
+  monitoring:
+    enable_health_checks: true
+    metrics_endpoint: "/metrics"
+    log_level: "INFO"
+    enable_prometheus: true
+
+  security:
+    enable_rate_limiting: true
+    rate_limit_requests: 100
+    rate_limit_window: 60
+    enable_cors: true
+    allowed_origins: ["*"]

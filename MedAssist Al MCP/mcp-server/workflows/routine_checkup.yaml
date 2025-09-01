@@ -1,0 +1,101 @@
+workflow_id: "routine_checkup_workflow"
+name: "Routine Medical Checkup Workflow"
+description: "Comprehensive workflow for routine medical checkups with preventive care recommendations"
+version: "1.0"
+
+global_config:
+  priority: "medium"
+  preventive_focus: true
+  follow_up_scheduling: true
+  health_education: true
+
+error_handling:
+  continue_on_error: true
+  max_retries: 3
+  retry_delay: 30
+  escalate_to_human: false
+
+human_review_required: false
+
+steps:
+  - step_id: "health_assessment"
+    agent_type: "symptom_checker"
+    agent_config:
+      preventive_mode: true
+      comprehensive_check: true
+      risk_assessment: true
+    input_mapping:
+      symptoms: "reported_symptoms"
+      medical_history: "patient_history"
+      lifestyle_factors: "lifestyle_data"
+      family_history: "family_medical_history"
+    output_mapping:
+      health_status: "overall_health_status"
+      risk_factors: "identified_risks"
+      preventive_measures: "recommended_preventions"
+      follow_up_needed: "follow_up_required"
+    depends_on: []
+    parallel: false
+    retry_on_failure: true
+    timeout_seconds: 180
+
+  - step_id: "medication_review"
+    agent_type: "drug_info"
+    agent_config:
+      comprehensive_review: true
+      adherence_check: true
+      optimization_suggestions: true
+    input_mapping:
+      current_medications: "patient_medications"
+      health_status: "overall_health_status"
+      medical_history: "patient_history"
+    output_mapping:
+      medication_effectiveness: "medication_assessment"
+      optimization_opportunities: "optimization_suggestions"
+      adherence_score: "adherence_rating"
+      side_effects_monitoring: "side_effects_to_monitor"
+    depends_on: ["health_assessment"]
+    parallel: true
+    retry_on_failure: true
+    timeout_seconds: 240
+
+  - step_id: "preventive_research"
+    agent_type: "literature_search"
+    agent_config:
+      preventive_focus: true
+      evidence_based: true
+      patient_education: true
+    input_mapping:
+      risk_factors: "identified_risks"
+      health_status: "overall_health_status"
+      patient_profile: "patient_demographics"
+    output_mapping:
+      preventive_studies: "relevant_research"
+      lifestyle_recommendations: "lifestyle_advice"
+      educational_materials: "patient_education"
+      screening_guidelines: "recommended_screenings"
+    depends_on: ["health_assessment"]
+    parallel: true
+    retry_on_failure: false
+    timeout_seconds: 300
+
+  - step_id: "care_coordination"
+    agent_type: "patient_interaction"
+    agent_config:
+      scheduling_mode: true
+      education_focus: true
+      follow_up_coordination: true
+    input_mapping:
+      health_status: "overall_health_status"
+      recommendations: "consolidated_recommendations"
+      follow_up_needed: "follow_up_required"
+      educational_materials: "patient_education"
+    output_mapping:
+      care_plan: "personalized_care_plan"
+      appointment_schedule: "scheduled_appointments"
+      educational_plan: "learning_plan"
+      progress_tracking: "monitoring_plan"
+    depends_on: ["health_assessment", "medication_review", "preventive_research"]
+    parallel: false
+    retry_on_failure: true
+    timeout_seconds: 120

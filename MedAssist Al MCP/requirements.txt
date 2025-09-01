@@ -1,0 +1,9 @@
+mcp[cli]
+requests
+fastapi
+uvicorn
+pydantic
+openai
+biopython
+aiohttp
+PyYAML

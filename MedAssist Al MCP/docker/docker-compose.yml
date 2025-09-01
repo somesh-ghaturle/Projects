@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  medical-assistant:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - MCP_TRANSPORT=streamable-http
+    command: python -m mcp_server.server
