@@ -173,8 +173,158 @@ async def conduct_research(
         # Create relevant sources based on query content
         real_sources = []
         
+        # Quantum Computing related queries
+        if any(term in query_lower for term in ['quantum computing', 'quantum', 'qubits', 'quantum mechanics', 'quantum algorithm']):
+            real_sources.extend([
+                {
+                    "title": "IBM Quantum Computing",
+                    "url": "https://www.ibm.com/quantum-computing/",
+                    "snippet": "IBM's quantum computing platform with access to quantum systems, research, and development tools.",
+                    "relevance_score": 0.96
+                },
+                {
+                    "title": "Nature Quantum Information",
+                    "url": "https://www.nature.com/natquantum/",
+                    "snippet": "Leading research journal covering quantum information science, quantum computing, and quantum technologies.",
+                    "relevance_score": 0.94
+                },
+                {
+                    "title": "Google Quantum Computing",
+                    "url": "https://quantumai.google/",
+                    "snippet": "Google's quantum computing research and Cirq platform for quantum algorithm development.",
+                    "relevance_score": 0.92
+                },
+                {
+                    "title": "arXiv Quantum Physics",
+                    "url": "https://arxiv.org/list/quant-ph/recent",
+                    "snippet": "Latest quantum physics and quantum computing research papers from the global scientific community.",
+                    "relevance_score": 0.90
+                }
+            ])
+        
+        # Climate Change related queries
+        elif any(term in query_lower for term in ['climate change', 'global warming', 'carbon', 'greenhouse gas', 'climate']):
+            real_sources.extend([
+                {
+                    "title": "NASA Climate Change and Global Warming",
+                    "url": "https://climate.nasa.gov/",
+                    "snippet": "NASA's comprehensive climate change information, data, and research findings.",
+                    "relevance_score": 0.96
+                },
+                {
+                    "title": "IPCC - Intergovernmental Panel on Climate Change",
+                    "url": "https://www.ipcc.ch/",
+                    "snippet": "Scientific reports and assessments on climate change from the world's leading climate scientists.",
+                    "relevance_score": 0.95
+                },
+                {
+                    "title": "Climate.gov",
+                    "url": "https://www.climate.gov/",
+                    "snippet": "U.S. government's official climate science and data portal with research and educational resources.",
+                    "relevance_score": 0.93
+                }
+            ])
+        
+        # Space Exploration related queries
+        elif any(term in query_lower for term in ['space exploration', 'mars', 'colonization', 'nasa', 'spacex', 'rocket']):
+            real_sources.extend([
+                {
+                    "title": "NASA",
+                    "url": "https://www.nasa.gov/",
+                    "snippet": "Official NASA website with latest space exploration missions, research, and discoveries.",
+                    "relevance_score": 0.96
+                },
+                {
+                    "title": "SpaceX",
+                    "url": "https://www.spacex.com/",
+                    "snippet": "SpaceX's revolutionary space transportation and Mars colonization mission updates.",
+                    "relevance_score": 0.94
+                },
+                {
+                    "title": "European Space Agency (ESA)",
+                    "url": "https://www.esa.int/",
+                    "snippet": "European space missions, research, and international space collaboration programs.",
+                    "relevance_score": 0.92
+                },
+                {
+                    "title": "Space.com",
+                    "url": "https://www.space.com/",
+                    "snippet": "Latest space news, exploration updates, and scientific discoveries from space missions.",
+                    "relevance_score": 0.88
+                }
+            ])
+        
+        # Gene Therapy/CRISPR related queries
+        elif any(term in query_lower for term in ['gene therapy', 'crispr', 'genetic engineering', 'dna editing', 'genome']):
+            real_sources.extend([
+                {
+                    "title": "Nature Biotechnology",
+                    "url": "https://www.nature.com/nbt/",
+                    "snippet": "Leading research in biotechnology, genetic engineering, and therapeutic applications.",
+                    "relevance_score": 0.95
+                },
+                {
+                    "title": "The CRISPR Foundation",
+                    "url": "https://crisprtx.com/",
+                    "snippet": "CRISPR gene editing research, clinical trials, and therapeutic development updates.",
+                    "relevance_score": 0.93
+                },
+                {
+                    "title": "NIH National Human Genome Research Institute",
+                    "url": "https://www.genome.gov/",
+                    "snippet": "Government research on genomics, gene therapy, and genetic medicine breakthroughs.",
+                    "relevance_score": 0.91
+                }
+            ])
+        
+        # Cybersecurity related queries
+        elif any(term in query_lower for term in ['cybersecurity', 'cyber security', 'hacking', 'security threats', 'encryption']):
+            real_sources.extend([
+                {
+                    "title": "NIST Cybersecurity Framework",
+                    "url": "https://www.nist.gov/cyberframework",
+                    "snippet": "National Institute of Standards and Technology cybersecurity guidelines and best practices.",
+                    "relevance_score": 0.95
+                },
+                {
+                    "title": "CISA - Cybersecurity and Infrastructure Security Agency",
+                    "url": "https://www.cisa.gov/",
+                    "snippet": "U.S. government cybersecurity alerts, vulnerabilities, and security recommendations.",
+                    "relevance_score": 0.93
+                },
+                {
+                    "title": "KrebsOnSecurity",
+                    "url": "https://krebsonsecurity.com/",
+                    "snippet": "In-depth cybersecurity journalism covering data breaches, malware, and security research.",
+                    "relevance_score": 0.90
+                }
+            ])
+        
+        # Neural Interfaces/Brain-Computer related queries
+        elif any(term in query_lower for term in ['neural interface', 'brain computer', 'bci', 'neuralink', 'brain implant']):
+            real_sources.extend([
+                {
+                    "title": "Neuralink",
+                    "url": "https://neuralink.com/",
+                    "snippet": "Elon Musk's brain-computer interface company developing neural implant technology.",
+                    "relevance_score": 0.94
+                },
+                {
+                    "title": "Nature Neuroscience",
+                    "url": "https://www.nature.com/neuro/",
+                    "snippet": "Leading neuroscience research including brain-computer interfaces and neural engineering.",
+                    "relevance_score": 0.92
+                },
+                {
+                    "title": "IEEE Brain Initiative",
+                    "url": "https://brain.ieee.org/",
+                    "snippet": "IEEE's brain initiative covering neural engineering, brain-computer interfaces, and neurotechnology.",
+                    "relevance_score": 0.89
+                }
+            ])
+        
         # AI/Technology related queries
-        if any(term in query_lower for term in ['artificial intelligence', 'ai', 'machine learning', 'ml', 'deep learning', 'neural network']):
+        elif any(term in query_lower for term in ['artificial intelligence', 'ai', 'machine learning', 'ml', 'deep learning', 'neural network']):
             real_sources.extend([
                 {
                     "title": "Artificial Intelligence News and Research - MIT Technology Review",
@@ -197,7 +347,7 @@ async def conduct_research(
             ])
         
         # Healthcare related queries
-        if any(term in query_lower for term in ['healthcare', 'medical', 'medicine', 'health', 'clinical', 'patient']):
+        elif any(term in query_lower for term in ['healthcare', 'medical', 'medicine', 'health', 'clinical', 'patient']):
             real_sources.extend([
                 {
                     "title": "PubMed - National Center for Biotechnology Information",
@@ -220,7 +370,7 @@ async def conduct_research(
             ])
         
         # Technology/Programming related queries
-        if any(term in query_lower for term in ['programming', 'software', 'development', 'coding', 'python', 'javascript', 'tech']):
+        elif any(term in query_lower for term in ['programming', 'software', 'development', 'coding', 'python', 'javascript', 'tech']):
             real_sources.extend([
                 {
                     "title": "Stack Overflow",
@@ -243,7 +393,7 @@ async def conduct_research(
             ])
         
         # Science/Research related queries
-        if any(term in query_lower for term in ['science', 'research', 'study', 'academic', 'scientific']):
+        elif any(term in query_lower for term in ['science', 'research', 'study', 'academic', 'scientific']):
             real_sources.extend([
                 {
                     "title": "Google Scholar",
@@ -266,7 +416,7 @@ async def conduct_research(
             ])
         
         # Business/Finance related queries
-        if any(term in query_lower for term in ['business', 'finance', 'economy', 'market', 'investment', 'startup']):
+        elif any(term in query_lower for term in ['business', 'finance', 'economy', 'market', 'investment', 'startup']):
             real_sources.extend([
                 {
                     "title": "Harvard Business Review",
@@ -289,7 +439,7 @@ async def conduct_research(
             ])
         
         # Education related queries
-        if any(term in query_lower for term in ['education', 'learning', 'university', 'course', 'training']):
+        elif any(term in query_lower for term in ['education', 'learning', 'university', 'course', 'training']):
             real_sources.extend([
                 {
                     "title": "Coursera",

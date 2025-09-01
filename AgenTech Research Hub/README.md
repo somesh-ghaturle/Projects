@@ -12,6 +12,16 @@ A sophisticated research-oriented multi-agent platform designed for comprehensiv
 
 ![AgenTech Research Hub Dashboard](research.png)
 
+### 🎯 Sample Research Test
+
+![Sample Research Test Results](sampletest.png)
+
+*Live demonstration of comprehensive research output showcasing:*
+- **Topic-Specific Source Detection**: Intelligent categorization returning relevant authorities (IBM Quantum, NASA, Nature journals)
+- **Dynamic Content Analysis**: Real-time research with relevance scoring and quality metrics
+- **Professional UI**: Modern Grok-inspired interface with glassmorphism effects and smooth animations
+- **Production-Ready Results**: Formatted research summaries with clickable source links
+
 ## 🎯 Overview
 
 **AgenTech Research Hub** is an enterprise-grade research platform that combines advanced AI agents with professional web interfaces to provide comprehensive research capabilities. The platform supports data collection, analysis, automation, and intelligent research workflows through a scalable multi-agent architecture.

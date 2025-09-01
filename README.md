@@ -85,7 +85,7 @@ An advanced financial analysis platform featuring multi-agent AI systems, real-t
 ### 🔬 AgenTech Research Hub
 > **Multi-Agent AI Research System with Dynamic Topic Detection**
 
-![AgenTech Research Platform](./AgenTech%20Research%20Hub/research.png)
+![AgenTech Research Platform](./AgenTech%20Research%20Hub/app%20preview.png)
 
 Advanced multi-agent AI research system leveraging CrewAI, LangGraph, and AutoGen frameworks for comprehensive research automation with intelligent topic detection and authoritative source gathering.
 

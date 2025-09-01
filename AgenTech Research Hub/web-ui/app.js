@@ -1,4 +1,6 @@
 // AgenTech Research Hub - Web UI JavaScript
+console.log('AgenTech app.js loaded!');
+
 class AgenTechUI {
     constructor() {
         // Auto-detect API base URL based on environment
@@ -12,9 +14,9 @@ class AgenTechUI {
         const port = window.location.port;
         
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            if (port === '3000') {
-                // Running in Docker - use nginx proxy (same origin)
-                return '';  // Use relative URLs - nginx will proxy to backend
+            if (port === '' || port === '80') {
+                // Running through nginx - use /api proxy
+                return '/api';
             } else {
                 // Running locally - direct API connection
                 return 'http://localhost:8000';
@@ -113,8 +115,172 @@ class AgenTechUI {
     }
 
     setQuery(query) {
-        document.getElementById('research-query').value = query;
-        document.getElementById('research-query').focus();
+        const queryInput = document.getElementById('researchQuery') || document.getElementById('research-query');
+        if (queryInput) {
+            queryInput.value = query;
+            queryInput.focus();
+        }
+    }
+
+    async startResearch() {
+        console.log('Starting research function...');
+        const queryInput = document.getElementById('researchQuery') || document.getElementById('research-query');
+        const depthSelect = document.getElementById('researchDepth') || document.getElementById('max-sources');
+        const domainSelect = document.getElementById('researchDomain') || document.getElementById('research-type');
+        
+        console.log('Found elements:', { queryInput, depthSelect, domainSelect });
+        
+        if (!queryInput) {
+            console.error('Research input not found');
+            this.showNotification('Research input not found', 'error');
+            return;
+        }
+        
+        const query = queryInput.value.trim();
+        console.log('Query value:', query);
+        
+        if (!query) {
+            this.showNotification('Please enter a research query', 'warning');
+            return;
+        }
+
+        this.showLoading();
+        
+        try {
+            const requestBody = {
+                query: query,
+                depth: depthSelect ? parseInt(depthSelect.value) : 5,
+                domain: domainSelect ? domainSelect.value : 'general'
+            };
+            
+            console.log('Starting research with:', requestBody);
+            console.log('API Base URL:', this.apiBase);
+            
+            const apiUrl = `${this.apiBase}/research`;
+            console.log('Making request to:', apiUrl);
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const result = await response.json();
+            console.log('Research result:', result);
+            this.hideLoading();
+            this.displayResults(result);
+            
+        } catch (error) {
+            console.error('Research error:', error);
+            this.hideLoading();
+            this.showNotification(`Research failed: ${error.message}`, 'error');
+        }
+    }
+
+    showLoading() {
+        const statusSection = document.getElementById('statusSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const button = document.getElementById('researchButton');
+        
+        if (statusSection) {
+            statusSection.classList.remove('hidden');
+        }
+        if (resultsSection) {
+            resultsSection.classList.add('hidden');
+        }
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<span class="relative z-10"><i class="fas fa-spinner fa-spin mr-2"></i>Researching...</span>';
+        }
+        
+        // Update status text
+        this.updateStatus('Initializing research agents...', 0);
+    }
+
+    hideLoading() {
+        const statusSection = document.getElementById('statusSection');
+        const button = document.getElementById('researchButton');
+        
+        if (statusSection) {
+            statusSection.classList.add('hidden');
+        }
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = '<span class="relative z-10"><i class="fas fa-rocket mr-2"></i>Launch Research</span>';
+        }
+    }
+
+    updateStatus(message, progress) {
+        const statusText = document.getElementById('statusText');
+        const progressText = document.getElementById('progressText');
+        const progressBar = document.getElementById('progressBar');
+        
+        if (statusText) statusText.textContent = message;
+        if (progressText) progressText.textContent = `${progress}%`;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+    }
+
+    displayResults(result) {
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContainer = document.getElementById('resultsContainer');
+        
+        if (!resultsSection || !resultsContainer) {
+            console.error('Results containers not found');
+            return;
+        }
+        
+        resultsSection.classList.remove('hidden');
+        
+        // Clear previous results
+        resultsContainer.innerHTML = '';
+        
+        // Create results HTML
+        const resultHTML = `
+            <div class="grok-card rounded-xl p-6 mb-6">
+                <h3 class="text-xl font-bold text-white mb-4">
+                    <i class="fas fa-search mr-2 text-cyan-400"></i>
+                    Research Summary
+                </h3>
+                <div class="text-gray-300 leading-relaxed">
+                    ${result.summary || 'Research completed successfully.'}
+                </div>
+            </div>
+            
+            ${result.sources ? result.sources.map((source, index) => `
+                <div class="grok-card rounded-xl p-6 mb-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <h4 class="text-lg font-semibold text-white">
+                            Source ${index + 1}: ${source.title || 'Research Source'}
+                        </h4>
+                        <span class="text-sm text-cyan-400 px-2 py-1 bg-cyan-400/10 rounded">
+                            Score: ${Math.round((source.relevance_score || 0) * 100)}%
+                        </span>
+                    </div>
+                    ${source.url ? `
+                        <a href="${source.url}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-sm mb-2 block">
+                            <i class="fas fa-external-link-alt mr-1"></i>
+                            ${source.url}
+                        </a>
+                    ` : ''}
+                    <p class="text-gray-300 leading-relaxed">
+                        ${source.snippet || source.content || source.summary || 'No content available.'}
+                    </p>
+                </div>
+            `).join('') : ''}
+        `;
+        
+        resultsContainer.innerHTML = resultHTML;
     }
 
     async handleResearch(event) {
@@ -371,9 +537,24 @@ function setQuery(query) {
     window.agenTechUI.setQuery(query);
 }
 
+// Global function for starting research
+function startResearch() {
+    console.log('Global startResearch called!');
+    console.log('window.agenTechUI exists:', !!window.agenTechUI);
+    if (window.agenTechUI) {
+        console.log('Calling agenTechUI.startResearch()...');
+        window.agenTechUI.startResearch();
+    } else {
+        console.error('window.agenTechUI not found!');
+        alert('AgenTech UI not initialized!');
+    }
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing AgenTechUI...');
     window.agenTechUI = new AgenTechUI();
+    console.log('AgenTechUI initialized:', window.agenTechUI);
 });
 
 // Add some utility CSS classes
