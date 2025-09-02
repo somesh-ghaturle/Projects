@@ -1,0 +1,89 @@
+{
+  "name": "MSFT Stock Prediction & Alert",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [100, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "symbol", "value": "MSFT" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Stock Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [250, 200]
+    },
+    {
+      "parameters": {
+  "url": "https://query1.finance.yahoo.com/v7/finance/quote?symbols=MSFT",
+  "responseFormat": "json",
+  "options": {}
+      },
+      "name": "Fetch MSFT Stock Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [400, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract price and time from Yahoo response\nconst quote = items[0].json.quoteResponse.result[0];\nreturn [{ json: { price: quote.regularMarketPrice, time: quote.regularMarketTime } }];"
+      },
+      "name": "Process Stock Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [550, 200]
+    },
+    {
+      "parameters": {
+        "url": "http://ollama:11434/api/generate",
+        "method": "POST",
+        "responseFormat": "json",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\n  \"model\": \"llama3\",\n  \"prompt\": \"Analyze MSFT stock price: ${{ $json.price }} at time ${{ $json.time }}. Should I BUY, SELL, or HOLD?\"\n}"
+      },
+      "name": "AI Stock Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [700, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Format AI response for email\nconst ai = items[0].json;\nreturn [{ json: { subject: 'MSFT Trading Alert', message: ai.response || 'No response from AI.' } }];"
+      },
+      "name": "Format Trading Results",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+  "fromEmail": "your@email.com",
+  "toEmail": "recipient@email.com",
+  "subject": "={{$json['subject']}}",
+  "text": "={{$json['message']}}"
+      },
+      "name": "Send Trading Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1000, 200]
+    }
+  ],
+  "connections": {
+    "Start": { "main": [ [ { "node": "Set Stock Data", "type": "main", "index": 0 } ] ] },
+    "Set Stock Data": { "main": [ [ { "node": "Fetch MSFT Stock Data", "type": "main", "index": 0 } ] ] },
+    "Fetch MSFT Stock Data": { "main": [ [ { "node": "Process Stock Data", "type": "main", "index": 0 } ] ] },
+    "Process Stock Data": { "main": [ [ { "node": "AI Stock Analysis", "type": "main", "index": 0 } ] ] },
+    "AI Stock Analysis": { "main": [ [ { "node": "Format Trading Results", "type": "main", "index": 0 } ] ] },
+    "Format Trading Results": { "main": [ [ { "node": "Send Trading Alert", "type": "main", "index": 0 } ] ] }
+  }
+}
