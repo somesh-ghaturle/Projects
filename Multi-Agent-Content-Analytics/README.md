@@ -1,6 +1,6 @@
 # 🎭 Multi-Agent Content Analytics Platform
 
-> **Advanced AI-powered content analysis system with sophisticated agents for comprehensive movie script analysis, genre classification, and marketing intelligence**
+> **Advanced AI-powered content analysis system with sophisticated agents for comprehensive movie script analysis, genre classification, and marketing intelligence with standardized environment management**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green.svg)](https://fastapi.tiangolo.com/)
@@ -8,13 +8,27 @@
 [![AI Powered](https://img.shields.io/badge/AI-Powered-purple.svg)](https://github.com/somesh-ghaturle/Projects)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Quick Start
+
+```bash
+# Setup environment
+./setup.sh
+source .venv/bin/activate
+
+# Start development server
+python multi_agent_content_api.py
+
+# Or start with Docker
+docker-compose up -d
+```
+
 ## 📱 App Preview
 
 ![Multi-Agent Content Analytics Dashboard](multiagent.png)
 
 ## 🎯 Overview
 
-**Multi-Agent Content Analytics Platform** is a next-generation AI system that revolutionizes content analysis through specialized intelligent agents. Built for entertainment industry professionals, writers, and content creators, the platform provides comprehensive insights into movie scripts, story structures, character development, and market potential.
+**Multi-Agent Content Analytics Platform** is a next-generation AI system that revolutionizes content analysis through specialized intelligent agents. Built for entertainment industry professionals, writers, and content creators, the platform provides comprehensive insights into movie scripts, story structures, character development, and market potential with isolated virtual environment management.
 
 ### ✨ Advanced Features
 

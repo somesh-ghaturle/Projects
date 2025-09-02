@@ -1,12 +1,26 @@
 # 🚀 Agentic Finance Workflow
 
-A sophisticated multi-agent financial analysis platform that provides professional-grade investment analytics, real-time market data integration, and interactive financial visualizations.
+A sophisticated multi-agent financial analysis platform that provides professional-grade investment analytics, real-time market data integration, and interactive financial visualizations with standardized environment management.
 
 ![Agentic Finance Dashboard](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
 ![Docker](https://img.shields.io/badge/Docker-Supported-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+
+## 🚀 Quick Start
+
+```bash
+# Setup environment
+./setup.sh
+source .venv/bin/activate
+
+# Start development server
+python agentic_finance_api.py
+
+# Or start with Docker
+docker-compose up -d
+```
 
 ## 📱 App Preview
 

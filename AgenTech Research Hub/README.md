@@ -1,6 +1,6 @@
 # 🔬 AgenTech Research Hub
 
-A sophisticated research-oriented multi-agent platform designed for comprehensive data analysis, automation, and intelligent research workflows with professional web interface.
+A sophisticated research-oriented multi-agent platform designed for comprehensive data analysis, automation, and intelligent research workflows with professional web interface and standardized environment management.
 
 ![AgenTech Research Hub](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
@@ -8,7 +8,21 @@ A sophisticated research-oriented multi-agent platform designed for comprehensiv
 ![Docker](https://img.shields.io/badge/Docker-Supported-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## 📱 App Preview
+## � Quick Start
+
+```bash
+# Setup environment
+./setup.sh
+source .venv/bin/activate
+
+# Start development server
+python agentech_api_server.py
+
+# Or start with Docker
+docker-compose up -d
+```
+
+## �📱 App Preview
 
 ![AgenTech Research Hub Dashboard](app%20preview.png)
 *Modern Grok-inspired research interface with professional dark theme and comprehensive AI research capabilities*
@@ -25,7 +39,7 @@ A sophisticated research-oriented multi-agent platform designed for comprehensiv
 
 ## 🎯 Overview
 
-**AgenTech Research Hub** is an enterprise-grade research platform that combines advanced AI agents with professional web interfaces to provide comprehensive research capabilities. The platform supports data collection, analysis, automation, and intelligent research workflows through a scalable multi-agent architecture.
+**AgenTech Research Hub** is an enterprise-grade research platform that combines advanced AI agents with professional web interfaces to provide comprehensive research capabilities. The platform supports data collection, analysis, automation, and intelligent research workflows through a scalable multi-agent architecture with isolated virtual environment management.
 
 ## ✨ Key Features
 

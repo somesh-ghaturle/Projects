@@ -1,6 +1,6 @@
 # 📊 AI Data Analytics Agent
 
-> **Intelligent data analytics platform powered by local LLMs and Streamlit for comprehensive data analysis workflows**
+> **Intelligent data analytics platform powered by local LLMs and Streamlit for comprehensive data analysis workflows with standardized environment management**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit)](https://streamlit.io/)
@@ -8,13 +8,27 @@
 [![AI Powered](https://img.shields.io/badge/AI-Powered-purple.svg)](https://github.com/somesh-ghaturle/Projects)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Quick Start
+
+```bash
+# Setup environment
+./setup.sh
+source .venv/bin/activate
+
+# Start Streamlit app
+streamlit run streamlit_app.py
+
+# Or start with Docker
+docker-compose up -d
+```
+
 ## 📱 App Preview
 
 ![AI Data Analytics Agent Dashboard](ai%20agent.png)
 
 ## 🎯 Overview
 
-**AI Data Analytics Agent** is a production-ready analytics platform that combines the power of local LLMs (via Ollama) with an intuitive Streamlit interface. The system provides comprehensive data analysis capabilities including descriptive analytics, predictive modeling, data cleaning, and custom AI-powered insights.
+**AI Data Analytics Agent** is a production-ready analytics platform that combines the power of local LLMs (via Ollama) with an intuitive Streamlit interface. The system provides comprehensive data analysis capabilities including descriptive analytics, predictive modeling, data cleaning, and custom AI-powered insights with isolated virtual environment management.
 
 ### ✨ Key Features
 

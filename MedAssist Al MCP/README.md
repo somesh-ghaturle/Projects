@@ -1,6 +1,6 @@
 # ⚕️ MedAssist AI - Advanced Medical AI Assistant
 
-A sophisticated multi-agent medical AI platform designed for comprehensive healthcare support, diagnostic assistance, and medical information management with professional web interface.
+A sophisticated multi-agent medical AI platform designed for comprehensive healthcare support, diagnostic assistance, and medical information management with professional web interface and standardized environment management.
 
 ![MedAssist AI Platform](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.13+-blue)
@@ -9,13 +9,27 @@ A sophisticated multi-agent medical AI platform designed for comprehensive healt
 ![HIPAA](https://img.shields.io/badge/HIPAA-Compliant-red)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## 📱 App Preview
+## � Quick Start
+
+```bash
+# Setup environment
+./setup.sh
+source .venv/bin/activate
+
+# Start development server
+# Run your medical AI application
+
+# Or start with Docker
+docker-compose up -d
+```
+
+## �📱 App Preview
 
 ![MedAssist AI Dashboard](medassist%20ai.png)
 
 ## 🎯 Overview
 
-**MedAssist AI** is an enterprise-grade medical AI platform that combines specialized medical agents with a professional web interface to provide comprehensive healthcare support. The platform offers diagnostic assistance, pharmaceutical guidance, medical imaging consultation, and treatment recommendations through a scalable multi-agent architecture.
+**MedAssist AI** is an enterprise-grade medical AI platform that combines specialized medical agents with a professional web interface to provide comprehensive healthcare support. The platform offers diagnostic assistance, pharmaceutical guidance, medical imaging consultation, and treatment recommendations through a scalable multi-agent architecture with isolated virtual environment management.
 
 ## ✨ Key Features
 
